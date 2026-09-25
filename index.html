@@ -1,0 +1,2656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Grammar Academy | Future Tenses · 7 modules · 3 levels</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .gradient-bg { background: linear-gradient(135deg, #090d16 0%, #111827 50%, #14532d 100%); }
+    .neon-border { box-shadow: 0 0 15px rgba(16, 185, 129, 0.15); }
+    .neon-border:hover { box-shadow: 0 0 25px rgba(52, 211, 153, 0.45); }
+
+    .gap-input {
+      background: #020617;
+      border: none;
+      border-bottom: 3px solid #475569;
+      color: #fff;
+      font-weight: 800;
+      text-align: center;
+      padding: 2px 10px;
+      margin: 0 4px 6px;
+      border-radius: 6px 6px 0 0;
+      outline: none;
+      transition: all .15s ease;
+      display: inline-block;
+      min-width: 7ch;
+      max-width: 100%;
+    }
+    .gap-input:focus { border-bottom-color: #34d399; background: #0b1220; }
+    .gap-input.wide { display: block; width: 100%; min-width: 0; text-align: left; border: 2px solid #334155; border-radius: 14px; padding: 12px 16px; margin: 0; }
+    .gap-input.wide:focus { border-color: #34d399; }
+    .gap-input.wide::placeholder { color: #475569; font-weight: 600; }
+    .mcq-opt:disabled { cursor: default; }
+    .mcq-ok { border-color: #10b981 !important; background: rgba(6,78,59,.55) !important; color: #6ee7b7 !important; }
+    .mcq-ko { border-color: #f43f5e !important; background: rgba(76,5,25,.55) !important; color: #fda4af !important; }
+    .gap-ok { border-bottom-color: #10b981 !important; color: #6ee7b7 !important; background: rgba(6,78,59,.45) !important; }
+    .gap-ko { border-bottom-color: #f43f5e !important; color: #fda4af !important; background: rgba(76,5,25,.45) !important; }
+
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white !important; color: black !important; }
+      .print-card { border: 2px solid #000 !important; background: #fff !important; color: #000 !important; }
+    }
+  </style>
+
+<!-- 1. Firebase libraries -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+<script>
+  // 2. Firebase configuration (same project as the reference app)
+  window.firebaseConfig = {
+    apiKey: "AIzaSyD1kMkporqrJFZNfEakmzQjFngkmF4detQ",
+    authDomain: "goya-english.firebaseapp.com",
+    databaseURL: "https://goya-english-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "goya-english",
+    storageBucket: "goya-english.firebasestorage.app",
+    messagingSenderId: "707378371042",
+    appId: "1:707378371042:web:a85b3c8d179156cc7a41bb",
+    measurementId: "G-9L8SR3268E"
+  };
+
+  // 3. Safe initialisation
+  if (!firebase.apps.length) {
+    firebase.initializeApp(window.firebaseConfig);
+  }
+  const db = firebase.database();
+  const auth = firebase.auth();
+
+  // =====================================================================
+  //   C O N F I G U R A C I O N   ->   esto es lo unico que hay que tocar
+  // =====================================================================
+
+  // (1) TU NOMBRE y TU CUENTA DE GOOGLE. El boton gris "Teacher" abre el
+  //     panel solo si entras con esta cuenta: no hay contrasenas escritas
+  //     en este archivo, la identidad la comprueba Google y Firebase.
+  //     >>> PON AQUI TU CORREO DE GOOGLE, y el mismo en reglas-firebase.json
+  window.TEACHER_NAME  = "Nuria Calvo";
+  window.TEACHER_EMAIL = "nuria.calvo@iesgoya.es";
+
+  // (2) LOS CODIGOS DE CLASE YA NO ESTAN EN ESTE ARCHIVO.
+  //     Viven en las reglas de Firebase, que son privadas: asi nadie puede
+  //     leerlos mirando el codigo fuente de la pagina. Para cambiarlos o
+  //     anadir uno, se editan alli (reglas-firebase.json) y ya esta.
+
+  // (3) SOLO ENTRAN LAS CUENTAS DE ESTE DOMINIO. Deja "" para no filtrar.
+  //     Firebase lo comprueba tambien por su cuenta, no solo la pagina.
+  window.SCHOOL_DOMAIN = "iesgoya.es";
+
+  // (4) MODO INVITADO: quien no tenga codigo (o no sea de tus grupos) puede
+  //     hacer los ejercicios y ver su nota, pero NO se guarda nada.
+  window.ALLOW_GUEST_MODE = true;
+
+  //     Texto que veran los alumnos debajo de la casilla del codigo ("" = nada).
+  window.CODE_HINT = "";
+
+  // (5) AVANZADO: otros profesores que compartan esta base de datos.
+  //     Su correo hay que anadirlo tambien en reglas-firebase.json.
+  window.EXTRA_TEACHERS = [
+    // { teacher: "Marta", email: "marta@iesgoya.es" }
+  ];
+
+  // ---- a partir de aqui no hace falta tocar nada ----
+  // Nodo propio de esta app (no se mezcla con las demas apps).
+  const RESULTS_NODE = "future_tenses_v1";
+
+  window.TEACHERS = [{ teacher: window.TEACHER_NAME, email: window.TEACHER_EMAIL }]
+    .concat(window.EXTRA_TEACHERS || []);
+</script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen gradient-bg flex flex-col selection:bg-emerald-500 selection:text-white">
+
+<!-- FLOATING TEACHER BUTTON -->
+<button onclick="showTeacherLogin()" style="position: fixed; top: 15px; right: 15px; z-index: 99999; padding: 10px 16px; background-color: #059669; color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.5);" class="no-print">
+  ⚙️ Teacher
+</button>
+
+  <!-- NAVBAR -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-filter blur-md sticky top-0 z-50 py-4 no-print">
+    <div class="max-w-7xl mx-auto px-4 md:px-8 flex justify-between items-center">
+      <div class="flex items-center space-x-4 cursor-pointer" onclick="goHome()">
+        <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-emerald-600 flex items-center justify-center font-black text-2xl md:text-3xl text-white shadow-lg shadow-emerald-500/40">
+          E
+        </div>
+        <div>
+          <h1 class="font-black text-2xl md:text-3xl text-white tracking-wider">ENGLISH<span class="text-emerald-400">PRO</span></h1>
+          <p class="text-sm font-semibold text-slate-400">Future Tenses · 7 modules · 3 levels</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div id="userInfoHeader" class="hidden text-right text-sm md:text-base text-slate-300 bg-slate-800/90 px-4 py-2 rounded-xl border border-slate-700"></div>
+
+        <button onclick="toggleFullScreen()" class="bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-400 px-5 py-3 rounded-2xl font-black text-sm md:text-base transition flex items-center gap-2 shadow-lg shadow-emerald-600/30">
+          <i class="fa-solid fa-expand text-lg"></i> <span class="hidden md:inline">Full Screen</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-grow max-w-6xl w-full mx-auto p-4 md:p-8 flex flex-col justify-center">
+
+    <!-- STUDENT REGISTRATION -->
+    <section id="viewRegistration" class="space-y-6 max-w-xl mx-auto w-full py-6">
+      <div class="text-center space-y-3">
+        <span class="px-4 py-1.5 bg-emerald-500/20 text-emerald-300 rounded-full text-xs md:text-sm font-extrabold uppercase tracking-widest border border-emerald-500/30">Student Portal</span>
+        <h2 class="text-3xl md:text-5xl font-black text-white">Master the Future! 🇬🇧</h2>
+        <p class="text-slate-300 text-base md:text-xl"><strong>7 modules</strong> on the future, each one with <strong>3 levels</strong>: choose the right option, fill in the gaps and translate into English.</p>
+      </div>
+
+      <form id="regForm" onsubmit="handleRegistration(event)" class="bg-slate-900/95 border-2 border-slate-800 p-6 md:p-10 rounded-3xl shadow-2xl space-y-5">
+        <div id="authGate" class="space-y-4">
+          <div class="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 text-left space-y-2">
+            <p class="text-base md:text-lg text-slate-200 font-bold"><i class="fa-solid fa-cloud text-emerald-400 mr-1"></i> Sign in and your work follows you</p>
+            <p class="text-sm md:text-base text-slate-400 leading-snug">Your marks are saved in <strong>your own account</strong>, so you can carry on from any computer, tablet or phone. Nobody else can see them.</p>
+          </div>
+          <button type="button" onclick="signInWithGoogle()" class="w-full bg-white hover:bg-slate-100 text-slate-800 font-black text-lg md:text-xl py-4 rounded-2xl transition flex items-center justify-center gap-3 shadow-lg">
+            <i class="fa-brands fa-google text-xl"></i> Sign in with Google
+          </button>
+          <p id="authError" class="hidden text-sm font-bold text-rose-400"></p>
+        </div>
+
+        <div id="regFields" class="hidden space-y-5">
+        <div>
+          <label class="block text-sm font-bold text-slate-300 uppercase tracking-wider mb-2">First name</label>
+          <input type="text" id="regFirstName" required placeholder="e.g. Alex" class="w-full bg-slate-950 border-2 border-slate-800 rounded-2xl px-5 py-4 text-lg md:text-xl text-white focus:outline-none focus:border-emerald-500 transition">
+        </div>
+        <div>
+          <label class="block text-sm font-bold text-slate-300 uppercase tracking-wider mb-2">Surname(s)</label>
+          <input type="text" id="regLastName" required placeholder="e.g. García López" class="w-full bg-slate-950 border-2 border-slate-800 rounded-2xl px-5 py-4 text-lg md:text-xl text-white focus:outline-none focus:border-emerald-500 transition">
+        </div>
+        <div id="accountBox">
+          <label class="block text-sm font-bold text-slate-300 uppercase tracking-wider mb-2">Your account</label>
+          <div class="w-full bg-slate-950 border-2 border-emerald-500/30 rounded-2xl px-5 py-4 flex items-center justify-between gap-3">
+            <span id="regEmailShown" class="text-base md:text-lg text-emerald-300 font-bold break-all"></span>
+            <button type="button" onclick="signOutNow()" class="text-xs text-slate-400 hover:text-white underline whitespace-nowrap">Not you?</button>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-bold text-slate-300 uppercase tracking-wider mb-2">Group / Grupo</label>
+          <select id="regGrade" required class="w-full bg-slate-950 border-2 border-slate-800 rounded-2xl px-5 py-4 text-lg md:text-xl text-white focus:outline-none focus:border-emerald-500 transition">
+            <option value="" disabled selected>Select your group...</option>
+            <option value="1ESO">1ESO</option>
+            <option value="2ESO">2ESO</option>
+            <option value="3ESO">3ESO</option>
+            <option value="4ESO">4ESO</option>
+            <option value="1BTO">1BTO</option>
+            <option value="2BTO">2BTO</option>
+          </select>
+        </div>
+        <div id="codeBox">
+          <label class="block text-sm font-bold text-amber-400 uppercase tracking-wider mb-2">Class code</label>
+          <input type="text" id="regClassCode" required placeholder="e.g. ABC123" autocomplete="off" autocapitalize="characters"
+            class="w-full bg-slate-950 border-2 border-amber-500/40 rounded-2xl px-5 py-4 text-lg md:text-xl text-white font-black tracking-widest uppercase focus:outline-none focus:border-amber-400 transition">
+          <p class="text-xs md:text-sm text-slate-400 mt-2 leading-snug">
+            Your own teacher gives you this code. Your work is sent <strong>only</strong> to that teacher.
+          </p>
+          <p id="regCodeHint" class="hidden text-sm font-bold text-amber-300 mt-2"></p>
+        </div>
+        <div id="guestNotice" class="hidden bg-slate-800/60 border border-slate-700 rounded-2xl p-4 text-left">
+          <p class="text-base font-black text-slate-200"><i class="fa-solid fa-user-clock text-slate-400 mr-1"></i> Guest mode</p>
+          <p class="text-sm text-slate-400 leading-snug mt-1">You can do every exercise and see your marks on screen, but <strong>nothing is saved</strong>: if you close the page, your progress is lost and your teacher does not get it.</p>
+          <button type="button" onclick="cancelGuestForm()" class="text-sm text-emerald-300 hover:text-white underline mt-2">I do have a code \u2192 sign in with Google</button>
+        </div>
+        <p id="regCodeError" class="hidden text-sm font-bold text-rose-400"></p>
+        <button type="submit" id="regSubmitBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xl md:text-2xl py-5 rounded-2xl transition shadow-xl shadow-emerald-600/40 flex items-center justify-center gap-3 mt-4">
+          Enter the Academy <i class="fa-solid fa-arrow-right"></i>
+        </button>
+        </div>
+
+        <div id="guestBox" class="hidden pt-2 text-center border-t border-slate-800 mt-2">
+          <p class="text-sm text-slate-400 mt-4 mb-3">Don’t have a code? You can still practise: your marks appear on screen and you can print them, but <strong>nothing is sent to any teacher</strong>.</p>
+          <p class="text-xs text-slate-500 mb-3 leading-snug"><i class="fa-solid fa-circle-info"></i> <strong>Other teachers:</strong> your students are welcome to use this app in guest mode. They get every exercise and their own report on screen — it just isn’t stored, so nothing reaches another teacher’s marks list.</p>
+          <button type="button" onclick="startGuestForm()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-black text-base md:text-lg py-4 rounded-2xl transition flex items-center justify-center gap-3">
+            <i class="fa-solid fa-user-clock"></i> Practise without a code
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- MAIN DASHBOARD -->
+    <section id="viewDashboard" class="hidden space-y-8 py-4">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-slate-900/90 border-2 border-slate-800 p-6 md:p-8 rounded-3xl">
+        <div>
+          <h2 class="text-3xl md:text-5xl font-black text-white" id="welcomeUserText">Hi!</h2>
+          <p class="text-slate-300 text-lg md:text-xl mt-1">Work through each module from <strong>level 1</strong> to <strong>level 3</strong>. Pass every level and send a <strong>screenshot</strong> of your result to your teacher.</p>
+        </div>
+        <button onclick="showGlobalReportModal()" class="w-full md:w-auto bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-lg md:text-xl px-8 py-5 rounded-2xl transition flex items-center justify-center gap-3 shadow-xl shadow-amber-500/30">
+          <i class="fa-solid fa-graduation-cap text-2xl"></i> FINAL REPORT
+        </button>
+      </div>
+
+      <div class="space-y-12" id="modulesGrid"></div>
+    </section>
+
+    <!-- THEORY GUIDE -->
+    <section id="viewLesson" class="hidden space-y-6 py-4">
+      <div class="flex justify-between items-center no-print">
+        <button onclick="goHome()" class="text-base md:text-lg font-bold text-slate-400 hover:text-white flex items-center gap-2">
+          <i class="fa-solid fa-chevron-left"></i> Back to dashboard
+        </button>
+        <span class="text-base font-black text-emerald-400 uppercase tracking-widest" id="lessonTopicCategory">Grammar Guide</span>
+      </div>
+
+      <div class="bg-slate-900/95 border-2 border-slate-800 rounded-3xl p-6 md:p-10 space-y-8 text-slate-100 text-xl md:text-2xl leading-relaxed shadow-2xl" id="lessonContent"></div>
+
+      <!-- HOW TO ANSWER -->
+      <div class="bg-emerald-950/40 border-2 border-emerald-500/40 rounded-3xl p-6 md:p-8 space-y-3">
+        <h3 class="text-emerald-300 font-black text-xl md:text-2xl flex items-center gap-3"><i class="fa-solid fa-pen-to-square"></i> How to answer</h3>
+        <ul id="howToList" class="text-base md:text-xl text-slate-200 space-y-2 list-disc list-inside"></ul>
+      </div>
+
+      <div class="flex justify-end no-print">
+        <button id="startQuizBtn" onclick="startCurrentQuiz()" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xl md:text-2xl px-10 py-5 rounded-2xl transition shadow-xl shadow-emerald-600/40 flex items-center justify-center gap-3">
+          Start <i class="fa-solid fa-play"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- LIVE EXERCISES -->
+    <section id="viewQuiz" class="hidden space-y-6 py-2">
+      <div class="flex justify-between items-center bg-slate-900 border-2 border-slate-800 p-5 md:p-6 rounded-2xl">
+        <div>
+          <span class="text-sm md:text-base text-emerald-400 font-extrabold uppercase tracking-wider" id="quizCategoryTitle">Exercises</span>
+          <h3 class="text-2xl md:text-4xl font-black text-white" id="quizQuestionCount">Question 1 of 50</h3>
+        </div>
+        <div class="text-right">
+          <span class="text-sm md:text-base text-slate-400 font-bold">Time</span>
+          <div id="quizTimer" class="font-mono font-black text-3xl md:text-5xl text-emerald-400">00:00</div>
+        </div>
+      </div>
+
+      <div class="w-full bg-slate-800 rounded-full h-4 overflow-hidden">
+        <div id="quizProgressBar" class="bg-emerald-500 h-4 rounded-full transition-all duration-300" style="width: 10%;"></div>
+      </div>
+
+      <div class="bg-slate-900/90 border-2 border-slate-800 p-6 md:p-10 rounded-3xl space-y-6 shadow-2xl">
+        <div id="quizTypeBadge"></div>
+        <p class="text-2xl md:text-4xl font-extrabold text-white leading-relaxed" id="quizSentence">Loading...</p>
+        <div id="verbFormsHint" class="hidden"></div>
+        <div id="quizFeedback" class="hidden p-6 md:p-8 rounded-2xl text-lg md:text-2xl font-bold border-2"></div>
+        <div class="flex justify-end no-print">
+          <button id="checkAnswerBtn" onclick="checkExercise()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xl md:text-2xl px-8 py-4 rounded-2xl transition shadow-lg shadow-emerald-600/30">
+            <i class="fa-solid fa-check mr-2"></i> Check
+          </button>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center pt-2 no-print">
+        <button onclick="quitQuiz()" class="text-base md:text-lg font-bold text-slate-400 hover:text-slate-200">Quit the test</button>
+        <button id="nextQuestionBtn" onclick="nextQuestion()" class="hidden bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xl md:text-2xl px-8 py-4 rounded-2xl transition shadow-lg shadow-emerald-600/30">
+          Next Sentence <i class="fa-solid fa-arrow-right ml-2"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- PARTIAL RESULT -->
+    <section id="viewResults" class="hidden space-y-6 py-6 max-w-3xl mx-auto w-full">
+      <div id="resultsCard" class="bg-slate-900 border-2 border-slate-800 p-8 md:p-10 rounded-3xl text-center space-y-6 shadow-2xl"></div>
+      <div id="reviewCard" class="bg-slate-900 border-2 border-slate-800 p-6 md:p-8 rounded-3xl space-y-3 shadow-2xl"></div>
+    </section>
+
+    <!-- FINAL GLOBAL REPORT -->
+    <section id="viewGlobalReport" class="hidden py-4 max-w-3xl mx-auto w-full">
+      <div id="screenCaptureArea" class="bg-slate-900 border-4 border-emerald-500/50 p-6 md:p-8 rounded-3xl space-y-5 shadow-2xl relative overflow-hidden print-card">
+        <div class="absolute -right-10 -bottom-10 opacity-5 pointer-events-none text-9xl font-black text-white select-none">
+          ENGLISHPRO
+        </div>
+
+        <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="text-xs font-black text-amber-400 uppercase tracking-widest">Official • Future Tenses · 7 modules · 3 levels</span>
+            </div>
+            <h2 class="text-2xl md:text-3xl font-black text-white mt-1">Final Assessment Report</h2>
+          </div>
+          <button onclick="goHome()" class="no-print text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-4 py-2 rounded-xl">
+            <i class="fa-solid fa-xmark"></i> Close
+          </button>
+        </div>
+
+        <div id="globalReportDetails" class="space-y-5"></div>
+      </div>
+    </section>
+
+    <!-- TEACHER PANEL -->
+    <section id="viewTeacher" class="hidden space-y-6 py-6">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+        <div>
+          <h2 class="text-3xl md:text-4xl font-black text-white" id="teacherTitle">Teacher Dashboard</h2>
+          <p id="teacherSubtitle" class="text-base text-slate-400">One row per student · click a student to see every attempt and every answer they wrote.</p>
+        </div>
+        <button onclick="goHome()" class="text-sm md:text-base bg-slate-800 text-slate-300 font-bold px-5 py-3 rounded-xl">Exit</button>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="teacherStatsGrid"></div>
+
+      <div class="flex flex-col md:flex-row gap-3 md:items-center">
+        <input id="teacherSearchInput" type="text" placeholder="🔍 Search student by name, surname, group or email..." oninput="filterTeacherTable(this.value)"
+          class="flex-1 bg-slate-900 border-2 border-slate-800 rounded-2xl px-5 py-3 text-base text-white focus:outline-none focus:border-emerald-500 transition">
+        <button id="teacherRefreshBtn" onclick="refreshTeacherDashboardNow()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-5 py-3 rounded-2xl transition flex items-center justify-center gap-2 whitespace-nowrap">
+          <i class="fa-solid fa-arrows-rotate"></i> Refresh
+        </button>
+        <button onclick="exportTeacherCsv()" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-5 py-3 rounded-2xl transition flex items-center justify-center gap-2 whitespace-nowrap">
+          <i class="fa-solid fa-file-csv"></i> Export CSV
+        </button>
+      </div>
+      <p id="teacherLastRefreshed" class="text-xs text-slate-500 -mt-2">Loading...</p>
+
+      <div class="bg-slate-900 border-2 border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm md:text-base text-slate-300">
+            <thead class="bg-slate-950 text-slate-400 uppercase font-bold text-xs" id="teacherTableHead"></thead>
+            <tbody id="teacherTableBody" class="divide-y divide-slate-800"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-slate-800/80 py-4 text-center text-sm text-slate-500 font-semibold no-print">
+    EnglishPRO Academy • Future Tenses · 7 modules · 3 levels • Designed for ESO &amp; Bachillerato
+  </footer>
+  <script>
+    /* ============================================================
+       CONTENIDO · 7 módulos × 3 niveles
+       Cada módulo trae: teoría, 10 de opción múltiple, 10 de huecos
+       y 10 de traducción.
+       En las traducciones, [a|b|c] dentro de una respuesta significa
+       "vale cualquiera de estas opciones" y [a|] que la palabra es
+       opcional: el corrector genera todas las combinaciones.
+       ============================================================ */
+    const MODULE_DEFS = [
+      {
+        id: "will", title: "1 · Future with Will", short: "Will", icon: "fa-wand-magic-sparkles",
+        desc: "Predicciones, decisiones rápidas, ofrecimientos y promesas.",
+        theory: `
+          <h2 class="text-3xl md:text-4xl font-black text-indigo-400 mb-3">1 · Future with Will</h2>
+          <p class="text-slate-200 text-lg md:text-2xl mb-6 leading-relaxed">El futuro "de siempre": lo que <strong>creemos</strong> que pasará, lo que <strong>decidimos en ese momento</strong>, lo que <strong>ofrecemos</strong> o <strong>prometemos</strong>. Equivale al futuro del español (<em>iré, comeré</em>).</p>
+          <div class="space-y-5">
+            <div class="bg-emerald-950/40 p-5 md:p-7 rounded-3xl border-2 border-emerald-500/50">
+              <h3 class="text-emerald-300 font-black text-xl md:text-2xl mb-3">⚙️ La forma</h3>
+              <p class="text-base md:text-xl text-slate-200 mb-2"><strong>Afirmativa:</strong> <strong>will</strong> + infinitivo, igual para <strong>todas</strong> las personas → I / she / they <strong>will go</strong> · contracción: <strong>I'll</strong>, <strong>she'll</strong>…</p>
+              <p class="text-base md:text-xl text-slate-200 mb-2"><strong>Negativa:</strong> <strong>won't</strong> (= will not) + infinitivo → It <strong>won't rain</strong>.</p>
+              <p class="text-base md:text-xl text-slate-200"><strong>Interrogativa:</strong> <strong>Will</strong> + sujeto + infinitivo → <strong>Will</strong> you <strong>help</strong> me?</p>
+              <p class="text-base md:text-lg text-amber-300 mt-3">⚠️ Sin <em>to</em> y sin <em>-s</em>: <s>I will to go</s> · <s>She will goes</s> → She <strong>will go</strong>.</p>
+            </div>
+            <div class="bg-slate-950 p-5 md:p-7 rounded-3xl border-2 border-slate-800">
+              <h3 class="text-amber-400 font-black text-xl md:text-2xl mb-3">📌 Cuándo se usa</h3>
+              <ul class="space-y-3 text-base md:text-xl text-slate-300">
+                <li><strong class="text-indigo-300">Predicciones y opiniones</strong> (sin pruebas, lo que pensamos):<br>I think it <u>will rain</u> tomorrow. · I'm sure you <u>will pass</u>.</li>
+                <li><strong class="text-indigo-300">Decisiones tomadas en el momento de hablar:</strong><br>A: The phone is ringing. B: I<u>'ll answer</u> it!</li>
+                <li><strong class="text-indigo-300">Ofrecimientos:</strong><br>That bag looks heavy. I<u>'ll carry</u> it for you. · <u>Shall</u> I open the window?</li>
+                <li><strong class="text-indigo-300">Promesas:</strong><br>I promise I <u>won't tell</u> anyone.</li>
+                <li><strong class="text-indigo-300">Peticiones:</strong><br><u>Will</u> you <u>close</u> the door, please?</li>
+                <li><strong class="text-indigo-300">Hechos futuros seguros:</strong><br>I <u>will be</u> sixteen next month.</li>
+                <li><strong class="text-indigo-300">Negarse (personas o cosas):</strong><br>The car <u>won't start</u>! · He <u>won't listen</u> to me.</li>
+              </ul>
+            </div>
+            <div class="bg-sky-950/30 p-5 md:p-7 rounded-3xl border-2 border-sky-500/40">
+              <h3 class="text-sky-300 font-black text-xl md:text-2xl mb-3">💡 SHALL</h3>
+              <p class="text-base md:text-xl text-slate-300">Con <strong>I</strong> y <strong>we</strong>, para ofrecer o sugerir se usa <strong>Shall</strong>: <em>Shall I help you?</em> (¿Te ayudo?) · <em>Shall we go?</em> (¿Nos vamos?)</p>
+            </div>
+            <div class="bg-amber-950/30 p-5 md:p-7 rounded-3xl border-2 border-amber-500/40">
+              <h3 class="text-amber-300 font-black text-xl md:text-2xl mb-3">⏰ Palabras que lo acompañan</h3>
+              <p class="text-base md:text-xl text-slate-300">I think, I'm sure, I hope, I expect, probably, perhaps, maybe, tomorrow, next week, in 2050, in the future.</p>
+              <p class="text-base md:text-lg text-slate-400 mt-2"><strong>probably</strong> va detrás de <em>will</em> y delante de <em>won't</em>: She'll <u>probably</u> come. · She <u>probably</u> won't come.</p>
+              <p class="text-base md:text-lg text-slate-400 mt-2">"No creo que venga" → lo más natural es <strong>I don't think</strong> he will come (mejor que <em>I think he won't come</em>).</p>
+            </div>
+          </div>`,
+        mcq: [
+          { q: "I think it _____ tomorrow.", options: ["will rain", "rains", "is raining", "will rains"], x: "Predicción basada en una opinión (I think) → will + infinitivo." },
+          { q: "The phone is ringing. — Don't worry, I _____ it.", options: ["will answer", "answer", "to answer", "answers"], x: "Decisión tomada en el momento de hablar → will." },
+          { q: "_____ you help me with my homework, please?", options: ["Will", "Do", "Are", "Shall"], x: "Petición → Will you…? ('Shall' solo con I / we)." },
+          { q: "I promise I _____ tell anyone your secret.", options: ["won't", "don't", "am not", "willn't"], x: "Promesa en negativa → won't (= will not)." },
+          { q: "In 2050 people _____ on Mars.", options: ["will live", "live", "are living", "will living"], x: "Predicción sobre el futuro → will + infinitivo." },
+          { q: "She _____ probably _____ late, as always.", options: ["will / be", "is / be", "will / is", "does / be"], x: "will + probably + infinitivo (be)." },
+          { q: "I'm sure you _____ your exam.", options: ["will pass", "pass", "are passing", "will to pass"], x: "Opinión con 'I'm sure' → will pass. Nunca 'will to'." },
+          { q: "It's hot in here. — I _____ the window.", options: ["will open", "open", "opened", "am open"], x: "Decisión espontánea / ofrecimiento → will open." },
+          { q: "My brother _____ 18 next month.", options: ["will be", "will have", "is going", "has"], x: "Hecho futuro seguro (edad) → will be. En inglés la edad va con BE." },
+          { q: "I don't think they _____ the match.", options: ["will win", "won't win", "win", "are winning"], x: "'I don't think' + will (la negación va en think, no en will)." }
+        ],
+        gaps: [
+          { text: "I think Real Madrid ___ the league this year.", hint: "win", answers: ["will win", "'ll win", "are going to win", "is going to win"], x: "Predicción de opinión → will win (también vale 'going to')." },
+          { text: "Don't worry. I ___ you with your suitcase.", hint: "help", answers: ["will help", "'ll help"], x: "Ofrecimiento → will help." },
+          { text: "I promise I ___ late again.", hint: "not / be", answers: ["won't be", "will not be"], x: "Promesa negativa → won't be." },
+          { text: "___ you ___ me a favour, please?", hint: "do", answers: [["will", "Will"], ["do"]], x: "Petición: Will + you + infinitivo." },
+          { text: "Maybe it ___ tomorrow.", hint: "snow", answers: ["will snow", "'ll snow"], x: "Predicción con 'maybe' → will snow." },
+          { text: "I'm sure you ___ this film. It's great!", hint: "love", answers: ["will love", "'ll love", "are going to love"], x: "Opinión con 'I'm sure' → will love." },
+          { text: "People ___ probably ___ flying cars in the future.", hint: "drive", answers: [["will"], ["drive"]], x: "will + probably + infinitivo." },
+          { text: "I'm hungry. — OK, I ___ you a sandwich.", hint: "make", answers: ["will make", "'ll make"], x: "Decisión en el momento / ofrecimiento → will make." },
+          { text: "The door ___. It's stuck!", hint: "not / open", answers: ["won't open", "will not open"], x: "Algo que 'se niega' a funcionar → won't open." },
+          { text: "I hope we ___ again soon.", hint: "meet", answers: ["will meet", "'ll meet", "meet"], x: "Deseo con 'I hope' → will meet (también vale 'meet')." }
+        ],
+        tr: [
+          { es: "Creo que lloverá mañana.", verb: "(rain)", en: "I think it will rain tomorrow.",
+            alts: ["I think [that|] it [will|is going to] rain tomorrow."], x: "Predicción de opinión → will rain." },
+          { es: "Te ayudaré con los deberes.", verb: "(help)", en: "I will help you with your homework.",
+            alts: ["I will help you with [your|the] homework."], x: "Ofrecimiento → will help." },
+          { es: "Prometo que no se lo diré a nadie.", verb: "(tell)", en: "I promise I won't tell anyone.",
+            alts: ["I promise [that|] I [won't|will not|will never] tell [anyone|anybody].", "I promise not to tell [anyone|anybody]."], x: "Promesa → won't tell." },
+          { es: "¿Me ayudarás con esta caja?", verb: "(help)", en: "Will you help me with this box?",
+            alts: ["Will you help me with this box[, please|]?"], x: "Petición → Will you…?" },
+          { es: "Seguramente llegarán tarde.", verb: "(arrive)", en: "They will probably arrive late.",
+            alts: ["They will probably [arrive|be|get there|get here] late.", "Probably they will [arrive|be] late.", "They are probably going to [arrive|be] late."], x: "will + probably + infinitivo." },
+          { es: "Estoy seguro de que aprobarás.", verb: "(pass)", en: "I'm sure you will pass.",
+            alts: ["I am sure [that|] you will pass [the exam|your exam|]."], x: "Opinión con 'I'm sure' → will pass." },
+          { es: "Te traeré un vaso de agua.", verb: "(bring)", en: "I will bring you a glass of water.",
+            alts: ["I will [bring|get] you a glass of water.", "I will [bring|get] a glass of water for you."], x: "Ofrecimiento → will bring." },
+          { es: "Los robots harán las tareas de casa en el futuro.", verb: "(do)", en: "Robots will do the housework in the future.",
+            alts: ["[Robots|The robots] will do [the housework|the household chores|the chores|our housework|the housework for us] in the future."], x: "Predicción sobre el futuro → will do." },
+          { es: "No creo que venga.", verb: "(come)", en: "I don't think he will come.",
+            alts: ["I [don't|do not] think [he|she] [will|is going to] come.", "I think [he|she] [won't|isn't going to] come."], x: "'I don't think' + will come. Sin sujeto en español: vale he o she." },
+          { es: "Cumpliré dieciséis años el mes que viene.", verb: "(be)", en: "I will be sixteen next month.",
+            alts: ["I [will be|will turn|am|am turning] sixteen next month."], x: "Edad → will be sixteen (en inglés la edad va con BE)." }
+        ]
+      },
+      {
+        id: "going", title: "2 · Be Going To", short: "Going to", icon: "fa-route",
+        desc: "Planes ya decididos y predicciones con pruebas.",
+        theory: `
+          <h2 class="text-3xl md:text-4xl font-black text-sky-400 mb-3">2 · Be Going To</h2>
+          <p class="text-slate-200 text-lg md:text-2xl mb-6 leading-relaxed">Es el <strong>«ir a + infinitivo»</strong> del español: <em>voy a estudiar</em>. Sirve para <strong>planes que ya hemos decidido</strong> y para <strong>predicciones con pruebas</strong> (lo estamos viendo).</p>
+          <div class="space-y-5">
+            <div class="bg-emerald-950/40 p-5 md:p-7 rounded-3xl border-2 border-emerald-500/50">
+              <h3 class="text-emerald-300 font-black text-xl md:text-2xl mb-3">⚙️ La forma</h3>
+              <p class="text-base md:text-xl text-slate-200 mb-2"><strong>Afirmativa:</strong> am / is / are + <strong>going to</strong> + infinitivo → I<strong>'m going to study</strong> · She<strong>'s going to study</strong></p>
+              <p class="text-base md:text-xl text-slate-200 mb-2"><strong>Negativa:</strong> I'm not / She isn't / They aren't + going to + infinitivo</p>
+              <p class="text-base md:text-xl text-slate-200"><strong>Interrogativa:</strong> <strong>Are</strong> you going to <strong>study</strong>? · What <strong>is</strong> she going to <strong>do</strong>?</p>
+              <p class="text-base md:text-lg text-amber-300 mt-3">⚠️ El verbo <strong>be</strong> es obligatorio y detrás va el <strong>infinitivo</strong>: <s>I going to study</s> · <s>I'm going to studying</s> → I'<strong>m</strong> going to <strong>study</strong>.</p>
+            </div>
+            <div class="bg-slate-950 p-5 md:p-7 rounded-3xl border-2 border-slate-800">
+              <h3 class="text-amber-400 font-black text-xl md:text-2xl mb-3">📌 Cuándo se usa</h3>
+              <ul class="space-y-3 text-base md:text-xl text-slate-300">
+                <li><strong class="text-sky-300">Planes e intenciones decididos ANTES de hablar:</strong><br>I've saved some money. I<u>'m going to buy</u> a new bike.</li>
+                <li><strong class="text-sky-300">Predicciones con pruebas</strong> (lo que vemos ahora nos lo indica):<br>Look at those black clouds! It<u>'s going to rain</u>.</li>
+                <li><strong class="text-sky-300">Algo que está a punto de pasar:</strong><br>Watch out! You<u>'re going to fall</u>!</li>
+              </ul>
+            </div>
+            <div class="bg-sky-950/30 p-5 md:p-7 rounded-3xl border-2 border-sky-500/40">
+              <h3 class="text-sky-300 font-black text-xl md:text-2xl mb-3">💡 GOING TO GO</h3>
+              <p class="text-base md:text-xl text-slate-300">Con los verbos <em>go</em> y <em>come</em> se suele usar el present continuous en lugar de repetir <em>go</em>: <em>I'm going to go to the cinema</em> = <strong>I'm going to the cinema</strong> tonight. Las dos son correctas.</p>
+            </div>
+            <div class="bg-amber-950/30 p-5 md:p-7 rounded-3xl border-2 border-amber-500/40">
+              <h3 class="text-amber-300 font-black text-xl md:text-2xl mb-3">⏰ Palabras que lo acompañan</h3>
+              <p class="text-base md:text-xl text-slate-300">tomorrow, tonight, next week / month / year, this weekend, this summer, soon, when I grow up, Look!, Watch out!, Be careful!</p>
+            </div>
+          </div>`,
+        mcq: [
+          { q: "Look at those black clouds! It _____.", options: ["is going to rain", "will rain", "rains", "going to rain"], x: "Predicción con pruebas (vemos las nubes) → be going to." },
+          { q: "I've decided. I _____ a new laptop with my savings.", options: ["am going to buy", "will buy", "buy", "going to buy"], x: "Plan ya decidido (I've decided) → be going to." },
+          { q: "_____ you going to watch the match tonight?", options: ["Are", "Do", "Will", "Is"], x: "Pregunta con 'you' → Are you going to…?" },
+          { q: "Be careful! You _____ that glass!", options: ["are going to drop", "will drop", "drop", "dropped"], x: "Está a punto de pasar (lo vemos) → are going to drop." },
+          { q: "They _____ going to travel this summer. They don't have enough money.", options: ["aren't", "don't", "won't", "isn't"], x: "Negativa: aren't going to (sujeto plural)." },
+          { q: "My sister _____ study medicine at university.", options: ["is going to", "are going to", "going to", "is going"], x: "Intención, sujeto singular → is going to + infinitivo." },
+          { q: "What _____ you going to do after school?", options: ["are", "do", "will", "is"], x: "Wh- + are + you + going to." },
+          { q: "She's pregnant. She _____ a baby in May.", options: ["is going to have", "going to have", "has", "is going to having"], x: "Predicción con pruebas → is going to have (+ infinitivo)." },
+          { q: "We _____ to paint the kitchen this weekend.", options: ["are going", "will", "going", "are go"], x: "Plan decidido → are going to paint." },
+          { q: "He _____ to call you later. He told me.", options: ["is going", "will", "goes", "going"], x: "Intención ya comunicada → is going to call." }
+        ],
+        gaps: [
+          { text: "Look at the sky! It ___.", hint: "rain", answers: ["is going to rain", "'s going to rain"], x: "Predicción con pruebas → is going to rain." },
+          { text: "I ___ harder next term. I've decided.", hint: "study", answers: ["am going to study", "'m going to study"], x: "Plan decidido → am going to study." },
+          { text: "We ___ our grandparents this weekend.", hint: "visit", answers: ["are going to visit", "'re going to visit", "are visiting", "'re visiting"], x: "Plan → are going to visit (también vale el present continuous)." },
+          { text: "She ___ to the party. She's too tired.", hint: "not / go", answers: ["isn't going to go", "is not going to go", "'s not going to go", "isn't going", "is not going", "'s not going"], x: "Negativa: isn't going to go (o isn't going)." },
+          { text: "___ you ___ a costume for Halloween?", hint: "wear", answers: [["are", "Are"], ["going to wear"]], x: "Pregunta: Are + you + going to + infinitivo." },
+          { text: "Watch out! You ___!", hint: "fall", answers: ["are going to fall", "'re going to fall"], x: "A punto de pasar → are going to fall." },
+          { text: "My parents ___ a new car next month.", hint: "buy", answers: ["are going to buy", "'re going to buy", "are buying"], x: "Plan decidido → are going to buy." },
+          { text: "What ___ you ___ to do this summer?", hint: "go", answers: [["are"], ["going"]], x: "What + are + you + going to + infinitivo." },
+          { text: "I ___ that film. It looks boring.", hint: "not / watch", answers: ["am not going to watch", "'m not going to watch"], x: "Negativa con I → am not going to watch." },
+          { text: "He's eaten too much. He ___ sick.", hint: "be", answers: ["is going to be", "'s going to be"], x: "Predicción con pruebas → is going to be." }
+        ],
+        tr: [
+          { es: "Voy a estudiar medicina.", verb: "(study)", en: "I am going to study medicine.",
+            alts: [], x: "'Ir a + infinitivo' → be going to." },
+          { es: "¡Mira esas nubes! Va a llover.", verb: "(rain)", en: "Look at those clouds! It is going to rain.",
+            alts: ["Look at those [clouds|black clouds]! It is going to rain."], x: "Predicción con pruebas → it's going to rain." },
+          { es: "¿Vas a ir a la fiesta de Ana?", verb: "(go)", en: "Are you going to go to Ana's party?",
+            alts: ["Are you going to Ana's party?"], x: "Plan → Are you going to go…? (o Are you going to Ana's party?)." },
+          { es: "No vamos a comprar un coche nuevo.", verb: "(buy)", en: "We aren't going to buy a new car.",
+            alts: ["We [aren't|are not] going to buy a new car."], x: "Negativa: aren't going to buy." },
+          { es: "¡Cuidado! Te vas a caer.", verb: "(fall)", en: "Be careful! You are going to fall.",
+            alts: ["[Be careful|Careful|Watch out|Look out]! You are going to fall [over|down|]."], x: "A punto de pasar → you're going to fall." },
+          { es: "Mi hermano va a empezar a trabajar en septiembre.", verb: "(start)", en: "My brother is going to start working in September.",
+            alts: ["My brother is going to [start working|start work|start to work|begin working|begin to work] in September."], x: "Plan → is going to start." },
+          { es: "¿Qué vas a hacer este fin de semana?", verb: "(do)", en: "What are you going to do this weekend?",
+            alts: ["What are you doing this weekend?"], x: "Plan → What are you going to do…? (también vale el present continuous)." },
+          { es: "Van a tener un bebé.", verb: "(have)", en: "They are going to have a baby.",
+            alts: ["They are having a baby."], x: "Predicción con pruebas / plan → are going to have." },
+          { es: "Este verano voy a aprender a nadar.", verb: "(learn)", en: "This summer I am going to learn to swim.",
+            alts: ["I am going to learn [to swim|how to swim|swimming] this summer."], x: "Intención → am going to learn." },
+          { es: "No voy a ver esa película.", verb: "(watch)", en: "I am not going to watch that film.",
+            alts: ["I am not going to [watch|see] that film."], x: "Negativa con I → I'm not going to watch." }
+        ]
+      },
+      {
+        id: "wvg", title: "3 · Will vs Be Going To", short: "Will vs Going", icon: "fa-code-compare",
+        desc: "¿Lo decides ahora o ya estaba decidido?",
+        theory: `
+          <h2 class="text-3xl md:text-4xl font-black text-violet-400 mb-3">3 · Will vs Be Going To</h2>
+          <p class="text-slate-200 text-lg md:text-2xl mb-6 leading-relaxed">Los dos hablan del futuro, pero no significan lo mismo. La clave es <strong>cuándo tomas la decisión</strong> y <strong>en qué te basas</strong> para predecir.</p>
+          <div class="space-y-5">
+            <div class="bg-slate-950 p-5 md:p-7 rounded-3xl border-2 border-slate-800">
+              <h3 class="text-amber-400 font-black text-xl md:text-2xl mb-3">🧠 Decisiones</h3>
+              <p class="text-base md:text-xl text-slate-300 mb-2"><strong class="text-indigo-300">WILL</strong> → decides <strong>ahora</strong>, en el momento de hablar:<br>A: We've run out of milk. B: Oh, I<u>'ll buy</u> some.</p>
+              <p class="text-base md:text-xl text-slate-300"><strong class="text-sky-300">GOING TO</strong> → ya lo habías decidido <strong>antes</strong>:<br>A: Why are you taking your bag? B: I<u>'m going to buy</u> some milk.</p>
+            </div>
+            <div class="bg-slate-950 p-5 md:p-7 rounded-3xl border-2 border-slate-800">
+              <h3 class="text-amber-400 font-black text-xl md:text-2xl mb-3">🔮 Predicciones</h3>
+              <p class="text-base md:text-xl text-slate-300 mb-2"><strong class="text-indigo-300">WILL</strong> → opinión, lo que crees (I think, I'm sure, probably):<br>I think it<u>'ll be</u> a good film.</p>
+              <p class="text-base md:text-xl text-slate-300"><strong class="text-sky-300">GOING TO</strong> → tienes una <strong>prueba</strong> delante:<br>Look at the queue! The film<u>'s going to be</u> really popular.</p>
+              <p class="text-base md:text-lg text-slate-400 mt-2">Cuando es solo una opinión, muchas veces valen los dos: <em>I think it will rain / it's going to rain.</em></p>
+            </div>
+            <div class="bg-emerald-950/40 p-5 md:p-7 rounded-3xl border-2 border-emerald-500/50">
+              <h3 class="text-emerald-300 font-black text-xl md:text-2xl mb-3">📋 Chuleta</h3>
+              <ul class="space-y-2 text-base md:text-xl text-slate-300">
+                <li><strong class="text-indigo-300">WILL:</strong> decisión en el momento · ofrecimiento (<em>I'll help you</em>) · promesa (<em>I'll call you</em>) · petición (<em>Will you…?</em>) · opinión (<em>I think…</em>)</li>
+                <li><strong class="text-sky-300">GOING TO:</strong> plan decidido (<em>I've decided…</em>) · prueba visible (<em>Look!</em>) · a punto de pasar (<em>Watch out!</em>)</li>
+                <li><strong class="text-violet-300">SHALL I / SHALL WE:</strong> para ofrecerse o sugerir (<em>Shall I carry it?</em>)</li>
+              </ul>
+            </div>
+            <div class="bg-rose-950/30 p-5 md:p-7 rounded-3xl border-2 border-rose-500/40">
+              <h3 class="text-rose-300 font-black text-xl md:text-2xl mb-3">🚫 Cuidado</h3>
+              <p class="text-base md:text-xl text-slate-300">"Voy a…" en español casi siempre es <strong>going to</strong>, y "te ayudo / te lo traigo" dicho en el momento es <strong>will</strong>: <em>Tengo frío. — Cierro la ventana.</em> → I<strong>'ll close</strong> the window.</p>
+            </div>
+          </div>`,
+        mcq: [
+          { q: "A: I'm cold. B: I _____ the window.", options: ["will close", "am going to close", "close", "closed"], x: "Decisión tomada en ese momento → will." },
+          { q: "A: Why are you buying flour? B: I _____ a cake.", options: ["am going to make", "will make", "make", "made"], x: "Plan decidido antes de comprar → going to." },
+          { q: "Look at that man! He _____ into the river!", options: ["is going to fall", "will fall", "falls", "fell"], x: "Lo estamos viendo, a punto de pasar → going to." },
+          { q: "I promise I _____ you back tomorrow.", options: ["will pay", "am going to pay", "pay", "paid"], x: "Promesa → will." },
+          { q: "We've bought the tickets. We _____ Paris in August.", options: ["are going to visit", "will visit", "visit", "visited"], x: "Plan ya decidido (tenemos entradas) → going to." },
+          { q: "A: There's no milk. B: Really? I _____ some at the supermarket.", options: ["will buy", "am going to buy", "bought", "buys"], x: "B se entera ahora y decide en el momento → will." },
+          { q: "She has booked a table. She _____ dinner with her friends tonight.", options: ["is going to have", "will have", "has", "had"], x: "Plan decidido (ha reservado) → going to." },
+          { q: "The sky is completely clear. It _____ a beautiful day.", options: ["is going to be", "will be", "is", "was"], x: "Predicción con pruebas (el cielo despejado) → going to." },
+          { q: "_____ I help you with those bags?", options: ["Shall", "Will", "Am", "Do"], x: "Ofrecimiento con I → Shall I…?" },
+          { q: "I've already decided: I _____ for a job this summer.", options: ["am going to look", "will look", "look", "looked"], x: "Decisión previa (I've already decided) → going to." }
+        ],
+        gaps: [
+          { text: "A: I've got a headache. B: Sit down. I ___ you an aspirin.", hint: "get", answers: ["will get", "'ll get"], x: "Ofrecimiento / decisión en el momento → will get." },
+          { text: "We ___ married in June. We've already booked the church.", hint: "get", answers: ["are going to get", "'re going to get", "are getting", "'re getting"], x: "Plan decidido → are going to get (o are getting)." },
+          { text: "Look! That car ___ the tree!", hint: "hit", answers: ["is going to hit", "'s going to hit"], x: "Lo estamos viendo → is going to hit." },
+          { text: "A: This bag is really heavy. B: I ___ it for you.", hint: "carry", answers: ["will carry", "'ll carry"], x: "Ofrecimiento → will carry." },
+          { text: "I ___ a vet when I grow up. I've always wanted to.", hint: "be", answers: ["am going to be", "'m going to be", "will be", "'ll be"], x: "Intención → am going to be (también vale will be)." },
+          { text: "Don't worry, I ___ anybody.", hint: "not / tell", answers: ["won't tell", "will not tell"], x: "Promesa → won't tell." },
+          { text: "She has bought some paint. She ___ her bedroom.", hint: "paint", answers: ["is going to paint", "'s going to paint"], x: "Plan decidido (ha comprado pintura) → is going to paint." },
+          { text: "I'm sure you ___ the new teacher.", hint: "like", answers: ["will like", "'ll like", "are going to like", "'re going to like"], x: "Opinión con 'I'm sure' → will like (también vale going to)." },
+          { text: "Why are you wearing a tracksuit? — I ___ for a run.", hint: "go", answers: ["am going to go", "'m going to go", "am going", "'m going"], x: "Plan ya decidido → am going to go (o am going)." },
+          { text: "It's late. I think I ___ to bed.", hint: "go", answers: ["will go", "'ll go"], x: "Decisión en el momento → will go." }
+        ],
+        tr: [
+          { es: "Hace frío. Cerraré la ventana.", verb: "(close)", en: "It's cold. I'll close the window.",
+            alts: ["It is cold. I will [close|shut] the window."], x: "Decisión en el momento → will." },
+          { es: "Ya lo he decidido: voy a estudiar en Inglaterra.", verb: "(study)", en: "I have already decided: I am going to study in England.",
+            alts: ["I have [already|] decided: I am going to study in England."], x: "Plan decidido → going to." },
+          { es: "¡Mira! Ese niño se va a caer.", verb: "(fall)", en: "Look! That boy is going to fall.",
+            alts: ["Look! That [boy|child|kid|little boy] is going to fall [over|down|]."], x: "Lo estamos viendo → going to." },
+          { es: "¿Te ayudo con las maletas?", verb: "(help)", en: "Shall I help you with the suitcases?",
+            alts: ["[Shall I|Can I] help you with [the|your] [suitcases|bags|luggage]?", "Do you want me to help you with [the|your] [suitcases|bags|luggage]?"], x: "Ofrecimiento con I → Shall I…?" },
+          { es: "Te prometo que te llamaré.", verb: "(call)", en: "I promise I will call you.",
+            alts: ["I promise [that|] I will [call|phone|ring] you."], x: "Promesa → will call." },
+          { es: "Hemos comprado los billetes: vamos a ir a Roma en agosto.", verb: "(go)", en: "We have bought the tickets: we are going to go to Rome in August.",
+            alts: ["We have bought the tickets: we are [going to go to|going to|going to travel to|going to visit|travelling to|flying to|visiting] Rome in August."], x: "Plan decidido → going to." },
+          { es: "Creo que te gustará este libro.", verb: "(like)", en: "I think you will like this book.",
+            alts: ["I think [that|] you [will|are going to] like this book."], x: "Opinión con 'I think' → will like." },
+          { es: "¡Cuidado! Vas a romper el jarrón.", verb: "(break)", en: "Be careful! You are going to break the vase.",
+            alts: ["[Be careful|Careful|Watch out|Look out]! You are going to break the vase."], x: "A punto de pasar → going to." },
+          { es: "Es tarde. Creo que me iré a casa.", verb: "(go)", en: "It's late. I think I'll go home.",
+            alts: ["It is late. I think I will go home."], x: "Decisión en el momento con 'I think' → will." },
+          { es: "No voy a cenar esta noche porque no tengo hambre.", verb: "(have dinner)", en: "I'm not going to have dinner tonight because I'm not hungry.",
+            alts: ["I am not going to [have dinner|eat dinner|have supper] tonight [because|as|since] I am not hungry."], x: "Decisión ya tomada → going to." }
+        ]
+      },
+      {
+        id: "fc", title: "4 · Future Continuous", short: "Future Cont.", icon: "fa-hourglass-half",
+        desc: "Lo que estará pasando en un momento del futuro.",
+        theory: `
+          <h2 class="text-3xl md:text-4xl font-black text-rose-400 mb-3">4 · Future Continuous</h2>
+          <p class="text-slate-200 text-lg md:text-2xl mb-6 leading-relaxed">Una acción que <strong>estará en marcha</strong> en un momento concreto del futuro. Equivale a <strong>«estaré + gerundio»</strong> (<em>mañana a esta hora estaré volando</em>).</p>
+          <div class="space-y-5">
+            <div class="bg-emerald-950/40 p-5 md:p-7 rounded-3xl border-2 border-emerald-500/50">
+              <h3 class="text-emerald-300 font-black text-xl md:text-2xl mb-3">⚙️ La forma</h3>
+              <p class="text-base md:text-xl text-slate-200 mb-2"><strong>Afirmativa:</strong> <strong>will be</strong> + verbo-<strong>ing</strong> (igual para todas las personas) → I<strong>'ll be working</strong>.</p>
+              <p class="text-base md:text-xl text-slate-200 mb-2"><strong>Negativa:</strong> <strong>won't be</strong> + verbo-ing → She <strong>won't be working</strong>.</p>
+              <p class="text-base md:text-xl text-slate-200"><strong>Interrogativa:</strong> <strong>Will</strong> you <strong>be working</strong>? · What <strong>will</strong> you <strong>be doing</strong>?</p>
+              <p class="text-base md:text-lg text-amber-300 mt-3">⚠️ No olvides el <strong>be</strong>: <s>I will working</s> → I will <strong>be</strong> working.</p>
+            </div>
+            <div class="bg-slate-950 p-5 md:p-7 rounded-3xl border-2 border-slate-800">
+              <h3 class="text-amber-400 font-black text-xl md:text-2xl mb-3">📌 Cuándo se usa</h3>
+              <ul class="space-y-3 text-base md:text-xl text-slate-300">
+                <li><strong class="text-rose-300">Acción en progreso en un momento del futuro:</strong><br>This time tomorrow I<u>'ll be lying</u> on the beach.</li>
+                <li><strong class="text-rose-300">Acción larga que "interrumpe" otra futura:</strong><br>When you arrive, we<u>'ll be having</u> dinner.</li>
+                <li><strong class="text-rose-300">Algo que pasará de forma normal, como parte de la rutina o de un plan:</strong><br>I<u>'ll be seeing</u> Ana at school tomorrow, so I'll give her the book.</li>
+                <li><strong class="text-rose-300">Preguntas educadas sobre los planes de alguien:</strong><br><u>Will</u> you <u>be using</u> the car tonight? (= ¿lo vas a necesitar? Es que yo lo quiero)</li>
+              </ul>
+            </div>
+            <div class="bg-sky-950/30 p-5 md:p-7 rounded-3xl border-2 border-sky-500/40">
+              <h3 class="text-sky-300 font-black text-xl md:text-2xl mb-3">🎞️ Piensa en una foto del futuro</h3>
+              <p class="text-base md:text-xl text-slate-300">Future continuous = foto de <strong>ese momento</strong>, con la acción a medias.</p>
+              <p class="text-base md:text-xl text-slate-300 mt-2">At 8 p.m. I<strong>'ll have</strong> dinner. → empezaré a cenar a las 8.<br>At 8 p.m. I<strong>'ll be having</strong> dinner. → a las 8 ya estaré cenando.</p>
+            </div>
+            <div class="bg-amber-950/30 p-5 md:p-7 rounded-3xl border-2 border-amber-500/40">
+              <h3 class="text-amber-300 font-black text-xl md:text-2xl mb-3">⏰ Palabras que lo acompañan</h3>
+              <p class="text-base md:text-xl text-slate-300">this time tomorrow / next week / next year, at 10 o'clock tomorrow, all day tomorrow, in ten years' time, when you arrive.</p>
+              <p class="text-base md:text-lg text-slate-400 mt-2">Los verbos de estado (know, like, want, understand…) no van en continuo: <s>I'll be knowing</s> → I<strong>'ll know</strong>.</p>
+            </div>
+          </div>`,
+        mcq: [
+          { q: "This time tomorrow I _____ on a beach in Mallorca.", options: ["will be lying", "will lie", "lie", "will be lie"], x: "Acción en progreso en un momento futuro → will be + -ing." },
+          { q: "Don't call me at 9. I _____ dinner then.", options: ["will be having", "will had", "have", "am have"], x: "A las 9 ya estaré cenando → will be having." },
+          { q: "At 10 o'clock tomorrow we _____ our English exam.", options: ["will be doing", "will doing", "are do", "be doing"], x: "will + be + -ing. Sin 'be' no es correcto." },
+          { q: "_____ you be using your laptop tonight? Can I borrow it?", options: ["Will", "Are", "Do", "Shall"], x: "Pregunta educada sobre planes → Will you be using…?" },
+          { q: "In ten years' time, I _____ in another country.", options: ["will be living", "will living", "am living", "live"], x: "Situación en progreso en un momento del futuro → will be living." },
+          { q: "She _____ at 3 p.m. She'll be at the dentist's.", options: ["won't be working", "won't working", "doesn't be working", "isn't work"], x: "Negativa: won't be + -ing." },
+          { q: "What _____ this time next week?", options: ["will you be doing", "will you doing", "are you be doing", "do you be doing"], x: "Wh- + will + sujeto + be + -ing." },
+          { q: "Tomorrow at 7 a.m. I _____ to school on the bus.", options: ["will be travelling", "will travelling", "am be travelling", "travel"], x: "Acción en progreso a una hora futura → will be travelling." },
+          { q: "All day tomorrow the workers _____ the road, so it'll be noisy.", options: ["will be repairing", "will repairing", "repair", "are repair"], x: "'All day tomorrow' → acción larga en progreso → will be repairing." },
+          { q: "I _____ you at the party tonight, so I can give you the book then.", options: ["will be seeing", "will seeing", "am see", "see"], x: "Algo que pasará de forma normal → will be seeing." }
+        ],
+        gaps: [
+          { text: "This time next week I ___ in the sea.", hint: "swim", answers: ["will be swimming", "'ll be swimming"], x: "'This time next week' → will be swimming." },
+          { text: "Don't phone at eight. We ___ dinner.", hint: "have", answers: ["will be having", "'ll be having"], x: "Acción en marcha a las ocho → will be having." },
+          { text: "At midnight they ___ still ___.", hint: "dance", answers: [["will"], ["be dancing"]], x: "will + still + be dancing." },
+          { text: "___ you ___ the car tomorrow? I need it.", hint: "use", answers: [["will", "Will"], ["be using"]], x: "Pregunta educada → Will you be using…?" },
+          { text: "I ___ at 5 p.m., so you can come round.", hint: "not / work", answers: ["won't be working", "will not be working"], x: "Negativa → won't be working." },
+          { text: "In 2040 most people ___ electric cars.", hint: "drive", answers: ["will be driving", "'ll be driving", "will drive", "'ll drive"], x: "Situación en marcha en el futuro → will be driving (también vale will drive)." },
+          { text: "What ___ you ___ at this time tomorrow?", hint: "do", answers: [["will"], ["be doing"]], x: "What + will + you + be doing." },
+          { text: "Tomorrow morning I ___ for my exam, so I can't go out.", hint: "study", answers: ["will be studying", "'ll be studying"], x: "Acción en progreso → will be studying." },
+          { text: "When you arrive, I ___ in the garden.", hint: "work", answers: ["will be working", "'ll be working"], x: "Ya estaré trabajando cuando llegues → will be working." },
+          { text: "Don't worry about the dog. We ___ after it while you're away.", hint: "look", answers: ["will be looking", "'ll be looking", "will look", "'ll look"], x: "Acción que durará todo el periodo → will be looking after (también vale will look after)." }
+        ],
+        tr: [
+          { es: "Mañana a esta hora estaré volando a Londres.", verb: "(fly)", en: "This time tomorrow I will be flying to London.",
+            alts: ["I will be flying to London [this time tomorrow|at this time tomorrow]."], x: "Acción en progreso en un momento futuro → will be flying." },
+          { es: "A las ocho estaremos cenando.", verb: "(have dinner)", en: "At eight we will be having dinner.",
+            alts: ["We will be [having dinner|eating dinner|having supper] at eight [o'clock|pm|]."], x: "Ya estaremos cenando → will be having dinner." },
+          { es: "¿Vas a usar el ordenador esta noche?", verb: "(use)", en: "Will you be using the computer tonight?",
+            alts: ["Will you be using the computer [tonight|this evening]?", "Are you [going to use|using] the computer [tonight|this evening]?"], x: "Pregunta educada sobre planes → Will you be using…?" },
+          { es: "No estaré trabajando el lunes.", verb: "(work)", en: "I won't be working on Monday.",
+            alts: ["I [won't|will not] be working on Monday.", "I am not working on Monday."], x: "Negativa → won't be working." },
+          { es: "Dentro de diez años estaré viviendo en otro país.", verb: "(live)", en: "In ten years' time I will be living in another country.",
+            alts: ["In ten years['|] time I will [be living|live] in [another|a different] country.", "In ten years I will [be living|live] in [another|a different] country."], x: "Situación en marcha en el futuro → will be living." },
+          { es: "¿Qué estarás haciendo mañana a las cinco?", verb: "(do)", en: "What will you be doing at five tomorrow?",
+            alts: ["What will you be doing tomorrow at five [o'clock|pm|in the afternoon|]?"], x: "What + will + you + be doing." },
+          { es: "Estaré estudiando todo el día de mañana.", verb: "(study)", en: "I will be studying all day tomorrow.",
+            alts: ["Tomorrow I will be studying all day."], x: "'Todo el día' → acción larga → will be studying." },
+          { es: "Cuando llegues, estaremos viendo el partido.", verb: "(arrive / watch)", en: "When you arrive, we will be watching the match.",
+            alts: ["When you [arrive|get here|come], we will be watching the match."], x: "Tras 'when' va presente (arrive); lo que estará en marcha → will be watching." },
+          { es: "El año que viene a esta hora estará trabajando en Londres.", verb: "(work)", en: "This time next year she will be working in London.",
+            alts: ["[He|She] will be working in London [this time next year|at this time next year]."], x: "Sin sujeto en español: vale he o she." },
+          { es: "No me llames a las nueve: estaré durmiendo.", verb: "(call / sleep)", en: "Don't call me at nine: I will be sleeping.",
+            alts: ["Don't [call|phone|ring] me at nine [o'clock|pm|]: I will be [sleeping|asleep].", "Don't [call|phone|ring] me at nine [o'clock|pm|] because I will be [sleeping|asleep]."], x: "A las nueve ya estaré durmiendo → will be sleeping." }
+        ]
+      },
+      {
+        id: "fp", title: "5 · Future Perfect", short: "Future Perfect", icon: "fa-flag-checkered",
+        desc: "Lo que ya habrá terminado antes de un momento del futuro.",
+        theory: `
+          <h2 class="text-3xl md:text-4xl font-black text-amber-400 mb-3">5 · Future Perfect</h2>
+          <p class="text-slate-200 text-lg md:text-2xl mb-6 leading-relaxed">Una acción que <strong>ya estará terminada antes</strong> de un momento del futuro. Equivale a <strong>«habré + participio»</strong> (<em>para las diez habré terminado</em>).</p>
+          <div class="space-y-5">
+            <div class="bg-emerald-950/40 p-5 md:p-7 rounded-3xl border-2 border-emerald-500/50">
+              <h3 class="text-emerald-300 font-black text-xl md:text-2xl mb-3">⚙️ La forma</h3>
+              <p class="text-base md:text-xl text-slate-200 mb-2"><strong>Afirmativa:</strong> <strong>will have</strong> + participio (3ª columna) → I<strong>'ll have finished</strong> · She<strong>'ll have gone</strong></p>
+              <p class="text-base md:text-xl text-slate-200 mb-2"><strong>Negativa:</strong> <strong>won't have</strong> + participio → We <strong>won't have finished</strong>.</p>
+              <p class="text-base md:text-xl text-slate-200"><strong>Interrogativa:</strong> <strong>Will</strong> you <strong>have finished</strong> by Friday?</p>
+              <p class="text-base md:text-lg text-amber-300 mt-3">⚠️ Siempre <strong>have</strong> (nunca <em>has</em>) y detrás el <strong>participio</strong>: <s>She will has went</s> → She will <strong>have gone</strong>.</p>
+            </div>
+            <div class="bg-slate-950 p-5 md:p-7 rounded-3xl border-2 border-slate-800">
+              <h3 class="text-amber-400 font-black text-xl md:text-2xl mb-3">📌 Cuándo se usa</h3>
+              <ul class="space-y-3 text-base md:text-xl text-slate-300">
+                <li><strong class="text-amber-300">Acción terminada antes de un momento futuro:</strong><br><u>By</u> 2030 I<u>'ll have finished</u> university.</li>
+                <li><strong class="text-amber-300">Antes de que ocurra otra acción futura</strong> (by the time + presente):<br><u>By the time</u> you <u>arrive</u>, we<u>'ll have had</u> dinner.</li>
+                <li><strong class="text-amber-300">Duración hasta un momento futuro:</strong><br>Next June my parents <u>will have been</u> married for twenty years.</li>
+              </ul>
+            </div>
+            <div class="bg-sky-950/30 p-5 md:p-7 rounded-3xl border-2 border-sky-500/40">
+              <h3 class="text-sky-300 font-black text-xl md:text-2xl mb-3">🔑 La palabra clave: BY</h3>
+              <p class="text-base md:text-xl text-slate-300"><strong>by</strong> = "para (antes de)": by ten o'clock, by Friday, by 2030, by then, by the end of the year.</p>
+              <p class="text-base md:text-xl text-slate-300 mt-2"><strong>by the time</strong> + <strong>present simple</strong>: By the time the film <strong>starts</strong>… (NO <s>will start</s>)</p>
+            </div>
+            <div class="bg-violet-950/30 p-5 md:p-7 rounded-3xl border-2 border-violet-500/40">
+              <h3 class="text-violet-300 font-black text-xl md:text-2xl mb-3">⚖️ Continuous o Perfect</h3>
+              <p class="text-base md:text-xl text-slate-300">At 10 I<strong>'ll be doing</strong> my homework. → a las 10 estaré haciéndolo (a medias).</p>
+              <p class="text-base md:text-xl text-slate-300">By 10 I<strong>'ll have done</strong> my homework. → a las 10 ya lo habré terminado.</p>
+            </div>
+          </div>`,
+        mcq: [
+          { q: "By 10 p.m. I _____ my homework.", options: ["will have finished", "will finished", "finish", "will have finish"], x: "'By 10 p.m.' → terminado antes → will have + participio." },
+          { q: "By the time you arrive, we _____ dinner.", options: ["will have had", "will have", "had", "have had"], x: "Terminado antes de que llegues → will have had." },
+          { q: "_____ you have finished the report by Friday?", options: ["Will", "Are", "Have", "Do"], x: "Pregunta: Will + sujeto + have + participio." },
+          { q: "By 2035 scientists _____ a cure for many illnesses.", options: ["will have found", "will found", "have found", "found"], x: "'By 2035' → will have found." },
+          { q: "She _____ the book by tomorrow; she's only on page 20.", options: ["won't have read", "won't read", "doesn't have read", "won't have readed"], x: "Negativa → won't have + participio (read)." },
+          { q: "By the time we _____ at the cinema, the film will have started.", options: ["get", "will get", "will have got", "got"], x: "Tras 'by the time' va present simple, no will." },
+          { q: "Next June my parents _____ married for twenty years.", options: ["will have been", "are", "have been", "will have be"], x: "Duración hasta un momento futuro → will have been." },
+          { q: "In two years' time, I _____ secondary school.", options: ["will have left", "will left", "have left", "am leaving"], x: "Terminado antes de ese momento → will have left." },
+          { q: "Don't worry. The painters _____ by the time you come home.", options: ["will have gone", "will have go", "have gone", "will gone"], x: "will have + participio (go → gone)." },
+          { q: "How many countries _____ by the end of your trip?", options: ["will you have visited", "did you visit", "have you visited", "you will have visited"], x: "Pregunta: How many + will + you + have + participio." }
+        ],
+        gaps: [
+          { text: "By next summer I ___ my driving test.", hint: "pass", answers: ["will have passed", "'ll have passed"], x: "'By next summer' → will have passed." },
+          { text: "By the time you get home, I ___ the cake.", hint: "make", answers: ["will have made", "'ll have made"], x: "Terminado antes de que llegues → will have made." },
+          { text: "___ you ___ the book by Monday?", hint: "finish", answers: [["will", "Will"], ["have finished"]], x: "Pregunta: Will + you + have finished." },
+          { text: "They ___ the new bridge by 2030.", hint: "build", answers: ["will have built", "'ll have built"], x: "build → built (participio irregular)." },
+          { text: "I ___ my homework by eight, so we can't play before then.", hint: "not / finish", answers: ["won't have finished", "will not have finished"], x: "Negativa → won't have finished." },
+          { text: "By the end of this year, she ___ in ten different countries.", hint: "work", answers: ["will have worked", "'ll have worked"], x: "'By the end of this year' → will have worked." },
+          { text: "The film ___ by the time we get there.", hint: "start", answers: ["will have started", "'ll have started", "will already have started", "will have already started"], x: "Empezará antes de que lleguemos → will have started." },
+          { text: "Next month we ___ here for five years.", hint: "live", answers: ["will have lived", "'ll have lived", "will have been living", "'ll have been living"], x: "Duración hasta un momento futuro → will have lived." },
+          { text: "By the time the teacher arrives, we ___ the classroom.", hint: "tidy", answers: ["will have tidied", "'ll have tidied"], x: "tidy → tidied (consonante + y)." },
+          { text: "Hurry up! By the time you ___ ready, the party will have finished.", hint: "get", answers: ["get"], x: "Tras 'by the time' → present simple, no will." }
+        ],
+        tr: [
+          { es: "Para las diez habré terminado los deberes.", verb: "(finish)", en: "By ten I will have finished my homework.",
+            alts: ["I will have finished [my|the] homework by ten [o'clock|pm|].", "By ten [o'clock|pm] I will have finished [my|the] homework."], x: "'Para las diez' = by ten → will have finished." },
+          { es: "Cuando llegues, ya nos habremos ido.", verb: "(arrive / leave)", en: "When you arrive, we will have already left.",
+            alts: ["[When|By the time] you [arrive|get here|get there|come], we will [have already left|already have left|have left|have already gone|already have gone|have gone]."], x: "Tras 'when' va presente (arrive); lo anterior → will have left." },
+          { es: "Para 2030 habré terminado la universidad.", verb: "(finish)", en: "By 2030 I will have finished university.",
+            alts: ["I will have [finished|graduated from|left] university by 2030."], x: "'Para 2030' → will have finished." },
+          { es: "¿Habrás leído el libro para el viernes?", verb: "(read)", en: "Will you have read the book by Friday?",
+            alts: [], x: "Pregunta: Will + you + have + read." },
+          { es: "No habrán terminado el puente para el verano.", verb: "(finish)", en: "They won't have finished the bridge by the summer.",
+            alts: ["They [won't|will not] have finished the bridge by summer."], x: "Negativa → won't have finished." },
+          { es: "El mes que viene habremos vivido aquí diez años.", verb: "(live)", en: "Next month we will have lived here for ten years.",
+            alts: ["Next month we will [have lived|have been living] here [for ten years|ten years]."], x: "Duración hasta un momento futuro → will have lived." },
+          { es: "Para cuando llegue el profesor, habremos acabado el examen.", verb: "(arrive / finish)", en: "By the time the teacher arrives, we will have finished the exam.",
+            alts: ["By the time the teacher [arrives|comes|gets here], we will have [finished|done] the exam."], x: "By the time + presente; lo anterior → will have finished." },
+          { es: "Mañana a estas horas ya habré hecho el examen.", verb: "(do)", en: "This time tomorrow I will have done the exam.",
+            alts: ["[This time tomorrow|By this time tomorrow] I will [have already done|already have done|have done|have taken|have sat|have finished] the exam."], x: "Terminado antes de ese momento → will have done." },
+          { es: "Para final de curso habrá leído diez libros.", verb: "(read)", en: "By the end of the year she will have read ten books.",
+            alts: ["By the end of the [year|school year|course|term] [he|she] will have read ten books."], x: "Sin sujeto en español: vale he o she." },
+          { es: "Para entonces, ya se habrán olvidado de nosotros.", verb: "(forget)", en: "By then, they will have already forgotten about us.",
+            alts: ["By then, they will [have already forgotten|already have forgotten|have forgotten] [about us|us]."], x: "'Para entonces' = by then → will have forgotten." }
+        ]
+      },
+      {
+        id: "pres", title: "6 · Present Tenses for the Future", short: "Present → Future", icon: "fa-calendar-days",
+        desc: "Horarios, citas ya fijadas y el presente tras when / as soon as.",
+        theory: `
+          <h2 class="text-3xl md:text-4xl font-black text-fuchsia-400 mb-3">6 · Present Tenses for the Future</h2>
+          <p class="text-slate-200 text-lg md:text-2xl mb-6 leading-relaxed">En inglés, igual que en español (<em>mañana ceno con Ana</em>), a veces hablamos del <strong>futuro con tiempos de presente</strong>. Hay tres casos.</p>
+          <div class="space-y-5">
+            <div class="bg-slate-950 p-5 md:p-7 rounded-3xl border-2 border-slate-800">
+              <h3 class="text-amber-400 font-black text-xl md:text-2xl mb-3">🚆 1. Present simple → horarios y calendarios</h3>
+              <p class="text-base md:text-xl text-slate-300 mb-2">Para cosas <strong>fijadas por un horario oficial</strong>: trenes, aviones, películas, clases, tiendas.</p>
+              <p class="text-base md:text-xl text-slate-300">The train <u>leaves</u> at 8:15 tomorrow. · The film <u>starts</u> at nine. · School <u>starts</u> on Monday. · What time <u>does</u> the shop <u>open</u>?</p>
+            </div>
+            <div class="bg-sky-950/30 p-5 md:p-7 rounded-3xl border-2 border-sky-500/40">
+              <h3 class="text-sky-300 font-black text-xl md:text-2xl mb-3">📅 2. Present continuous → planes ya acordados</h3>
+              <p class="text-base md:text-xl text-slate-300 mb-2">Para planes <strong>ya organizados</strong> (hay día, hora, entradas, otras personas…). Significa casi lo mismo que <strong>be going to</strong>:</p>
+              <p class="text-base md:text-xl text-slate-300">I<u>'m meeting</u> Ana tomorrow. = I'm going to meet Ana tomorrow.<br>We<u>'re flying</u> to Rome on Friday. · What <u>are</u> you <u>doing</u> this weekend?</p>
+              <p class="text-base md:text-lg text-amber-300 mt-3">⚠️ Necesita una <strong>expresión de futuro</strong> (tomorrow, on Friday, tonight, next week…); sin ella se entiende que es <strong>ahora</strong>:<br>I'm playing tennis. (ahora) · I'm playing tennis <u>tomorrow</u>. (futuro)</p>
+            </div>
+            <div class="bg-emerald-950/40 p-5 md:p-7 rounded-3xl border-2 border-emerald-500/50">
+              <h3 class="text-emerald-300 font-black text-xl md:text-2xl mb-3">⏳ 3. Present simple tras WHEN, AS SOON AS, BEFORE, AFTER, UNTIL, IF</h3>
+              <p class="text-base md:text-xl text-slate-300 mb-2">Aunque hablemos del futuro, detrás de estas palabras va <strong>presente</strong>, nunca <em>will</em>. Igual que en español usamos el subjuntivo (<em>cuando llegue</em>):</p>
+              <p class="text-base md:text-xl text-slate-300">I'll call you <u>when</u> I <u>arrive</u>. (NO <s>when I will arrive</s>)<br>We'll start <u>as soon as</u> everybody <u>is</u> here. · <u>If</u> it <u>rains</u>, we'll stay at home.</p>
+            </div>
+            <div class="bg-rose-950/30 p-5 md:p-7 rounded-3xl border-2 border-rose-500/40">
+              <h3 class="text-rose-300 font-black text-xl md:text-2xl mb-3">🧭 Resumen</h3>
+              <ul class="space-y-2 text-base md:text-xl text-slate-300">
+                <li>Horario oficial → <strong>present simple</strong> (The bus <em>leaves</em> at 7).</li>
+                <li>Plan con otras personas / día y hora → <strong>present continuous</strong> o going to (I'<em>m seeing</em> the doctor at 5).</li>
+                <li>Tras when / as soon as / until / if… → <strong>present simple</strong>.</li>
+              </ul>
+            </div>
+          </div>`,
+        mcq: [
+          { q: "Hurry up! The train _____ at 8:15.", options: ["leaves", "leave", "is leave", "will leaving"], x: "Horario oficial → present simple (3ª persona: leaves)." },
+          { q: "I _____ my grandmother tomorrow afternoon. I've already told her.", options: ["am visiting", "visit", "visiting", "will visiting"], x: "Plan ya acordado + 'tomorrow' → present continuous." },
+          { q: "I'll phone you when I _____ home.", options: ["get", "will get", "am get", "got"], x: "Tras 'when' (futuro) → present simple, nunca will." },
+          { q: "The concert _____ at nine o'clock tonight.", options: ["starts", "start", "is start", "starting"], x: "Horario → present simple." },
+          { q: "What _____ you doing on Saturday evening?", options: ["are", "do", "will", "is"], x: "Pregunta sobre planes → present continuous: What are you doing…?" },
+          { q: "We _____ to Rome on Friday. The flight is at 10.", options: ["are flying", "flies", "flying", "will flying"], x: "Plan fijado (hay vuelo) → are flying." },
+          { q: "As soon as she _____ the results, she'll tell us.", options: ["gets", "will get", "is getting", "got"], x: "Tras 'as soon as' → present simple." },
+          { q: "School _____ on 8 September this year.", options: ["starts", "starting", "will to start", "start"], x: "Calendario oficial → present simple." },
+          { q: "Don't go out until the rain _____.", options: ["stops", "will stop", "stop", "is stop"], x: "Tras 'until' → present simple." },
+          { q: "Sorry, I can't come. I _____ my cousins tonight.", options: ["am meeting", "meet", "meets", "am meet"], x: "Plan ya acordado + 'tonight' → present continuous." }
+        ],
+        gaps: [
+          { text: "The bus ___ at 7:30 tomorrow morning.", hint: "leave", answers: ["leaves", "is leaving", "'s leaving"], x: "Horario → leaves (también se oye 'is leaving')." },
+          { text: "We ___ dinner with Sara on Friday. We've booked a table.", hint: "have", answers: ["are having", "'re having", "are going to have", "'re going to have"], x: "Plan acordado → are having (o are going to have)." },
+          { text: "I'll call you as soon as I ___.", hint: "arrive", answers: ["arrive"], x: "Tras 'as soon as' → present simple." },
+          { text: "What time ___ the film ___?", hint: "start", answers: [["does"], ["start"]], x: "Horario → present simple: What time does the film start?" },
+          { text: "She ___ her friends this evening. It's all arranged.", hint: "meet", answers: ["is meeting", "'s meeting", "is going to meet", "'s going to meet"], x: "Plan acordado → is meeting." },
+          { text: "We won't start until everybody ___.", hint: "arrive", answers: ["arrives", "has arrived"], x: "Tras 'until' → present simple (arrives)." },
+          { text: "My flight ___ at 6 a.m., so I have to get up early.", hint: "take off", answers: ["takes off", "is taking off", "'s taking off"], x: "Horario → takes off." },
+          { text: "___ you ___ anything tomorrow night?", hint: "do", answers: [["are", "Are"], ["doing"]], x: "Planes → Are you doing anything…?" },
+          { text: "If it ___ tomorrow, we'll stay at home.", hint: "rain", answers: ["rains"], x: "Tras 'if' → present simple." },
+          { text: "I ___ to the dentist tomorrow at 5. I've got an appointment.", hint: "go", answers: ["am going", "'m going", "am going to go", "'m going to go"], x: "Cita fijada → am going (present continuous)." }
+        ],
+        tr: [
+          { es: "El tren sale a las ocho.", verb: "(leave)", en: "The train leaves at eight.",
+            alts: ["The train [leaves|is leaving|departs|goes] at eight [o'clock|am|pm|]."], x: "Horario → present simple." },
+          { es: "Mañana ceno con mis abuelos.", verb: "(have dinner)", en: "I'm having dinner with my grandparents tomorrow.",
+            alts: ["I am [having dinner|eating dinner|having supper|going to have dinner|going to eat dinner] with my grandparents tomorrow."], x: "Plan acordado + 'mañana' → present continuous (o going to)." },
+          { es: "Te llamaré cuando llegue a casa.", verb: "(call / get)", en: "I will call you when I get home.",
+            alts: ["I will [call|phone|ring] you when I [get home|arrive home|get back home|get back|arrive|get there]."], x: "Tras 'when' → present simple (get), nunca will." },
+          { es: "¿A qué hora empieza la película?", verb: "(start)", en: "What time does the film start?",
+            alts: ["[What time|When] does the film [start|begin]?", "What time is the film starting?"], x: "Horario → present simple." },
+          { es: "¿Qué haces este fin de semana?", verb: "(do)", en: "What are you doing this weekend?",
+            alts: ["What are you going to do this weekend?"], x: "Planes → present continuous (o going to)." },
+          { es: "Las clases empiezan el lunes.", verb: "(start)", en: "Classes start on Monday.",
+            alts: ["[Classes|Lessons] [start|begin|are starting] on Monday.", "School [starts|begins|is starting] on Monday."], x: "Calendario → present simple." },
+          { es: "No saldremos hasta que deje de llover.", verb: "(go out / stop)", en: "We won't go out until it stops raining.",
+            alts: ["We [won't|will not] go out until [it stops raining|the rain stops]."], x: "Tras 'until' → present simple (stops)." },
+          { es: "Esta tarde juego al tenis con Pablo.", verb: "(play)", en: "I'm playing tennis with Pablo this afternoon.",
+            alts: ["I am [playing|going to play] tennis with Pablo this [afternoon|evening]."], x: "Plan acordado → present continuous." },
+          { es: "En cuanto termine el examen, te enviaré un mensaje.", verb: "(finish / send)", en: "As soon as I finish the exam, I will send you a message.",
+            alts: ["[As soon as|When] I finish the exam, I will [send you a message|text you|message you|send you a text]."], x: "Tras 'as soon as' → present simple (finish)." },
+          { es: "Nuestro vuelo sale a las seis de la mañana.", verb: "(leave)", en: "Our flight leaves at six in the morning.",
+            alts: ["Our flight [leaves|departs|takes off|is leaving] at six [in the morning|am|o'clock in the morning]."], x: "Horario → present simple." }
+        ]
+      },
+      {
+        id: "review", title: "7 · Future Review", short: "Review", icon: "fa-trophy",
+        desc: "Todos los futuros mezclados, como en el examen.",
+        theory: `
+          <h2 class="text-3xl md:text-4xl font-black text-emerald-400 mb-3">7 · Future Review</h2>
+          <p class="text-slate-200 text-lg md:text-2xl mb-6 leading-relaxed">Aquí cae de todo. Antes de responder, pregúntate <strong>qué tipo de futuro</strong> es.</p>
+          <div class="space-y-5">
+            <div class="bg-slate-950 p-5 md:p-7 rounded-3xl border-2 border-slate-800">
+              <h3 class="text-emerald-300 font-black text-xl md:text-2xl mb-3">🗂️ Resumen</h3>
+              <ul class="space-y-3 text-base md:text-xl text-slate-300">
+                <li><strong class="text-indigo-300">will</strong> → opinión, decisión en el momento, ofrecimiento, promesa: <em>I think she'll win. · I'll help you.</em></li>
+                <li><strong class="text-sky-300">be going to</strong> → plan decidido, prueba visible: <em>I'm going to study. · Look! It's going to rain.</em></li>
+                <li><strong class="text-fuchsia-300">present continuous</strong> → plan acordado con día / hora: <em>I'm meeting Ana at six.</em></li>
+                <li><strong class="text-fuchsia-300">present simple</strong> → horarios, y tras when / as soon as / if / until: <em>The bus leaves at 7. · I'll call you when I arrive.</em></li>
+                <li><strong class="text-rose-300">future continuous</strong> (will be + -ing) → en marcha en un momento futuro: <em>This time tomorrow I'll be flying.</em></li>
+                <li><strong class="text-amber-300">future perfect</strong> (will have + participio) → terminado antes de un momento futuro: <em>By ten I'll have finished.</em></li>
+              </ul>
+            </div>
+            <div class="bg-emerald-950/40 p-5 md:p-7 rounded-3xl border-2 border-emerald-500/50">
+              <h3 class="text-emerald-300 font-black text-xl md:text-2xl mb-3">🔍 Busca la pista</h3>
+              <p class="text-base md:text-xl text-slate-300">I think / I'm sure / probably → <strong>will</strong> · Look! / Watch out! / I've decided → <strong>going to</strong> · tomorrow at 5 + plan con otros → <strong>present continuous</strong> · at 8:15 (horario) → <strong>present simple</strong> · this time tomorrow → <strong>will be + -ing</strong> · by / by the time → <strong>will have + participio</strong>.</p>
+            </div>
+            <div class="bg-amber-950/30 p-5 md:p-7 rounded-3xl border-2 border-amber-500/40">
+              <h3 class="text-amber-300 font-black text-xl md:text-2xl mb-3">✅ Repasa siempre esto antes de entregar</h3>
+              <p class="text-base md:text-xl text-slate-300">¿Has puesto <em>am / is / are</em> delante de <em>going to</em>? ¿Detrás de <em>will</em> va el infinitivo sin <em>to</em>? ¿Has puesto el <em>be</em> en <em>will be working</em>? ¿Hay un <em>when / as soon as / by the time</em> que te obliga a usar presente?</p>
+            </div>
+          </div>`,
+        mcq: [
+          { q: "A: I'm thirsty. B: I _____ you some water.", options: ["will get", "am going to get", "get", "got"], x: "Decisión en el momento / ofrecimiento → will." },
+          { q: "Look at that boy on the ice! He _____.", options: ["is going to fall", "will fall", "falls", "fell"], x: "Prueba visible → going to." },
+          { q: "This time next Monday I _____ around Paris.", options: ["will be walking", "will walked", "walk", "will have walk"], x: "En marcha en un momento futuro → will be walking." },
+          { q: "By the end of the month, we _____ the project.", options: ["will have finished", "will be finish", "finish", "are finish"], x: "'By the end of the month' → will have finished." },
+          { q: "The museum _____ at 10 a.m. on Sundays.", options: ["opens", "is open to", "will opened", "open"], x: "Horario → present simple." },
+          { q: "I _____ Laura tonight. We're going to the cinema.", options: ["am meeting", "meet", "will have met", "meets"], x: "Plan acordado + 'tonight' → present continuous." },
+          { q: "I'll tell him when I _____ him.", options: ["see", "will see", "am going to see", "saw"], x: "Tras 'when' → present simple." },
+          { q: "I think robots _____ most jobs in the future.", options: ["will do", "are doing", "do", "have done"], x: "Opinión con 'I think' → will." },
+          { q: "_____ you be using the printer this afternoon?", options: ["Will", "Are", "Do", "Have"], x: "Pregunta educada → Will you be using…?" },
+          { q: "We _____ a party next Saturday. Do you want to come?", options: ["are having", "have", "will have had", "had"], x: "Plan acordado → are having." }
+        ],
+        gaps: [
+          { text: "Look out! You ___ your coffee!", hint: "spill", answers: ["are going to spill", "'re going to spill"], x: "A punto de pasar → are going to spill." },
+          { text: "A: It's dark in here. B: I ___ the light on.", hint: "turn", answers: ["will turn", "'ll turn"], x: "Decisión en el momento → will turn." },
+          { text: "By the time you read this, I ___ the country.", hint: "leave", answers: ["will have left", "'ll have left"], x: "Terminado antes → will have left." },
+          { text: "At ten tomorrow I ___ my maths exam.", hint: "do", answers: ["will be doing", "'ll be doing", "am doing", "'m doing"], x: "En marcha a las diez → will be doing." },
+          { text: "The shop ___ at 9 a.m. tomorrow.", hint: "open", answers: ["opens", "is opening", "'s opening"], x: "Horario → opens." },
+          { text: "I'll text you when the film ___.", hint: "finish", answers: ["finishes", "has finished"], x: "Tras 'when' → present simple." },
+          { text: "We ___ to the beach on Sunday. It's all planned.", hint: "go", answers: ["are going", "'re going", "are going to go", "'re going to go"], x: "Plan acordado → are going." },
+          { text: "I'm sure you ___ a great time in London.", hint: "have", answers: ["will have", "'ll have", "are going to have", "'re going to have"], x: "Opinión con 'I'm sure' → will have." },
+          { text: "By June I ___ English for ten years.", hint: "study", answers: ["will have studied", "'ll have studied", "will have been studying", "'ll have been studying"], x: "Duración hasta un momento futuro → will have studied." },
+          { text: "___ you ___ your homework by six?", hint: "finish", answers: [["will", "Will"], ["have finished"]], x: "Pregunta en future perfect → Will you have finished…?" }
+        ],
+        tr: [
+          { es: "Creo que nevará esta noche.", verb: "(snow)", en: "I think it will snow tonight.",
+            alts: ["I think [that|] it [will|is going to] snow tonight."], x: "Opinión → will." },
+          { es: "¡Mira! El autobús se va a ir sin nosotros.", verb: "(leave)", en: "Look! The bus is going to leave without us.",
+            alts: ["Look! The bus is [going to leave|leaving|going to go] without us."], x: "Prueba visible → going to." },
+          { es: "Mañana a las diez estaré haciendo un examen.", verb: "(do)", en: "At ten tomorrow I will be doing an exam.",
+            alts: ["Tomorrow at ten [o'clock|] I will be [doing|taking|sitting|having] an exam.", "At ten [o'clock|] tomorrow I will be [doing|taking|sitting|having] an exam."], x: "En marcha a una hora futura → will be doing." },
+          { es: "Para junio habré aprobado el carné de conducir.", verb: "(pass)", en: "By June I will have passed my driving test.",
+            alts: ["I will have passed [my|the] [driving test|driving exam] by June.", "By June I will have got my driving licence."], x: "'Para junio' → will have passed." },
+          { es: "La película empieza a las nueve y media.", verb: "(start)", en: "The film starts at half past nine.",
+            alts: ["The film [starts|begins|is starting] at [half past nine|nine thirty|9:30]."], x: "Horario → present simple." },
+          { es: "Esta noche salgo con mis amigos.", verb: "(go out)", en: "I'm going out with my friends tonight.",
+            alts: ["I am [going out|going to go out] with my friends tonight."], x: "Plan acordado → present continuous." },
+          { es: "Te lo diré cuando lo sepa.", verb: "(tell / know)", en: "I will tell you when I know.",
+            alts: ["I will tell you when I [know|find out]."], x: "Tras 'when' → present simple (know)." },
+          { es: "No te preocupes, te ayudaré.", verb: "(help)", en: "Don't worry, I will help you.",
+            alts: ["Do not worry, I will help you."], x: "Ofrecimiento → will help." },
+          { es: "¿Estarás usando la bici esta tarde?", verb: "(use)", en: "Will you be using the bike this afternoon?",
+            alts: ["Will you be using the bike this [afternoon|evening]?", "Are you [using|going to use] the bike this [afternoon|evening]?"], x: "Pregunta educada → Will you be using…?" },
+          { es: "Cuando cumpla 18 años, habré terminado el instituto.", verb: "(be / finish)", en: "When I am 18, I will have finished secondary school.",
+            alts: ["When I [am|turn] 18, I will have [finished|left] [secondary school|school|high school]."], x: "Tras 'when' → presente (am); terminado antes → will have finished." }
+        ]
+      }
+    ];
+
+    /* ============================================================
+       PISTAS DE VOCABULARIO DEL NIVEL 3
+       Da las palabras de la frase, nunca la forma del verbo:
+       esa la tiene que pensar el alumno.
+       ============================================================ */
+    const GLOSS = {
+      "mañana": "tomorrow", "manana": "tomorrow", "esta noche": "tonight", "esta tarde": "this afternoon",
+      "este fin de semana": "this weekend", "este verano": "this summer", "el mes que viene": "next month",
+      "el año que viene": "next year", "el ano que viene": "next year", "a esta hora": "this time",
+      "mañana a esta hora": "this time tomorrow", "manana a esta hora": "this time tomorrow",
+      "mañana a estas horas": "this time tomorrow", "manana a estas horas": "this time tomorrow",
+      "a las ocho": "at eight", "a las nueve": "at nine", "a las cinco": "at five", "a las diez": "at ten",
+      "a las seis de la mañana": "at six in the morning", "a las seis de la manana": "at six in the morning",
+      "a las nueve y media": "at half past nine", "para las diez": "by ten", "para junio": "by June",
+      "para 2030": "by 2030", "para el viernes": "by Friday", "para el verano": "by the summer",
+      "para entonces": "by then", "para cuando": "by the time", "para final de curso": "by the end of the year",
+      "dentro de diez años": "in ten years' time", "dentro de diez anos": "in ten years' time",
+      "todo el día de mañana": "all day tomorrow", "todo el dia de manana": "all day tomorrow",
+      "el lunes": "on Monday", "en septiembre": "in September", "en agosto": "in August",
+      "en el futuro": "in the future", "cuando": "when", "en cuanto": "as soon as", "hasta que": "until",
+      "seguramente": "probably", "creo que": "I think", "no creo que": "I don't think",
+      "estoy seguro de que": "I'm sure", "prometo que": "I promise", "te prometo que": "I promise",
+      "a nadie": "anyone", "los deberes": "homework", "esta caja": "this box", "un vaso de agua": "a glass of water",
+      "los robots": "robots", "las tareas de casa": "the housework", "dieciséis años": "sixteen", "dieciseis anos": "sixteen",
+      "medicina": "medicine", "esas nubes": "those clouds", "la fiesta de ana": "Ana's party",
+      "un coche nuevo": "a new car", "cuidado": "be careful / watch out", "mi hermano": "my brother",
+      "un bebé": "a baby", "un bebe": "a baby", "nadar": "swim", "esa película": "that film", "esa pelicula": "that film",
+      "la ventana": "the window", "hace frío": "it's cold", "hace frio": "it's cold", "inglaterra": "England",
+      "ese niño": "that boy", "ese nino": "that boy", "las maletas": "the suitcases", "los billetes": "the tickets",
+      "roma": "Rome", "este libro": "this book", "el jarrón": "the vase", "el jarron": "the vase",
+      "es tarde": "it's late", "a casa": "home", "no tengo hambre": "I'm not hungry",
+      "volando": "fly", "londres": "London", "el ordenador": "the computer", "otro país": "another country",
+      "otro pais": "another country", "el partido": "the match", "no me llames": "don't call me",
+      "la universidad": "university", "el libro": "the book", "el puente": "the bridge", "aquí": "here", "aqui": "here",
+      "diez años": "ten years", "diez anos": "ten years", "el profesor": "the teacher", "el examen": "the exam",
+      "un examen": "an exam", "diez libros": "ten books", "de nosotros": "about us", "el tren": "the train",
+      "mis abuelos": "my grandparents", "la película": "the film", "la pelicula": "the film",
+      "las clases": "classes", "llover": "rain", "al tenis": "tennis", "un mensaje": "a message",
+      "nuestro vuelo": "our flight", "el autobús": "the bus", "el autobus": "the bus", "sin nosotros": "without us",
+      "el carné de conducir": "driving test / licence", "el carne de conducir": "driving test / licence",
+      "mis amigos": "my friends", "no te preocupes": "don't worry", "la bici": "the bike",
+      "18 años": "18", "18 anos": "18", "el instituto": "secondary school"
+    };
+
+    /* ============================================================
+       SINÓNIMOS ACEPTADOS
+       Todas las variantes de una línea valen igual: el corrector las
+       reduce a la primera antes de comparar.
+       ============================================================ */
+    const SWAPS = [
+      ["mobile", "mobile phone", "phone", "cell phone", "cellphone", "smartphone"],
+      ["mother", "mum", "mom", "mummy", "mommy"],
+      ["father", "dad", "daddy"],
+      ["grandparents", "grandmother and grandfather", "grandpa and grandma", "grandma and grandpa"],
+      ["children", "kids"], ["child", "kid"],
+      ["film", "movie"], ["films", "movies"],
+      ["cinema", "movie theater", "movie theatre"],
+      ["television", "tv", "telly"],
+      ["football", "soccer"],
+      ["match", "game"],
+      ["exam", "test"], ["exams", "tests"],
+      ["shop", "store"],
+      ["bike", "bicycle"],
+      ["licence", "license"],
+      ["timetable", "schedule"],
+      ["holiday", "holidays", "vacation"],
+      ["at weekends", "on weekends", "at the weekend", "on the weekend"],
+      ["homework", "the homework"],
+      ["dinner", "supper"],
+      ["tonight", "this evening"],
+      ["secondary school", "high school"],
+      ["suitcases", "cases"],
+      ["seven", "7"], ["eight", "8"], ["nine", "9"], ["ten", "10"], ["five", "5"], ["six", "6"],
+      ["sixteen", "16"], ["eighteen", "18"], ["twenty", "20"],
+      ["travelled", "traveled"], ["travelling", "traveling"],
+      ["favourite", "favorite"], ["colour", "color"], ["neighbour", "neighbor"], ["centre", "center"],
+      ["realise", "realize"]
+    ];
+
+    /* Expresiones de tiempo: se extraen y se ordenan, de modo que da
+       igual ponerlas al principio o al final de la frase. */
+    const TIME_RX = /\b(this time (?:tomorrow|next (?:week|month|year|monday))|by this time tomorrow|all day tomorrow|tomorrow (?:morning|afternoon|evening|night)|tomorrow|tonight|next (?:week|weekend|month|year|summer|monday|tuesday|wednesday|thursday|friday|saturday|sunday)|this (?:morning|afternoon|evening|week|weekend|month|year|summer|winter)|in the future|in (?:\d+|two|three|five|ten|twenty) years(?: s)? time|by (?:then|\d{4}|june|friday|monday|ten|six|the summer|summer)|soon|probably|already)\b/g;
+
+
+    /* ============================================================
+       LOS 3 NIVELES DE CADA MODULO
+       ============================================================ */
+    const PASS_THRESHOLD = 90;
+
+    const LEVELS = [
+      { n: 1, type: "mcq",       name: "Level 1 \u00b7 Choose the right option", tag: "L1", icon: "fa-list-check", pass: 90,
+        blurb: "Recognise the right form among four options.",
+        chip: "bg-sky-500/15 text-sky-300 border-sky-500/40",
+        how: [
+          "Read the sentence and choose <strong>one of the four options</strong>. The order changes every time, so do not learn the position.",
+          "Look at the <strong>clues</strong> (I think, Look!, I\u2019ve decided, tomorrow at 5, this time tomorrow, by, by the time, when\u2026): they almost always tell you which tense you need.",
+          "After answering you will see <strong>why</strong> that one is right and the others are not.",
+          "You need <strong>90%</strong> to pass this level."
+        ] },
+      { n: 2, type: "gap",       name: "Level 2 \u00b7 Fill in the gap",  tag: "L2", icon: "fa-pen-to-square", pass: 80,
+        blurb: "Now you write the verb form inside the sentence.",
+        chip: "bg-amber-500/15 text-amber-300 border-amber-500/40",
+        how: [
+          "Write <strong>only the missing verb</strong>. The infinitive is <strong>in brackets</strong>: <span class=\"font-mono text-amber-400\">(go)</span>.",
+          "If it says <span class=\"font-mono text-amber-400\">(not / go)</span>, write the <strong>whole negative</strong>: <em>won\u2019t go</em>, <em>isn\u2019t going to go</em>\u2026 Write every word of the verb: <em>will be working</em>, <em>will have finished</em>.",
+          "<strong>Contractions</strong> are accepted (I\u2019ll, won\u2019t, I\u2019m, isn\u2019t, aren\u2019t\u2026) and <strong>capital letters do not matter</strong>.",
+          "You need <strong>80%</strong> to pass this level."
+        ] },
+      { n: 3, type: "translate", name: "Level 3 \u00b7 Spanish into English", tag: "L3", icon: "fa-language", pass: 80,
+        blurb: "Write the whole sentence in English. They are short sentences.",
+        chip: "bg-fuchsia-500/15 text-fuchsia-300 border-fuchsia-500/40",
+        how: [
+          "Write the <strong>whole sentence</strong> in English. They are short, exam-style sentences.",
+          "The verb you need is <strong>in brackets, in the infinitive</strong>. <strong>You decide the tense</strong>: that is what is being assessed.",
+          "The <strong class=\"text-amber-300\">\ud83d\udca1 Vocabulary</strong> button gives you the words of the sentence, but <strong>never</strong> the form of the verb.",
+          "<strong>Many translations are accepted</strong>: synonyms (phone / mobile, film / movie, exam / test, match / game\u2026), British and American spelling, contractions (I will / I\u2019ll, will not / won\u2019t) and every future form that is also correct in that sentence (for example <em>I\u2019m meeting</em> or <em>I\u2019m going to meet</em> for a plan). Capital letters, commas and the full stop do not matter.",
+          "If the Spanish sentence has no subject (<em>no creo que venga</em>, <em>estará trabajando</em>\u2026), both <strong>he</strong> and <strong>she</strong> are accepted.",
+          "The time expression can go at the beginning or at the end: both are right.",
+          "You need <strong>80%</strong> to pass this level."
+        ] }
+    ];
+
+    const TYPES = {
+      mcq:       { label: "Choose the right one", badge: "bg-sky-500/15 text-sky-300 border-sky-500/40",        icon: "fa-list-check" },
+      gap:       { label: "Fill the gap", badge: "bg-amber-500/15 text-amber-300 border-amber-500/40",       icon: "fa-pen-to-square" },
+      translate: { label: "Translation", badge: "bg-fuchsia-500/15 text-fuchsia-300 border-fuchsia-500/40", icon: "fa-language" }
+    };
+
+    /* Baraja las opciones para que la correcta no caiga siempre en el mismo sitio */
+    function shuffleOptions(opts) {
+      const arr = opts.map((text, i) => ({ text: text, correct: i === 0 }));
+      for (let k = arr.length - 1; k > 0; k--) {
+        const r = Math.floor(Math.random() * (k + 1));
+        const t = arr[k]; arr[k] = arr[r]; arr[r] = t;
+      }
+      return arr;
+    }
+
+    /* "[a|b|c]" dentro de una respuesta = vale cualquiera de las opciones;
+       "[a|]" = palabra opcional. Se generan todas las combinaciones. */
+    function expandAlts(str) {
+      const m = /\[([^\[\]]*)\]/.exec(str);
+      if (!m) return [str.replace(/\s+/g, " ").replace(/\s+([,.?!])/g, "$1").trim()];
+      const head = str.slice(0, m.index), tail = str.slice(m.index + m[0].length);
+      return m[1].split("|").reduce((acc, opt) => acc.concat(expandAlts(head + opt + tail)), []);
+    }
+    function expandAnswers(list) {
+      const seen = new Set(), out = [];
+      list.forEach(a => expandAlts(a).forEach(v => {
+        const k = v.toLowerCase();
+        if (!seen.has(k)) { seen.add(k); out.push(v); }
+      }));
+      return out;
+    }
+
+    const MODULES = [];
+    LEVELS.forEach(lv => {
+      MODULE_DEFS.forEach((def, mi) => {
+        let questions;
+        if (lv.type === "mcq") {
+          questions = def.mcq.map((row, i) => ({
+            qid: `${def.id}_l1_${i}`, type: "mcq", text: row.q,
+            options: row.options, answers: [row.options[0]], x: row.x
+          }));
+        } else if (lv.type === "gap") {
+          questions = def.gaps.map((row, i) => ({
+            qid: `${def.id}_l2_${i}`, type: "gap", text: row.text, hint: row.hint,
+            answers: row.answers, x: row.x
+          }));
+        } else {
+          questions = def.tr.map((row, i) => ({
+            qid: `${def.id}_l3_${i}`, type: "translate", prompt: row.es, verbHint: row.verb,
+            answers: expandAnswers([row.en].concat(row.alts || [])), x: row.x
+          }));
+        }
+        MODULES.push({
+          id: `${def.id}_l${lv.n}`, moduleId: def.id, moduleIndex: mi, level: lv.n,
+          type: lv.type, icon: def.icon, levelIcon: lv.icon, levelName: lv.name,
+          chip: lv.chip, how: lv.how, levelTag: lv.tag,
+          title: `${def.title} \u00b7 ${lv.name.split(" \u00b7 ")[1]}`,
+          moduleTitle: def.title, short: `${def.short} ${lv.tag}`,
+          theory: def.theory, moduleDesc: def.desc,
+          pass: lv.pass, questions: questions, size: questions.length,
+          desc: lv.type === "mcq"
+            ? `${def.mcq.length} questions \u00b7 choose the right form among four options.`
+            : (lv.type === "gap"
+              ? `${def.gaps.length} sentences \u00b7 write the missing verb.`
+              : `${def.tr.length} sentences \u00b7 write them in English. You decide the tense.`)
+        });
+      });
+    });
+
+    function passMark(mod) { return (mod && mod.pass) || PASS_THRESHOLD; }
+    function passMarkOf(modId) { return passMark(MODULES.find(m => m.id === modId)); }
+    function modulesOfLevel(n) { return MODULES.filter(m => m.level === n); }
+
+    /* ============================================================
+       CHECKING
+       ============================================================ */
+    function normalize(str) {
+      return (str || "").toString()
+        .replace(/[\u2018\u2019\u02bc`\u00b4]/g, "'")
+        .trim()
+        .toLowerCase()
+        .replace(/[.,;!?]+$/g, "")
+        .replace(/\s+/g, " ");
+    }
+
+    // Para las traducciones: ignora comas, puntos y apostrofes (I've = Ive = I have? no, solo el apostrofe)
+    function normalizeLoose(str) {
+      return normalize(str).replace(/[.,;:!?"']/g, "").replace(/\s+/g, " ").trim();
+    }
+
+    function gradeMcq(userValue, q) {
+      return normalize(userValue) === normalize(q.answers[0]);
+    }
+
+    /* Las contracciones se expanden en los dos lados, as\u00ed que da igual que el
+       alumno escriba "haven't seen" o "have not seen". */
+    function expandGapForms(s) {
+      return s
+        .replace(/\bcan't\b/g, "can not").replace(/\bcannot\b/g, "can not")
+        .replace(/\bwon't\b/g, "will not")
+        .replace(/n't\b/g, " not")
+        .replace(/'m\b/g, " am").replace(/'re\b/g, " are")
+        .replace(/'ve\b/g, " have").replace(/'ll\b/g, " will").replace(/'d\b/g, " had")
+        .replace(/\s+/g, " ").trim();
+    }
+
+    /* Una frase puede tener uno o varios huecos.
+       answers = ["does"]                -> un hueco
+       answers = [["does"], ["speak"]]   -> un hueco por cada ___          */
+    function gapSets(q) {
+      return Array.isArray(q.answers[0]) ? q.answers : [q.answers];
+    }
+    function gapCount(text) { return (text.match(/_{3,}/g) || []).length; }
+    function fillGaps(text, valores) {
+      let i = 0;
+      return text.replace(/_{3,}/g, () => {
+        const v = valores[i++];
+        return (v === undefined || v === "") ? "______" : v;
+      });
+    }
+    function modelGapValues(q) { return gapSets(q).map(set => set[0]); }
+    function mayuscula(t) { return t ? t.charAt(0).toUpperCase() + t.slice(1) : t; }
+
+    function gradeOneGap(userValue, lista) {
+      const user = normalize(userValue);
+      if (!user) return false;
+      const userExp = expandGapForms(user);
+      return lista.some(ans => {
+        const a = normalize(ans);
+        return a === user || expandGapForms(a) === userExp;
+      });
+    }
+
+    function gradeGapValues(values, q) {
+      const sets = gapSets(q);
+      const partes = sets.map((set, i) => gradeOneGap(values[i], set));
+      return { ok: partes.every(Boolean), partes: partes };
+    }
+
+    function gradeGap(userValue, q) {          // compatibilidad: un solo hueco
+      return gradeGapValues([userValue], q).ok;
+    }
+
+    // Todas las alternativas de una linea de SWAPS se reducen a la primera,
+    // asi que da igual cual escriba el alumno.
+    const SWAP_RULES = (function () {
+      const list = [];
+      SWAPS.forEach(g => { g.slice(1).forEach(alt => list.push({ alt: alt, to: g[0] })); });
+      list.sort((a, b) => b.alt.length - a.alt.length);
+      return list.map(r => ({
+        re: new RegExp("\\b" + r.alt.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "g"),
+        to: r.to
+      }));
+    })();
+
+    /* Las contracciones se expanden ANTES de quitar el ap\u00f3strofo, para que
+       "I've lost" y "I have lost" acaben siendo la misma frase. */
+    function expandTrContractions(s) {
+      return s
+        .replace(/\bcan't\b/g, "can not").replace(/\bcannot\b/g, "can not")
+        .replace(/\bwon't\b/g, "will not")
+        .replace(/n't\b/g, " not")
+        .replace(/'m\b/g, " am").replace(/'re\b/g, " are")
+        .replace(/'ve\b/g, " have").replace(/'ll\b/g, " will").replace(/'d\b/g, " had")
+        .replace(/\s+/g, " ").trim();
+    }
+
+    /* "'s" puede ser IS, HAS o un posesivo: se prueban las tres lecturas. */
+    function sReadings(s) {
+      if (!/\w's\b/.test(s)) return [s];
+      return [
+        s.replace(/(\w)'s\b/g, "$1 is"),
+        s.replace(/(\w)'s\b/g, "$1 has"),
+        s.replace(/(\w)'s\b/g, "$1s")
+      ];
+    }
+
+    function canonCore(str) {
+      let out = normalizeLoose(str).replace(/[\u2013\u2014]/g, "-");
+      out = out.replace(/\boclock\b/g, " ");        // "at eight" = "at eight o'clock"
+      // "to" es palabra de pegamento, pero detrás de estos verbos cuenta:
+      // así no vale "will to go", "going study" ni "used play".
+      out = out.replace(/\b(going|used|use|will|would) to\b/g, "$1_to");
+      SWAP_RULES.forEach(r => { out = out.replace(r.re, r.to); });
+      const times = [];
+      out = out.replace(TIME_RX, m => { times.push(m.trim()); return " "; });
+      return (out + " " + times.sort().join(" ")).replace(/\s+/g, " ").trim();
+    }
+
+    function canonVariants(str) {
+      return sReadings(expandTrContractions(normalize(str))).map(canonCore);
+    }
+
+    function canonTranslation(str) { return canonCore(str); }
+
+    // Palabras de pegamento: no cuentan al comparar. Asi valen igual
+    // "lent Sara my bike" y "lent my bike to Sara", o que falte un articulo.
+    // "for" y "since" NO estan aqui a proposito: hay que escribirlos bien.
+    const GLUE = ["a", "an", "the", "to", "of", "at", "in", "on", "from", "with",
+                  "into", "onto", "and", "that", "up", "out", "down", "off", "away", "back", "as"];
+
+    function contentBag(canon) {
+      return canon.split(" ").filter(w => w && GLUE.indexOf(w) < 0).sort().join(" ");
+    }
+
+    function gradeTranslation(userValue, q) {
+      if (!normalizeLoose(userValue)) return false;
+      const mias = canonVariants(userValue);
+      const suyas = q.answers.reduce((acc, a) => acc.concat(canonVariants(a)), []);
+      if (mias.some(u => suyas.indexOf(u) >= 0)) return true;
+      const bolsasSuyas = suyas.map(contentBag);
+      return mias.map(contentBag).some(u => bolsasSuyas.indexOf(u) >= 0);
+    }
+
+    /* ---------- pista de vocabulario del nivel 3 ---------- */
+    function stripAccents(t) { return (t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
+    const GLOSS_KEYS = Object.keys(GLOSS).sort((a, b) => b.length - a.length);
+
+    function vocabHints(esText, max) {
+      const low = stripAccents((esText || "").toLowerCase());
+      const taken = [], found = [];
+      GLOSS_KEYS.forEach(k => {
+        const kk = stripAccents(k.toLowerCase());
+        const pos = low.indexOf(kk);
+        if (pos < 0) return;
+        const before = pos === 0 ? " " : low[pos - 1];
+        const after = (pos + kk.length >= low.length) ? " " : low[pos + kk.length];
+        if (/[a-z0-9]/.test(before) || /[a-z0-9]/.test(after)) return;
+        if (taken.some(t => pos < t[1] && pos + kk.length > t[0])) return;
+        taken.push([pos, pos + kk.length]);
+        found.push({ pos: pos, es: k, en: GLOSS[k] });
+      });
+      found.sort((a, b) => a.pos - b.pos);
+      return found.slice(0, max || 7);
+    }
+
+    /* ============================================================
+       HELPERS
+       ============================================================ */
+    let currentUser = null;
+    let currentTeacherLoggedIn = null;
+    let currentModuleId = null;
+    let currentQuestions = [];
+    let currentQuestionIdx = 0;
+    let currentScore = 0;
+    let quizTimerInterval = null;
+    let quizSeconds = 0;
+    let answered = false;
+    let attemptLog = [];
+
+    function escapeHtml(str) {
+      return (str || "").toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+    function currentModule() { return MODULES.find(m => m.id === currentModuleId); }
+    function fullName() { return currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : ""; }
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+    function storageGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+    function storageSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+    function storageDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+    function progressKey(modId) { return `englishpro_future_progress_${userScopeKey()}_${modId}`; }
+
+    /* ---------- class codes ---------- */
+    function normalizeCode(c) { return (c || "").toString().trim().toUpperCase().replace(/\s+/g, ""); }
+    function isSchoolAccount(mail) {
+      const dom = (window.SCHOOL_DOMAIN || "").toString().trim().toLowerCase();
+      if (!dom) return true;
+      return (mail || "").toString().trim().toLowerCase().endsWith("@" + dom);
+    }
+    function findTeacher(mail) {
+      const m = (mail || "").toString().trim().toLowerCase();
+      if (!m) return null;
+      return (window.TEACHERS || []).find(t => (t.email || "").toString().trim().toLowerCase() === m) || null;
+    }
+    function userScopeKey() {
+      if (!currentUser) return "";
+      const who = (currentUser.uid || currentUser.email || fullName() || "anon").toLowerCase();
+      return `${currentUser.guest ? "GUEST" : normalizeCode(currentUser.classCode)}_${who}`;
+    }
+    /* Cada alumno cuelga de su propia cuenta:
+       NODO / CODIGO DE CLASE / uid del alumno / { profile, attempts } */
+    function studentRef(code, uid) { return db.ref(`${RESULTS_NODE}/${normalizeCode(code)}/${uid}`); }
+    function myStudentRef() { return studentRef(currentUser.classCode, currentUser.uid); }
+    function myAttemptsRef() { return myStudentRef().child("attempts"); }
+
+    function saveMyProfile(propagarError) {
+      if (!currentUser || currentUser.guest || !currentUser.uid) return Promise.resolve();
+      const p = myStudentRef().child("profile").set({
+        firstName: currentUser.firstName, lastName: currentUser.lastName,
+        grade: currentUser.grade, email: currentUser.email, updated: Date.now()
+      });
+      return propagarError ? p : p.catch(err => console.error("No se pudo guardar el perfil:", err));
+    }
+
+    /* ---------- local copy of the results (guest mode / no connection) ---------- */
+    function localResultsKey() { return `englishpro_future_results_${userScopeKey()}`; }
+    function localResults() {
+      try { return JSON.parse(storageGet(localResultsKey()) || "[]"); } catch (e) { return []; }
+    }
+    function saveResultLocally(record) {
+      const light = Object.assign({}, record);
+      delete light.answers;                       // keep localStorage small
+      const all = localResults().concat([light]).slice(-60);
+      storageSet(localResultsKey(), JSON.stringify(all));
+    }
+    function fetchMyRecords(cb) {
+      if (!currentUser) { cb([]); return; }
+      if (currentUser.guest || !currentUser.uid) { cb(localResults()); return; }
+      myAttemptsRef().once("value", (snapshot) => {
+        const out = [];
+        snapshot.forEach(childSnap => { if (childSnap.val()) out.push(childSnap.val()); });
+        if (out.length) storageSet(localResultsKey(), JSON.stringify(out.map(r => { const x = Object.assign({}, r); delete x.answers; return x; }).slice(-60)));
+        cb(out.length ? out : localResults());
+      }, (err) => { console.error("Could not load previous results:", err); cb(localResults()); });
+    }
+
+    function questionBodyHtml(q) {
+      const inp = 'autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"';
+      if (q.type === "mcq") {
+        const opts = q.shuffled || (q.shuffled = shuffleOptions(q.options));
+        return `
+          <p class="text-xs md:text-sm font-black uppercase tracking-widest text-slate-400 mb-2">Choose the right option</p>
+          <p class="text-2xl md:text-4xl font-extrabold text-white mb-6 leading-snug">${escapeHtml(q.text)}</p>
+          <div id="mcqOptions" class="grid grid-cols-1 gap-3">
+            ${opts.map((o, i) => `
+              <button type="button" class="mcq-opt text-left w-full px-5 py-4 rounded-2xl border-2 border-slate-700 bg-slate-950 hover:border-sky-500 text-lg md:text-2xl font-bold text-slate-100 transition"
+                      data-value="${escapeHtml(o.text)}" onclick="pickOption(this)">
+                <span class="inline-block w-8 h-8 mr-3 rounded-lg bg-slate-800 text-sky-300 text-base font-black text-center leading-8">${String.fromCharCode(65 + i)}</span>${escapeHtml(o.text)}
+              </button>`).join("")}
+          </div>
+          <input type="hidden" id="ans_0" class="quiz-input" value="">`;
+      }
+      if (q.type === "gap") {
+        const sets = gapSets(q);
+        const trozos = q.text.split(/_{3,}/);
+        let html = "";
+        trozos.forEach((t, i) => {
+          html += escapeHtml(t);
+          if (i >= trozos.length - 1) return;
+          const set = sets[i] || sets[0] || [""];
+          const width = Math.max(7, Math.max.apply(null, set.map(a => a.length)) + 3);
+          html += `<input type="text" id="ans_${i}" class="quiz-input gap-input text-xl md:text-3xl" style="width:${width}ch" ${inp}>`;
+        });
+        return `<p class="text-2xl md:text-4xl font-extrabold text-white leading-relaxed">${html} <span class="text-amber-400 font-mono text-xl md:text-2xl">(${escapeHtml(q.hint)})</span></p>`;
+      }
+      return `
+        <p class="text-xs md:text-sm font-black uppercase tracking-widest text-slate-400 mb-2">Translate into English</p>
+        <p class="text-2xl md:text-4xl font-extrabold text-white mb-4" lang="es">${escapeHtml(q.prompt)}
+          <span class="text-amber-400 font-mono text-xl md:text-2xl whitespace-nowrap">${escapeHtml(q.verbHint || "")}</span></p>
+        <input type="text" id="ans_0" class="quiz-input gap-input wide text-lg md:text-2xl" placeholder="Write the whole sentence in English" ${inp}>`;
+    }
+
+    function questionInputs() {
+      return Array.prototype.slice.call(document.querySelectorAll(".quiz-input")).filter(i => i.type !== "hidden");
+    }
+
+    /* Nivel 1: marcar una opci\u00f3n (todav\u00eda no corrige; corrige el bot\u00f3n Comprobar) */
+    function pickOption(btn) {
+      if (answered) return;
+      document.querySelectorAll(".mcq-opt").forEach(b => {
+        b.classList.remove("border-sky-400", "bg-sky-950/40");
+        b.setAttribute("aria-pressed", "false");
+      });
+      btn.classList.add("border-sky-400", "bg-sky-950/40");
+      btn.setAttribute("aria-pressed", "true");
+      const hidden = document.getElementById("ans_0");
+      if (hidden) hidden.value = btn.dataset.value;
+      const check = document.getElementById("checkAnswerBtn");
+      if (check) check.disabled = false;
+    }
+
+    function questionPromptText(q) {
+      if (q.type === "gap") return `${q.text.replace(/_{3,}/g, "______")} (${q.hint})`;
+      if (q.type === "mcq") return q.text;
+      return q.prompt;
+    }
+
+    function modelAnswer(q) {
+      if (q.type === "gap") return mayuscula(fillGaps(q.text, modelGapValues(q)));
+      return q.answers.join("  |  ");
+    }
+
+    function toggleQuizHint() {
+      const box = document.getElementById("hintBox");
+      if (box) box.classList.toggle("hidden");
+    }
+
+    function studentStrip() {
+      if (!currentUser) return "";
+      return `
+        <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-col md:flex-row md:justify-between md:items-center gap-3 text-left">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
+            <div>
+              <p class="text-[11px] text-slate-400 uppercase font-bold tracking-wider">Name</p>
+              <p class="text-lg md:text-xl font-black text-white leading-tight">${escapeHtml(currentUser.firstName)}</p>
+            </div>
+            <div>
+              <p class="text-[11px] text-slate-400 uppercase font-bold tracking-wider">Surname(s)</p>
+              <p class="text-lg md:text-xl font-black text-emerald-300 leading-tight">${escapeHtml(currentUser.lastName)}</p>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2 text-sm font-bold">
+            <span class="px-3 py-1 rounded-lg bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"><i class="fa-solid fa-users"></i> Group: ${escapeHtml(currentUser.grade)}</span>
+            ${currentUser.guest
+              ? `<span class="px-3 py-1 rounded-lg bg-slate-700/40 text-slate-300 border border-slate-600"><i class="fa-solid fa-user-clock"></i> Guest · not saved</span>`
+              : `<span class="px-3 py-1 rounded-lg bg-amber-500/15 text-amber-300 border border-amber-500/30"><i class="fa-solid fa-key"></i> Code: ${escapeHtml(currentUser.classCode)}</span>`}
+          </div>
+        </div>`;
+    }
+
+    /* ============================================================
+       THEORY PAGE
+       ============================================================ */
+    function buildLesson(mod) {
+      const ejemplos = {
+        mcq: `<p class="text-base md:text-xl text-slate-300">Look at those black clouds! It ______.</p>
+              <p class="mt-2 text-base md:text-xl text-slate-200">You choose: <strong class="text-emerald-300">is going to rain</strong> (y no <em>will rain</em>, <em>rains</em> ni <em>will be raining</em>).</p>`,
+        gap: `<p class="text-base md:text-xl text-slate-300">This time tomorrow I ______ to London. <span class="font-mono text-amber-400">(fly)</span></p>
+              <p class="mt-2 text-base md:text-xl text-slate-200">You write only: <strong class="text-emerald-300">will be flying</strong></p>`,
+        translate: `<p class="text-base md:text-xl text-slate-300" lang="es">Te llamaré cuando llegue a casa. <span class="font-mono text-amber-400">(call / get)</span></p>
+              <p class="mt-2 text-base md:text-xl text-slate-200">You write: <strong class="text-emerald-300">I'll call you when I get home.</strong></p>
+              <p class="mt-2 text-base md:text-lg text-slate-400">Nobody tells you which future to use: that is your decision.</p>`
+      };
+      return `
+        ${mod.theory}
+        <div class="bg-slate-950 p-5 md:p-7 rounded-3xl border-2 border-slate-800 mt-8">
+          <h3 class="text-xl md:text-2xl font-black text-white mb-3">
+            <i class="fa-solid ${mod.levelIcon} text-emerald-400 mr-2"></i>${mod.levelName}</h3>
+          <ul class="list-disc list-inside space-y-2 text-base md:text-xl text-slate-300">
+            ${mod.how.map(li => `<li>${li}</li>`).join("")}
+          </ul>
+          <div class="mt-5 bg-slate-900/80 border border-slate-700 rounded-2xl p-4 md:p-5">
+            <p class="text-xs md:text-sm font-black uppercase tracking-widest text-slate-500 mb-2">Example</p>
+            ${ejemplos[mod.type]}
+          </div>
+          <p class="mt-5 text-base md:text-xl text-slate-300">
+            <i class="fa-solid fa-flag-checkered text-amber-400"></i>
+            ${mod.size} exercises \u00b7 you need <strong class="text-emerald-300">${mod.pass}%</strong> to pass this level.</p>
+        </div>`;
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => alert(`Error: ${err.message}`));
+      } else if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+
+    let currentAuthUser = null;
+
+    function showAuthError(msg) {
+      const el = document.getElementById("authError");
+      if (!el) return;
+      if (!msg) { el.classList.add("hidden"); el.innerText = ""; return; }
+      el.classList.remove("hidden"); el.innerText = msg;
+    }
+
+    function signInWithGoogle() {
+      showAuthError("");
+      const provider = new firebase.auth.GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: "select_account" });
+      auth.signInWithPopup(provider).catch(err => {
+        if (err && err.code === "auth/popup-blocked") {
+          auth.signInWithRedirect(provider);
+          return;
+        }
+        if (err && (err.code === "auth/popup-closed-by-user" || err.code === "auth/cancelled-popup-request")) return;
+        console.error(err);
+        showAuthError("\u26a0\ufe0f Could not sign in (" + ((err && err.code) || "error") + "). Try again or ask your teacher.");
+      });
+    }
+
+    function signOutNow() {
+      storageDel("englishpro_future_user");
+      currentUser = null;
+      auth.signOut().catch(err => console.error(err));
+    }
+
+    function splitDisplayName(name) {
+      const parts = (name || "").toString().trim().split(/\s+/).filter(Boolean);
+      if (!parts.length) return { first: "", last: "" };
+      return { first: parts.shift(), last: parts.join(" ") };
+    }
+
+    let guestUI = false;
+
+    function startGuestForm() {
+      if (!window.ALLOW_GUEST_MODE) return;
+      guestUI = true;
+      showCodeError(""); showAuthError("");
+      document.getElementById("authGate").classList.add("hidden");
+      document.getElementById("regFields").classList.remove("hidden");
+      document.getElementById("accountBox").classList.add("hidden");
+      document.getElementById("codeBox").classList.add("hidden");
+      // si sigue siendo obligatoria y esta oculta, el navegador no deja enviar
+      document.getElementById("regClassCode").removeAttribute("required");
+      document.getElementById("guestNotice").classList.remove("hidden");
+      document.getElementById("guestBox").classList.add("hidden");
+      document.getElementById("regSubmitBtn").innerHTML = `Start practising <i class="fa-solid fa-play"></i>`;
+      const fn = document.getElementById("regFirstName");
+      if (fn) fn.focus();
+      window.scrollTo(0, 0);
+    }
+
+    function cancelGuestForm() {
+      guestUI = false;
+      showCodeError("");
+      document.getElementById("guestNotice").classList.add("hidden");
+      document.getElementById("accountBox").classList.remove("hidden");
+      document.getElementById("codeBox").classList.remove("hidden");
+      document.getElementById("regClassCode").setAttribute("required", "required");
+      document.getElementById("regSubmitBtn").innerHTML = `Enter the Academy <i class="fa-solid fa-arrow-right"></i>`;
+      if (window.ALLOW_GUEST_MODE) document.getElementById("guestBox").classList.remove("hidden");
+      paintAuthState();
+    }
+
+    function paintAuthState() {
+      if (guestUI) return;
+      const gate = document.getElementById("authGate");
+      const fields = document.getElementById("regFields");
+      if (!gate || !fields) return;
+      if (currentAuthUser) {
+        gate.classList.add("hidden");
+        fields.classList.remove("hidden");
+        const shown = document.getElementById("regEmailShown");
+        if (shown) shown.innerText = currentAuthUser.email || "";
+        const n = splitDisplayName(currentAuthUser.displayName);
+        const fn = document.getElementById("regFirstName"), ln = document.getElementById("regLastName");
+        if (fn && !fn.value) fn.value = n.first;
+        if (ln && !ln.value) ln.value = n.last;
+      } else {
+        gate.classList.remove("hidden");
+        fields.classList.add("hidden");
+      }
+    }
+
+    function savedProfile() {
+      try { return JSON.parse(storageGet("englishpro_future_user") || "null"); } catch (e) { return null; }
+    }
+
+    function initApp() {
+      const guestBox = document.getElementById("guestBox");
+      if (guestBox && window.ALLOW_GUEST_MODE) guestBox.classList.remove("hidden");
+
+      const hint = document.getElementById("regCodeHint");
+      if (hint && window.CODE_HINT) {
+        hint.innerHTML = `<i class="fa-solid fa-circle-info"></i> ${escapeHtml(window.CODE_HINT)}`;
+        hint.classList.remove("hidden");
+      }
+
+      auth.onAuthStateChanged((user) => {
+        currentAuthUser = user || null;
+        paintAuthState();
+
+        const prof = savedProfile();
+        if (prof && prof.guest) {                       // invitado: sigue en local
+          currentUser = prof;
+          updateUserHeader(); showView("viewDashboard"); renderModules();
+          return;
+        }
+        if (user && prof && prof.uid === user.uid && prof.classCode) {
+          currentUser = prof;                            // vuelve el alumno de siempre
+          currentUser.email = user.email || prof.email;
+          updateUserHeader(); showView("viewDashboard"); renderModules();
+          return;
+        }
+        currentUser = null;
+        document.getElementById("userInfoHeader").classList.add("hidden");
+        showView("viewRegistration");
+      });
+    }
+
+    function readRegistrationForm() {
+      return {
+        firstName: document.getElementById("regFirstName").value.trim(),
+        lastName: document.getElementById("regLastName").value.trim(),
+        email: currentAuthUser ? (currentAuthUser.email || "") : "",
+        uid: currentAuthUser ? currentAuthUser.uid : null,
+        grade: document.getElementById("regGrade").value
+      };
+    }
+
+    function showCodeError(msg) {
+      const el = document.getElementById("regCodeError");
+      if (!el) return;
+      if (!msg) { el.classList.add("hidden"); el.innerText = ""; return; }
+      el.classList.remove("hidden");
+      el.innerText = msg;
+    }
+
+    function startSession(user) {
+      currentUser = user;
+      storageSet("englishpro_future_user", JSON.stringify(currentUser));
+      showCodeError("");
+      updateUserHeader();
+      showView("viewDashboard");
+      renderModules();
+      window.scrollTo(0, 0);
+    }
+
+    function handleRegistration(e) {
+      e.preventDefault();
+      if (guestUI) { enterGuestMode(); return; }
+      if (!currentAuthUser) { showAuthError("\u26a0\ufe0f Sign in with Google first."); return; }
+      if (!isSchoolAccount(currentAuthUser.email)) {
+        showCodeError("\u26a0\ufe0f This app only saves the work of @" + window.SCHOOL_DOMAIN +
+                      " accounts. You can still practise with the button below.");
+        return;
+      }
+      const code = normalizeCode(document.getElementById("regClassCode").value);
+      if (!code) { showCodeError("\u26a0\ufe0f Write your class code."); return; }
+
+      const user = readRegistrationForm();
+      user.guest = false;
+      user.classCode = code;
+
+      const btn = e.target.querySelector("button[type=submit]");
+      if (btn) { btn.disabled = true; btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Checking...`; }
+      showCodeError("");
+
+      // Solo Firebase sabe que codigos valen: si el codigo es bueno, el perfil
+      // se guarda; si no, la propia base de datos rechaza la escritura.
+      currentUser = user;
+      saveMyProfile(true).then(() => {
+        if (btn) { btn.disabled = false; btn.innerHTML = `Enter the Academy <i class="fa-solid fa-arrow-right"></i>`; }
+        startSession(user);
+        fetchMyRecords(() => renderModules());
+      }).catch(err => {
+        currentUser = null;
+        if (btn) { btn.disabled = false; btn.innerHTML = `Enter the Academy <i class="fa-solid fa-arrow-right"></i>`; }
+        const permiso = err && (err.code === "PERMISSION_DENIED" || /permission/i.test(err.message || ""));
+        showCodeError(permiso
+          ? "\u26a0\ufe0f Wrong class code. Ask your own teacher for it" +
+            (window.ALLOW_GUEST_MODE ? ", or use the button below to practise without saving." : ".")
+          : "\u26a0\ufe0f Could not connect (" + ((err && err.message) || "error") + "). Check your connection.");
+        document.getElementById("regClassCode").focus();
+      });
+    }
+
+    function enterGuestMode() {
+      if (!window.ALLOW_GUEST_MODE) return;
+      const user = readRegistrationForm();
+      user.uid = null;
+      user.email = "";
+      if (!user.firstName || !user.lastName || !user.grade) {
+        showCodeError("\u26a0\ufe0f Write your name, your surname(s) and choose your group to start.");
+        const fn = document.getElementById("regFirstName");
+        if (fn && !user.firstName) fn.focus();
+        return;
+      }
+      guestUI = false;
+      user.guest = true;
+      user.classCode = "";
+      startSession(user);
+    }
+
+    function logout() {
+      if (!confirm("Log out?")) return;
+      storageDel("englishpro_future_user");
+      const eraGuest = currentUser && currentUser.guest;
+      currentUser = null;
+      document.getElementById("userInfoHeader").classList.add("hidden");
+      document.getElementById("regForm").reset();
+      showCodeError("");
+      if (eraGuest) { cancelGuestForm(); showView("viewRegistration"); }
+      else { auth.signOut().catch(err => console.error(err)); }
+    }
+
+    function updateUserHeader() {
+      if (!currentUser) return;
+      const el = document.getElementById("userInfoHeader");
+      el.classList.remove("hidden");
+      el.innerHTML = `
+        <span class="font-extrabold text-white">${escapeHtml(fullName())}</span><br>
+        <span class="text-emerald-400 font-bold text-xs"><i class="fa-solid fa-users"></i> Group: ${escapeHtml(currentUser.grade)}</span>
+        ${currentUser.guest
+          ? `<span class="text-slate-400 font-bold text-xs"> · <i class="fa-solid fa-user-clock"></i> Guest</span>`
+          : `<span class="text-amber-400 font-bold text-xs"> · <i class="fa-solid fa-key"></i> ${escapeHtml(currentUser.classCode)}</span>`}
+        · <button onclick="logout()" class="text-xs text-slate-400 hover:text-white underline">Log out</button>`;
+      document.getElementById("welcomeUserText").innerText = `Hi, ${currentUser.firstName}! 👋`;
+    }
+
+    function showView(viewId) {
+      ["viewRegistration", "viewDashboard", "viewLesson", "viewQuiz", "viewResults", "viewGlobalReport", "viewTeacher"].forEach(id => {
+        document.getElementById(id).classList.add("hidden");
+      });
+      document.getElementById(viewId).classList.remove("hidden");
+    }
+
+    function goHome() {
+      if (quizTimerInterval) clearInterval(quizTimerInterval);
+      if (currentUser) {
+        showView("viewDashboard");
+        renderModules();
+      } else {
+        showView("viewRegistration");
+      }
+    }
+
+    function buildModuleCard(mod, bestScore) {
+      let badge = `<span class="text-sm bg-slate-800 text-slate-400 px-4 py-2 rounded-xl font-bold">Pending</span>`;
+      const saved = storageGet(progressKey(mod.id));
+      if (saved) {
+        try {
+          const p = JSON.parse(saved);
+          badge = `<span class="text-sm bg-sky-500/20 text-sky-300 border border-sky-500/40 px-4 py-2 rounded-xl font-black">\u23f8 ${p.idx}/${mod.size}</span>`;
+        } catch (e) {}
+      }
+      if (bestScore !== null && bestScore !== undefined) {
+        badge = (bestScore >= passMark(mod))
+          ? `<span class="text-sm bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-4 py-2 rounded-xl font-black">\u2705 ${bestScore}%</span>`
+          : `<span class="text-sm bg-rose-500/20 text-rose-400 border border-rose-500/40 px-4 py-2 rounded-xl font-black">${bestScore}% \u00b7 again</span>`;
+      }
+      const card = document.createElement("div");
+      card.className = "bg-slate-900 border-2 border-slate-800 hover:border-emerald-500/60 p-6 md:p-7 rounded-3xl transition cursor-pointer flex flex-col justify-between neon-border";
+      card.onclick = () => openLesson(mod.id);
+      const preview = mod.moduleDesc || "";
+      card.innerHTML = `
+        <div>
+          <div class="flex justify-between items-start mb-4 gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center text-xl font-black border border-emerald-500/30 shrink-0">
+              <i class="fa-solid ${mod.icon}"></i>
+            </div>
+            ${badge}
+          </div>
+          <h3 class="text-xl md:text-2xl font-black text-white mb-2">${mod.moduleTitle}</h3>
+          <p class="text-sm md:text-base text-slate-300 leading-relaxed mb-2">${mod.desc}</p>
+          <p class="text-xs text-slate-500 mb-4 italic">${preview}\u2026</p>
+          <div class="flex flex-wrap gap-2 mb-5 text-xs font-black">
+            <span class="px-3 py-1 rounded-lg border ${mod.chip}">${mod.levelTag} \u00b7 ${TYPES[mod.type].label}</span>
+            <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 border border-slate-700">${mod.size} questions</span>
+            <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 border border-slate-700">Pass: ${passMark(mod)}%</span>
+          </div>
+        </div>
+        <div class="text-sm md:text-base font-black text-emerald-400 flex items-center gap-2">
+          Study &amp; start <i class="fa-solid fa-arrow-right"></i>
+        </div>`;
+      return card;
+    }
+
+    function paintModulesGrid(scoresByModule) {
+      const grid = document.getElementById("modulesGrid");
+      grid.innerHTML = "";
+      LEVELS.forEach(lv => {
+        const mods = modulesOfLevel(lv.n);
+        const passed = mods.filter(m => {
+          const sc = scoresByModule ? scoresByModule[m.id] : null;
+          return sc !== null && sc !== undefined && sc >= passMark(m);
+        }).length;
+        const section = document.createElement("section");
+        section.className = "space-y-5";
+        section.innerHTML = `
+          <div class="flex flex-wrap items-end justify-between gap-3 border-b-2 border-slate-800 pb-3">
+            <div>
+              <h3 class="text-2xl md:text-3xl font-black text-white flex items-center gap-3">
+                <span class="w-11 h-11 rounded-2xl border flex items-center justify-center ${lv.chip}"><i class="fa-solid ${lv.icon}"></i></span>
+                ${lv.name}
+              </h3>
+              <p class="text-sm md:text-base text-slate-400 mt-2">${lv.blurb}</p>
+            </div>
+            <span class="text-sm font-black px-4 py-2 rounded-xl ${passed === mods.length ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/40" : "bg-slate-800 text-slate-300 border border-slate-700"}">${passed} / ${mods.length} passed</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>`;
+        const inner = section.querySelector("div.grid");
+        mods.forEach(mod => {
+          const best = scoresByModule ? scoresByModule[mod.id] : null;
+          inner.appendChild(buildModuleCard(mod, best === undefined ? null : best));
+        });
+        grid.appendChild(section);
+      });
+    }
+
+    function renderModules() {
+      paintModulesGrid(null);
+      fetchMyRecords((scores) => {
+        const best = {};
+        MODULES.forEach(mod => {
+          const userScores = scores.filter(s => s && s.moduleId === mod.id);
+          best[mod.id] = userScores.length > 0 ? Math.max(...userScores.map(s => Number(s.score) || 0)) : null;
+        });
+        paintModulesGrid(best);
+      });
+    }
+
+    function openLesson(modId) {
+      currentModuleId = modId;
+      const mod = currentModule();
+      document.getElementById("lessonTopicCategory").innerText = mod.title;
+      document.getElementById("lessonContent").innerHTML = buildLesson(mod);
+      document.getElementById("howToList").innerHTML = mod.how.map(li => `<li>${li}</li>`).join("");
+      document.getElementById("startQuizBtn").innerHTML = `Start the ${mod.size} questions <i class="fa-solid fa-play"></i>`;
+      showView("viewLesson");
+      window.scrollTo(0, 0);
+    }
+
+    /* ---------- progress saved in the browser (so a closed tab is not lost) ---------- */
+    function saveProgress() {
+      const mod = currentModule();
+      storageSet(progressKey(mod.id), JSON.stringify({
+        order: currentQuestions.map(q => q.qid),
+        idx: currentQuestionIdx + (answered ? 1 : 0),
+        score: currentScore,
+        seconds: quizSeconds,
+        log: attemptLog
+      }));
+    }
+
+    function startCurrentQuiz(forceNew) {
+      const mod = currentModule();
+      const saved = forceNew ? null : storageGet(progressKey(mod.id));
+      let resumed = false;
+      if (saved) {
+        try {
+          const p = JSON.parse(saved);
+          if (p.idx > 0 && p.idx < mod.size &&
+              confirm(`You have an unfinished attempt (${p.idx} of ${mod.size} questions done).\n\nOK = continue where you stopped\nCancel = start again from the beginning`)) {
+            currentQuestions = p.order.map(id => mod.questions.find(q => q.qid === id)).filter(Boolean);
+            currentQuestionIdx = p.idx;
+            currentScore = p.score;
+            quizSeconds = p.seconds || 0;
+            attemptLog = p.log || [];
+            resumed = currentQuestions.length === mod.size;
+          }
+        } catch (e) {}
+      }
+      if (!resumed) {
+        storageDel(progressKey(mod.id));
+        currentQuestions = shuffle(mod.questions).slice(0, mod.size);
+        currentQuestionIdx = 0;
+        currentScore = 0;
+        quizSeconds = 0;
+        attemptLog = [];
+      }
+      document.getElementById("quizCategoryTitle").innerText = mod.title;
+      showView("viewQuiz");
+      window.scrollTo(0, 0);
+      startTimer();
+      renderQuestion();
+    }
+
+    function startTimer() {
+      if (quizTimerInterval) clearInterval(quizTimerInterval);
+      const paint = () => {
+        const mins = String(Math.floor(quizSeconds / 60)).padStart(2, "0");
+        const secs = String(quizSeconds % 60).padStart(2, "0");
+        document.getElementById("quizTimer").innerText = `${mins}:${secs}`;
+      };
+      paint();
+      quizTimerInterval = setInterval(() => { quizSeconds++; paint(); }, 1000);
+    }
+
+    function renderQuestion() {
+      answered = false;
+      const q = currentQuestions[currentQuestionIdx];
+      const total = currentQuestions.length;
+
+      document.getElementById("quizQuestionCount").innerText = `Question ${currentQuestionIdx + 1} of ${total}`;
+      document.getElementById("quizProgressBar").style.width = `${((currentQuestionIdx + 1) / total) * 100}%`;
+
+      const t = TYPES[q.type];
+      document.getElementById("quizTypeBadge").innerHTML = `
+        <div class="flex flex-wrap justify-between items-center gap-3">
+          <span class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border ${t.badge} text-sm md:text-base font-black uppercase tracking-wider">
+            <i class="fa-solid ${t.icon}"></i> ${t.label}
+          </span>
+          <span class="text-sm md:text-base font-black text-emerald-400">\u2714 ${currentScore} / ${currentQuestionIdx} correct</span>
+        </div>`;
+
+      document.getElementById("quizSentence").innerHTML = questionBodyHtml(q);
+
+      const hintZone = document.getElementById("verbFormsHint");
+      if (q.type === "translate") {
+        const words = vocabHints(q.prompt, 7);
+        if (words.length) {
+          hintZone.innerHTML = `
+            <button type="button" onclick="toggleQuizHint()" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 font-black px-5 py-3 rounded-2xl transition text-base">
+              \ud83d\udca1 Vocabulary
+            </button>
+            <div id="hintBox" class="hidden mt-3 bg-amber-950/30 border-2 border-amber-500/40 rounded-2xl p-4 space-y-1">
+              ${words.map(w => `<p class="text-base md:text-lg text-amber-200"><strong lang="es">${escapeHtml(w.es)}</strong> = ${escapeHtml(w.en)}</p>`).join("")}
+            </div>`;
+          hintZone.classList.remove("hidden");
+        } else {
+          hintZone.innerHTML = "";
+          hintZone.classList.add("hidden");
+        }
+      } else {
+        hintZone.innerHTML = "";
+        hintZone.classList.add("hidden");
+      }
+
+      document.getElementById("quizFeedback").classList.add("hidden");
+      document.getElementById("nextQuestionBtn").classList.add("hidden");
+      const checkBtn = document.getElementById("checkAnswerBtn");
+      checkBtn.classList.remove("hidden");
+      checkBtn.disabled = (q.type === "mcq");
+
+      const inputs = questionInputs();
+      inputs.forEach((input, i) => {
+        input.addEventListener("keydown", (ev) => {
+          if (ev.key !== "Enter") return;
+          ev.preventDefault();
+          if (answered) { nextQuestion(); return; }
+          if (i < inputs.length - 1) inputs[i + 1].focus(); else checkExercise();
+        });
+      });
+      if (inputs[0]) inputs[0].focus();
+    }
+
+    function checkExercise() {
+      if (answered) return;
+      const q = currentQuestions[currentQuestionIdx];
+      const isMcq = q.type === "mcq";
+      const inputs = questionInputs();
+      const hidden = document.getElementById("ans_0");
+      const values = isMcq ? [(hidden && hidden.value) || ""] : inputs.map(i => i.value.trim());
+      if (values.every(v => !v)) {
+        if (isMcq) return;
+        if (inputs[0]) { inputs[0].focus(); inputs[0].placeholder = "?"; }
+        return;
+      }
+
+      let ok = false, parts = null;
+      if (isMcq) ok = gradeMcq(values[0], q);
+      else if (q.type === "gap") { const r = gradeGapValues(values, q); ok = r.ok; parts = r.partes; }
+      else ok = gradeTranslation(values[0], q);
+
+      if (isMcq) {
+        document.querySelectorAll(".mcq-opt").forEach(b => {
+          b.disabled = true;
+          const esta = normalize(b.dataset.value);
+          if (esta === normalize(q.answers[0])) b.classList.add("mcq-ok");
+          else if (esta === normalize(values[0])) b.classList.add("mcq-ko");
+          else b.classList.add("opacity-50");
+        });
+      } else {
+        inputs.forEach((input, i) => {
+          input.readOnly = true;
+          input.classList.add((parts ? parts[i] : ok) ? "gap-ok" : "gap-ko");
+        });
+      }
+      answered = true;
+      if (ok) currentScore++;
+
+      attemptLog.push({
+        type: q.type, prompt: questionPromptText(q), user: values.join(" \u00b7 "),
+        correct: modelAnswer(q), ok: ok
+      });
+      saveProgress();
+
+      let detail = "";
+      if (q.type === "gap") {
+        detail = `<div class="mt-3 text-base md:text-xl text-slate-200 font-semibold">${escapeHtml(mayuscula(fillGaps(q.text, modelGapValues(q))))}</div>`;
+      } else if (isMcq) {
+        detail = `<div class="mt-3 text-base md:text-xl text-slate-200 font-semibold">${escapeHtml(mayuscula(fillGaps(q.text, (q.answers[0] || "").split(" / "))))}</div>`;
+      } else if (q.type === "translate") {
+        const otras = q.answers.slice(1, 4);
+        detail = otras.length
+          ? `<div class="mt-3 text-base md:text-lg text-slate-300 font-semibold">Also accepted: ${otras.map(a => `<span class="font-mono text-emerald-200">${escapeHtml(a)}</span>`).join(" \u00b7 ")}</div>`
+          : "";
+      }
+      if (q.x) {
+        detail += `<div class="mt-3 text-base md:text-lg text-slate-300 font-semibold border-t border-slate-700/60 pt-3">
+          <i class="fa-solid fa-lightbulb text-amber-400"></i> ${q.x}</div>`;
+      }
+
+      const feedbackBox = document.getElementById("quizFeedback");
+      if (ok) {
+        feedbackBox.className = "p-6 md:p-8 rounded-2xl text-lg md:text-2xl font-bold border-2 bg-emerald-950/40 border-emerald-500/60 text-emerald-200";
+        feedbackBox.innerHTML = `<strong>CORRECT! \ud83c\udf89</strong>${detail}`;
+      } else {
+        feedbackBox.className = "p-6 md:p-8 rounded-2xl text-lg md:text-2xl font-bold border-2 bg-rose-950/40 border-rose-500/60 text-rose-200";
+        const solucion = (q.type === "gap")
+          ? modelGapValues(q).join("  +  ")
+          : q.answers[0];
+        feedbackBox.innerHTML = `<div class="mb-2"><strong>SOLUTION:</strong> <span class="text-emerald-300 font-mono">${escapeHtml(solucion)}</span></div>${detail}`;
+      }
+      feedbackBox.classList.remove("hidden");
+      document.getElementById("checkAnswerBtn").classList.add("hidden");
+      const nextBtn = document.getElementById("nextQuestionBtn");
+      nextBtn.classList.remove("hidden");
+      nextBtn.innerHTML = (currentQuestionIdx < currentQuestions.length - 1)
+        ? `Next question <i class="fa-solid fa-arrow-right ml-2"></i>`
+        : `See result <i class="fa-solid fa-flag-checkered ml-2"></i>`;
+      nextBtn.focus();
+    }
+
+    function nextQuestion() {
+      if (currentQuestionIdx < currentQuestions.length - 1) {
+        currentQuestionIdx++;
+        renderQuestion();
+      } else {
+        finishQuiz();
+      }
+    }
+
+    function quitQuiz() {
+      if (confirm("Leave this module now? Your progress is saved on this device and you can continue later.")) {
+        clearInterval(quizTimerInterval);
+        goHome();
+      }
+    }
+
+    function finishQuiz() {
+      clearInterval(quizTimerInterval);
+      const mod = currentModule();
+      storageDel(progressKey(mod.id));
+      const total = currentQuestions.length;
+      const percentage = Math.round((currentScore / total) * 100);
+      const timeStr = `${Math.floor(quizSeconds / 60)}m ${quizSeconds % 60}s`;
+      const nowStr = new Date().toLocaleString("en-GB", { dateStyle: "short", timeStyle: "short" });
+      const passed = percentage >= passMark(mod);
+
+      const record = {
+        studentName: fullName(),
+        firstName: currentUser.firstName,
+        lastName: currentUser.lastName,
+        email: currentUser.email,
+        grade: currentUser.grade,
+        group: currentUser.grade,
+        classCode: currentUser.guest ? "" : currentUser.classCode,
+        guest: !!currentUser.guest,
+        topic: mod.title,
+        moduleId: mod.id,
+        exerciseType: "future_tenses_levels",
+        score: percentage,
+        rawScore: `${currentScore}/${total}`,
+        passed: passed,
+        secondsSpent: quizSeconds,
+        timeSpent: timeStr,
+        dateTime: nowStr,
+        timestamp: Date.now(),
+        answers: attemptLog.map(a => ({ prompt: a.prompt, type: a.type, user: a.user, correct: a.correct, ok: a.ok }))
+      };
+
+      const message = passed
+        ? `
+          <div class="bg-emerald-950/50 border-2 border-emerald-400/60 rounded-2xl p-5 md:p-6 text-center space-y-3">
+            <h3 class="text-2xl md:text-3xl font-black text-emerald-300">🎉 CONGRATULATIONS, ${escapeHtml(currentUser.firstName.toUpperCase())}!</h3>
+            <p class="text-slate-100 text-base md:text-xl">You have passed <strong>${mod.title}</strong>. Well done!</p>
+            <div class="bg-amber-400/15 border-2 border-amber-400/60 rounded-xl p-4 text-amber-200 text-base md:text-xl font-bold">
+              <i class="fa-solid fa-camera"></i> Now take a <strong>SCREENSHOT</strong> of this result and send it to your teacher through <strong>Google Classroom</strong>.
+            </div>
+          </div>`
+        : `
+          <div class="bg-rose-950/40 border-2 border-rose-500/50 rounded-2xl p-5 md:p-6 text-left space-y-2">
+            <p class="text-rose-200 text-lg md:text-xl font-black"><i class="fa-solid fa-rotate-right"></i> You have to try again!</p>
+            <p class="text-slate-200 text-base md:text-lg">You got <strong>${currentScore} out of ${total}</strong>. You need <strong class="text-amber-300">at least ${passMark(mod)}% (${Math.ceil(total * passMark(mod) / 100)} out of ${total})</strong> to pass.
+            Remember: <strong>for your work to count, you must pass every level of every module</strong>.</p>
+            <p class="text-slate-300 text-base md:text-lg">Study the verb list again, look at your mistakes below and have another go. You can do it! 💪
+            When you pass, take a screenshot of your result and send it to your teacher through Google Classroom.</p>
+          </div>`;
+
+      document.getElementById("resultsCard").innerHTML = `
+        ${studentStrip()}
+        <div class="w-24 h-24 mx-auto rounded-full flex items-center justify-center text-4xl font-black ${passed ? "bg-emerald-500/20 text-emerald-400 border-2 border-emerald-500/50" : "bg-rose-500/20 text-rose-400 border-2 border-rose-500/50"}">
+          ${percentage}%
+        </div>
+        ${message}
+        <div class="bg-slate-950 p-6 rounded-2xl border-2 border-slate-800 text-left text-base md:text-xl text-slate-200 space-y-3 max-w-lg mx-auto">
+          <div class="flex justify-between gap-3"><span class="text-slate-400">Name:</span> <span class="font-bold text-white text-right">${escapeHtml(currentUser.firstName)}</span></div>
+          <div class="flex justify-between gap-3"><span class="text-slate-400">Surname(s):</span> <span class="font-bold text-white text-right">${escapeHtml(currentUser.lastName)}</span></div>
+          <div class="flex justify-between gap-3"><span class="text-slate-400">Group:</span> <span class="font-bold text-emerald-300">${escapeHtml(currentUser.grade)}</span></div>
+          <div class="flex justify-between gap-3"><span class="text-slate-400">Exercise:</span> <span class="font-bold text-emerald-400 text-right">${mod.title}</span></div>
+          <div class="flex justify-between gap-3"><span class="text-slate-400">Score:</span> <span class="font-bold text-white">${record.rawScore} (${percentage}%)</span></div>
+          <div class="flex justify-between gap-3"><span class="text-slate-400">Result:</span> <span class="font-bold ${passed ? "text-emerald-400" : "text-rose-400"} text-right">${passed ? "✅ Passed" : "⚠️ Not passed (minimum " + passMark(mod) + "%)"}</span></div>
+          <div class="flex justify-between gap-3"><span class="text-slate-400">Time:</span> <span class="font-bold text-emerald-400">${timeStr}</span></div>
+          <div class="flex justify-between gap-3"><span class="text-slate-400">Class code:</span> <span class="font-bold text-amber-400">${currentUser.guest ? "— (guest · not saved)" : escapeHtml(currentUser.classCode)}</span></div>
+          <div class="flex justify-between gap-3"><span class="text-slate-400">Date:</span> <span class="font-bold text-white">${nowStr}</span></div>
+        </div>
+        <div id="saveStatusLine" class="text-xs font-bold text-slate-500 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-cloud-arrow-up"></i> Saving to the cloud...
+        </div>
+        <div class="pt-4 flex flex-col md:flex-row gap-3 justify-center no-print">
+          ${!passed ? `<button onclick="startCurrentQuiz(true)" class="bg-rose-600 hover:bg-rose-500 text-white font-black text-lg px-8 py-4 rounded-2xl transition order-first">🔁 Try this module again</button>` : ""}
+          <button onclick="goHome()" class="${passed ? "bg-emerald-600 hover:bg-emerald-500" : "bg-slate-800 hover:bg-slate-700"} text-white font-black text-lg px-8 py-4 rounded-2xl transition">Back to Dashboard</button>
+        </div>`;
+
+      renderReview();
+      showView("viewResults");
+      window.scrollTo(0, 0);
+      saveResultToFirebase(record);
+    }
+
+    function renderReview() {
+      const wrong = attemptLog.filter(a => !a.ok).length;
+      const rows = attemptLog.map((a, idx) => {
+        const t = TYPES[a.type] || TYPES.gap;
+        return `
+          <div class="bg-slate-950 border ${a.ok ? "border-emerald-500/30" : "border-rose-500/50"} rounded-2xl p-3 md:p-4 text-left">
+            <div class="flex justify-between items-start gap-3 mb-1">
+              <span class="text-sm font-black ${a.ok ? "text-emerald-400" : "text-rose-400"}"><i class="fa-solid ${a.ok ? "fa-circle-check" : "fa-circle-xmark"}"></i> ${idx + 1}</span>
+              <span class="text-[11px] font-black uppercase px-2 py-1 rounded-lg border ${t.badge}">${t.label}</span>
+            </div>
+            <p class="text-base md:text-lg text-slate-200 font-semibold">${escapeHtml(a.prompt)}</p>
+            <p class="text-sm md:text-base mt-1"><span class="text-slate-500">You wrote:</span> <span class="${a.ok ? "text-emerald-300" : "text-rose-300"} font-mono">${escapeHtml(a.user) || "\u2014"}</span></p>
+            ${a.ok ? "" : `<p class="text-sm md:text-base"><span class="text-slate-500">Correct:</span> <span class="text-emerald-300 font-mono">${escapeHtml(a.correct)}</span></p>`}
+          </div>`;
+      }).join("");
+      document.getElementById("reviewCard").innerHTML = `
+        <p class="text-sm md:text-base font-bold text-slate-300 border-b border-slate-800 pb-3 mb-3">
+          <i class="fa-solid fa-user text-emerald-400 mr-1"></i> ${escapeHtml(currentUser.firstName)} <span class="text-emerald-300">${escapeHtml(currentUser.lastName)}</span>
+          <span class="text-slate-500">\u00b7</span> <span class="text-amber-300">Group: ${escapeHtml(currentUser.grade)}</span>
+        </p>
+        <div class="flex justify-between items-center mb-2 gap-3">
+          <h3 class="text-xl md:text-2xl font-black text-white"><i class="fa-solid fa-list-check text-emerald-400 mr-2"></i>Correction (${wrong} mistake${wrong === 1 ? "" : "s"})</h3>
+          <button onclick="window.print()" class="no-print text-sm bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-4 py-2 rounded-xl"><i class="fa-solid fa-print"></i> Print</button>
+        </div>
+        <div class="grid grid-cols-1 gap-2">${rows}</div>`;
+    }
+
+    function saveResultToFirebase(record, isRetry) {
+      if (!isRetry) saveResultLocally(record);
+
+      if (currentUser.guest || !currentUser.uid) {
+        const line = document.getElementById("saveStatusLine");
+        if (line) line.innerHTML = `<i class="fa-solid fa-user-clock text-slate-400"></i> <span class="text-slate-400">Guest mode: this result is only on this device, it is not sent to any teacher.</span>`;
+        return;
+      }
+
+      myAttemptsRef().push(record).then(() => {
+        const line = document.getElementById("saveStatusLine");
+        if (line) line.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> <span class="text-emerald-400">Saved to the cloud</span>`;
+      }).catch(err => {
+        console.error("Error saving to Firebase:", err);
+        if (!isRetry) {
+          setTimeout(() => saveResultToFirebase(record, true), 2500);
+        } else {
+          const line = document.getElementById("saveStatusLine");
+          if (line) line.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-400"></i> <span class="text-amber-400">Could not save. Please tell your teacher.</span>`;
+        }
+      });
+    }
+
+    /* ============================================================
+       FINAL REPORT
+       ============================================================ */
+    function showGlobalReportModal() {
+      showView("viewGlobalReport");
+      window.scrollTo(0, 0);
+      const container = document.getElementById("globalReportDetails");
+      container.innerHTML = `<div class="text-center py-10 text-slate-400 font-bold"><i class="fa-solid fa-spinner fa-spin text-2xl mb-3"></i><br>Loading your report...</div>`;
+
+      fetchMyRecords((records) => {
+        let completedCount = 0, passedCount = 0, sum = 0, secondsSum = 0;
+        let breakdownHtml = "";
+        LEVELS.forEach(lv => {
+          const mine = modulesOfLevel(lv.n);
+          const donos = mine.filter(m => records.some(r => r && r.moduleId === m.id)).length;
+          breakdownHtml += `<div class="md:col-span-2 mt-2 flex items-center justify-between gap-3">
+              <span class="text-sm font-black px-3 py-1 rounded-xl border ${lv.chip}">${lv.name}</span>
+              <span class="text-xs font-bold text-slate-500">${donos} / ${mine.length} done</span>
+            </div>`;
+          mine.forEach(mod => {
+          const list = records.filter(r => r && r.moduleId === mod.id);
+          if (list.length) {
+            const best = list.reduce((max, r) => (Number(r.score) > Number(max.score) ? r : max), list[0]);
+            const ok = Number(best.score) >= passMark(mod);
+            completedCount++; if (ok) passedCount++;
+            sum += Number(best.score) || 0; secondsSum += best.secondsSpent || 0;
+            breakdownHtml += `
+              <div class="flex justify-between items-center bg-slate-950/80 p-4 rounded-xl border ${ok ? "border-emerald-500/40" : "border-rose-500/50"} text-sm md:text-base">
+                <span class="font-extrabold text-white">${mod.moduleTitle}</span>
+                <div class="text-right">
+                  <span class="font-black ${ok ? "text-emerald-400" : "text-rose-400"}">${ok ? "✅" : "❌"} ${best.score}%</span>
+                  <span class="text-slate-500 text-xs ml-2">(${best.rawScore || ""} · ${list.length} attempt${list.length > 1 ? "s" : ""})</span>
+                </div>
+              </div>`;
+          } else {
+            breakdownHtml += `
+              <div class="flex justify-between items-center bg-slate-950/30 p-4 rounded-xl border border-slate-800/40 text-sm opacity-60">
+                <span class="font-bold text-slate-400">${mod.moduleTitle}</span>
+                <span class="text-rose-400 font-bold italic">Pending</span>
+              </div>`;
+          }
+          });
+        });
+
+        if (completedCount < MODULES.length) {
+          container.innerHTML = `
+            ${studentStrip()}
+            <div class="text-center py-4 space-y-4">
+              <div class="w-16 h-16 mx-auto rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-3xl border-2 border-amber-500/40"><i class="fa-solid fa-triangle-exclamation"></i></div>
+              <h3 class="text-2xl font-black text-white">Incomplete</h3>
+              <p class="text-slate-300 text-base md:text-lg max-w-md mx-auto">You have done <strong>${completedCount} of ${MODULES.length}</strong> levels (${MODULE_DEFS.length} modules \u00d7 ${LEVELS.length} levels). Pass them all to master the future.</p>
+              <div class="space-y-2 text-left my-4">${breakdownHtml}</div>
+              <button onclick="goHome()" class="no-print bg-emerald-600 text-white font-extrabold px-8 py-4 rounded-2xl text-base">Go back and continue</button>
+            </div>`;
+          return;
+        }
+
+        const allPassed = passedCount === MODULES.length;
+        const avg = Math.round(sum / MODULES.length);
+        const nowStr = new Date().toLocaleString("en-GB", { dateStyle: "short", timeStyle: "short" });
+        const msg = allPassed
+          ? `<div class="bg-emerald-950/50 border-2 border-emerald-400/60 rounded-2xl p-5 md:p-6 text-center space-y-3">
+               <div class="text-5xl">🏆🎉</div>
+               <h3 class="text-2xl md:text-3xl font-black text-emerald-300">CONGRATULATIONS, ${escapeHtml(currentUser.firstName.toUpperCase())}!</h3>
+               <p class="text-slate-100 text-base md:text-xl">You have passed <strong>all ${MODULES.length} levels</strong>: you have mastered the future tenses!</p>
+               <div class="bg-amber-400/15 border-2 border-amber-400/60 rounded-xl p-4 text-amber-200 text-base md:text-xl font-bold"><i class="fa-solid fa-camera"></i> Take a <strong>SCREENSHOT</strong> of this final result and send it to your teacher through <strong>Google Classroom</strong>.</div>
+             </div>`
+          : `<div class="bg-rose-950/40 border-2 border-rose-500/50 rounded-2xl p-5 md:p-6 text-left space-y-2">
+               <p class="text-rose-200 text-lg md:text-xl font-black"><i class="fa-solid fa-rotate-right"></i> Keep going — you're not there yet!</p>
+               <p class="text-slate-200 text-base md:text-lg">You have passed <strong>${passedCount} of ${MODULES.length}</strong> levels. Your work only counts when you pass <strong>all of them</strong>. Repeat the ones marked in red \u2014 you can do it! \ud83d\udcaa</p>
+             </div>`;
+
+        container.innerHTML = `
+          <div class="grid grid-cols-3 gap-4 items-center bg-slate-950/80 p-5 rounded-2xl border border-slate-800">
+            <div class="col-span-2 space-y-1">
+              <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Student</p>
+              <h3 class="text-xl md:text-2xl font-black text-white leading-tight">${escapeHtml(currentUser.firstName)} <span class="text-emerald-300">${escapeHtml(currentUser.lastName)}</span></h3>
+              <p class="text-sm md:text-base text-emerald-300 font-black">Group: ${escapeHtml(currentUser.grade)}</p>
+              <p class="text-xs text-slate-400 font-semibold">${escapeHtml(currentUser.email)}</p>
+              <p class="text-xs text-amber-400 font-extrabold mt-1">${currentUser.guest ? "Guest · not sent to any teacher" : "Class code: " + escapeHtml(currentUser.classCode)} · ${nowStr}</p>
+            </div>
+            <div class="text-center ${allPassed ? "bg-emerald-500/10 border-2 border-emerald-500/40" : "bg-rose-500/10 border-2 border-rose-500/40"} p-4 rounded-2xl">
+              <span class="text-xs font-bold ${allPassed ? "text-emerald-400" : "text-rose-400"} block uppercase">Average</span>
+              <span class="text-4xl md:text-5xl font-black ${allPassed ? "text-emerald-400" : "text-rose-400"} leading-none">${avg}%</span>
+              <span class="block text-[11px] md:text-xs font-black mt-1 ${allPassed ? "text-emerald-300" : "text-rose-300"}">${allPassed ? "✅ PASSED" : "⚠️ NOT PASSED"}</span>
+            </div>
+          </div>
+          ${msg}
+          <div>
+            <p class="text-xs font-black uppercase text-slate-400 mb-3 tracking-wider">Best score in each module and level</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">${breakdownHtml}</div>
+          </div>
+          <div class="pt-4 border-t border-slate-800 flex justify-center no-print">
+            <button onclick="window.print()" class="px-8 bg-emerald-600 hover:bg-emerald-500 text-white font-black py-4 rounded-2xl transition text-base md:text-lg flex items-center justify-center gap-3"><i class="fa-solid fa-print"></i> Print / Save PDF</button>
+          </div>`;
+      });
+    }
+    /* ============================================================
+       TEACHER PANEL
+       ------------------------------------------------------------
+       Cada profesor/a entra con SU PIN (ver window.CLASSES arriba) y
+       solo ve los resultados guardados bajo SU codigo de clase.
+       ============================================================ */
+
+    let teacherAllRecords = [];
+    let teacherSearchTerm = "";
+    let teacherRefs = [];
+    let teacherRecordsByCode = {};
+    let teacherLegacyRecords = [];
+    let teacherOpenRows = new Set();
+    let currentTeacherScope = [];
+    const TEACHER_COLSPAN = 7 + LEVELS.length;
+
+    function openTeacherPanelFor(user) {
+      const mine = findTeacher(user && user.email);
+      if (!mine) {
+        alert("Esta cuenta (" + ((user && user.email) || "?") + ") no es la del profesor.\n\n" +
+              "Si eres tu: pon tu correo de Google en TEACHER_EMAIL, dentro del archivo, " +
+              "y en reglas-firebase.json.");
+        return false;
+      }
+      currentTeacherScope = [mine];
+      currentTeacherLoggedIn = mine.teacher || "Teacher";
+      if (quizTimerInterval) clearInterval(quizTimerInterval);
+      renderTeacherDashboard();
+      showView("viewTeacher");
+      return true;
+    }
+
+    function showTeacherLogin() {
+      if (currentAuthUser && findTeacher(currentAuthUser.email)) {
+        openTeacherPanelFor(currentAuthUser);
+        return;
+      }
+      const provider = new firebase.auth.GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: "select_account" });
+      auth.signInWithPopup(provider).then(res => {
+        currentAuthUser = res.user;
+        openTeacherPanelFor(res.user);
+      }).catch(err => {
+        if (err && err.code === "auth/popup-blocked") { auth.signInWithRedirect(provider); return; }
+        if (err && (err.code === "auth/popup-closed-by-user" || err.code === "auth/cancelled-popup-request")) return;
+        alert("No se pudo entrar: " + ((err && err.message) || err));
+      });
+    }
+
+    function teacherCodes() { return Object.keys(teacherRecordsByCode).sort(); }
+
+    function isRecord(v) {
+      return v && typeof v === "object" && (v.moduleId || v.studentName || v.score !== undefined);
+    }
+
+    function detachTeacherRefs() {
+      teacherRefs.forEach(r => { try { r.off("value"); } catch (e) {} });
+      teacherRefs = [];
+    }
+
+    function mergeTeacherRecords() {
+      let all = [];
+      Object.keys(teacherRecordsByCode).forEach(k => { all = all.concat(teacherRecordsByCode[k]); });
+      teacherAllRecords = all.concat(teacherLegacyRecords);
+    }
+
+    function readBranch(snapshot, code) {
+      const out = [];
+      snapshot.forEach(childSnap => {
+        const v = childSnap.val();
+        if (!v || typeof v !== "object") return;
+        if (isRecord(v)) {                       // formato antiguo (sin cuentas)
+          out.push(Object.assign({}, v, { classCode: v.classCode || code }));
+          return;
+        }
+        const perfil = v.profile || {};
+        const intentos = v.attempts || {};
+        Object.keys(intentos).forEach(k => {
+          const r = intentos[k];
+          if (isRecord(r)) out.push(Object.assign({}, perfil, r, { classCode: r.classCode || code, uid: childSnap.key }));
+        });
+      });
+      return out;
+    }
+
+    function renderTeacherDashboard() {
+      document.getElementById("teacherTitle").innerText = currentTeacherLoggedIn;
+      renderTeacherTableHead();
+      teacherSearchTerm = "";
+      teacherRecordsByCode = {};
+      teacherLegacyRecords = [];
+      const searchInput = document.getElementById("teacherSearchInput");
+      if (searchInput) searchInput.value = "";
+      const tbody = document.getElementById("teacherTableBody");
+      tbody.innerHTML = `<tr><td colspan="${TEACHER_COLSPAN}" class="p-6 text-center text-slate-400 font-bold">Loading data from the cloud...</td></tr>`;
+
+      detachTeacherRefs();
+      const ref = db.ref(RESULTS_NODE);
+      teacherRefs.push(ref);
+      ref.on("value", (snapshot) => {
+        absorbTeacherSnapshot(snapshot);
+        paintTeacherTable();
+        updateTeacherLastRefreshed();
+      }, (err) => {
+        console.error("Error reading Firebase results:", err);
+        tbody.innerHTML = `<tr><td colspan="${TEACHER_COLSPAN}" class="p-6 text-center text-rose-400 font-bold">\u26a0\ufe0f Could not load the data (${escapeHtml(err.message)}). Check your connection.</td></tr>`;
+      });
+    }
+
+    /* El nodo tiene una carpeta por codigo de clase; los codigos se descubren
+       leyendo, no hay ninguna lista en esta pagina. */
+    function absorbTeacherSnapshot(snapshot) {
+      teacherRecordsByCode = {};
+      teacherLegacyRecords = [];
+      snapshot.forEach(codeSnap => {
+        const v = codeSnap.val();
+        if (!v || typeof v !== "object") return;
+        if (isRecord(v)) { teacherLegacyRecords.push(Object.assign({}, v, { classCode: "\u2014" })); return; }
+        teacherRecordsByCode[codeSnap.key] = readBranch(codeSnap, codeSnap.key);
+      });
+      mergeTeacherRecords();
+      const sub = document.getElementById("teacherSubtitle");
+      const codes = teacherCodes();
+      if (sub) sub.innerHTML = `Class code${codes.length === 1 ? "" : "s"}: <span class="text-amber-300 font-bold">${escapeHtml(codes.join(" \u00b7 ")) || "\u2014"}</span><br>One row per student \u00b7 click a student to see every attempt and every answer they wrote.`;
+    }
+
+    function refreshTeacherDashboardNow() {
+      const btn = document.getElementById("teacherRefreshBtn");
+      if (btn) { btn.disabled = true; btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Refreshing...`; }
+      db.ref(RESULTS_NODE).once("value").then(snapshot => {
+        absorbTeacherSnapshot(snapshot);
+        paintTeacherTable();
+        updateTeacherLastRefreshed();
+      }).catch(err => {
+        alert("Could not refresh: " + err.message);
+      }).then(() => {
+        if (btn) { btn.disabled = false; btn.innerHTML = `<i class="fa-solid fa-arrows-rotate"></i> Refresh`; }
+      });
+    }
+
+    function updateTeacherLastRefreshed() {
+      const el = document.getElementById("teacherLastRefreshed");
+      if (el) el.innerText = `Last updated: ${new Date().toLocaleTimeString("en-GB")}`;
+    }
+
+    function renderTeacherTableHead() {
+      document.getElementById("teacherTableHead").innerHTML = `
+        <tr>
+          <th class="p-3">Name</th>
+          <th class="p-3">Surname(s)</th>
+          <th class="p-3">Group</th>
+          <th class="p-3">Code</th>
+          ${LEVELS.map(lv => `<th class="p-3 text-center">${lv.tag} \u00b7 ${lv.type === "mcq" ? "choice" : (lv.type === "gap" ? "gaps" : "transl.")}</th>`).join("")}
+          <th class="p-3 text-center">Average</th>
+          <th class="p-3 text-center">Result</th>
+          <th class="p-3">Last activity</th>
+        </tr>`;
+    }
+
+    function splitName(r) {
+      const first = (r.firstName || "").toString().trim();
+      const last = (r.lastName || "").toString().trim();
+      if (first || last) return { first: first, last: last };
+      const parts = (r.studentName || "").toString().trim().split(/\s+/);
+      return { first: parts.shift() || "\u2014", last: parts.join(" ") };
+    }
+
+    function buildStudentSummaries(records) {
+      const byStudent = {};
+      records.forEach(r => {
+        const n = splitName(r);
+        const key = ((r.uid || r.email || (n.first + " " + n.last) || "no_name") + "|" + (r.classCode || "")).toString().trim().toLowerCase();
+        if (!byStudent[key]) {
+          byStudent[key] = { key, firstName: n.first, lastName: n.last, studentName: r.studentName || (n.first + " " + n.last),
+            grade: r.grade || r.group || "\u2014", classCode: r.classCode || "\u2014", email: r.email || "",
+            attempts: [], lastTimestamp: 0, lastDateTime: "" };
+        }
+        const st = byStudent[key];
+        st.attempts.push(r);
+        const ts = Number(r.timestamp) || 0;
+        if (ts >= st.lastTimestamp || !st.lastDateTime) {
+          st.lastTimestamp = ts;
+          st.lastDateTime = r.dateTime || "";
+          if (n.first) st.firstName = n.first;
+          if (n.last) st.lastName = n.last;
+          st.studentName = (st.firstName + " " + st.lastName).trim();
+          if (r.grade || r.group) st.grade = r.grade || r.group;
+        }
+      });
+
+      return Object.values(byStudent).map(st => {
+        const moduleScores = MODULES.map(mod => {
+          const list = st.attempts.filter(a => a.moduleId === mod.id);
+          return list.length ? Math.max(...list.map(a => Number(a.score) || 0)) : null;
+        });
+        const moduleAttempts = MODULES.map(mod => st.attempts.filter(a => a.moduleId === mod.id).length);
+        const levelStats = LEVELS.map(lv => {
+          const idx = MODULES.map((m, i) => i).filter(i => MODULES[i].level === lv.n);
+          const got = idx.filter(i => moduleScores[i] !== null);
+          const passed = got.filter(i => moduleScores[i] >= passMark(MODULES[i])).length;
+          const avg = got.length ? Math.round(got.reduce((a, i) => a + moduleScores[i], 0) / got.length) : null;
+          return { done: got.length, total: idx.length, passed: passed, avg: avg };
+        });
+        const completedCount = moduleScores.filter(sc => sc !== null).length;
+        const allDone = completedCount === MODULES.length;
+        const allPassed = allDone && moduleScores.every((sc, i) => sc >= passMark(MODULES[i]));
+        const finalAverage = allDone ? Math.round(moduleScores.reduce((a, sc) => a + sc, 0) / MODULES.length) : null;
+        return Object.assign({}, st, { moduleScores, moduleAttempts, levelStats, completedCount, allDone, allPassed, finalAverage });
+      });
+    }
+
+    function renderTeacherStats(students) {
+      const total = students.length;
+      const done = students.filter(s => s.allDone);
+      const passed = students.filter(s => s.allPassed).length;
+      const avg = done.length ? Math.round(done.reduce((a, s) => a + s.finalAverage, 0) / done.length) : 0;
+      document.getElementById("teacherStatsGrid").innerHTML = `
+        <div class="bg-slate-900 border-2 border-slate-800 rounded-2xl p-4 text-center"><div class="text-3xl font-black text-white">${total}</div><div class="text-xs text-slate-400 font-bold uppercase mt-1">Students</div></div>
+        <div class="bg-slate-900 border-2 border-slate-800 rounded-2xl p-4 text-center"><div class="text-3xl font-black text-emerald-400">${done.length}/${total}</div><div class="text-xs text-slate-400 font-bold uppercase mt-1">Did all ${MODULES.length} levels</div></div>
+        <div class="bg-slate-900 border-2 border-slate-800 rounded-2xl p-4 text-center"><div class="text-3xl font-black text-emerald-400">${passed}</div><div class="text-xs text-slate-400 font-bold uppercase mt-1">Passed everything</div></div>
+        <div class="bg-slate-900 border-2 border-slate-800 rounded-2xl p-4 text-center"><div class="text-3xl font-black text-amber-400">${avg}%</div><div class="text-xs text-slate-400 font-bold uppercase mt-1">Group average</div></div>`;
+    }
+
+    function filterTeacherTable(term) {
+      teacherSearchTerm = term || "";
+      paintTeacherTable();
+    }
+
+    function visibleStudents() {
+      let students = buildStudentSummaries(teacherAllRecords);
+      const term = teacherSearchTerm.trim().toLowerCase();
+      if (term) {
+        students = students.filter(s =>
+          (s.firstName || "").toLowerCase().includes(term) ||
+          (s.lastName || "").toLowerCase().includes(term) ||
+          (s.email || "").toLowerCase().includes(term) ||
+          (s.grade || "").toLowerCase().includes(term) ||
+          (s.classCode || "").toLowerCase().includes(term));
+      }
+      students.sort((a, b) =>
+        (a.lastName || "").localeCompare(b.lastName || "", "es") ||
+        (a.firstName || "").localeCompare(b.firstName || "", "es"));
+      return students;
+    }
+
+    function toggleStudentDetail(key) {
+      if (teacherOpenRows.has(key)) teacherOpenRows.delete(key); else teacherOpenRows.add(key);
+      paintTeacherTable();
+    }
+
+    function studentDetailHtml(s) {
+      const attempts = s.attempts.slice().sort((a, b) => (Number(b.timestamp) || 0) - (Number(a.timestamp) || 0));
+      const header = `
+        <p class="text-sm md:text-base font-bold text-slate-200 mb-2">
+          <i class="fa-solid fa-user text-emerald-400 mr-1"></i> ${escapeHtml(s.firstName)} <span class="text-emerald-300">${escapeHtml(s.lastName)}</span>
+          <span class="text-slate-500">\u00b7</span> <span class="text-amber-300">Group: ${escapeHtml(s.grade)}</span>
+          <span class="text-slate-500">\u00b7</span> <span class="text-slate-400">${escapeHtml(s.email)}</span>
+        </p>`;
+      const body = attempts.map(a => {
+        const ok = Number(a.score) >= passMarkOf(a.moduleId);
+        const answers = Array.isArray(a.answers) ? a.answers : Object.values(a.answers || {});
+        const lines = answers.map((x, i) => `
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-1 md:gap-3 py-1 border-b border-slate-800/60 text-xs md:text-sm">
+            <span class="text-slate-200">${i + 1}. ${escapeHtml(x.prompt || x.text || "")}</span>
+            <span class="${x.ok ? "text-emerald-300" : "text-rose-300"} font-mono">${x.ok ? "\u2714" : "\u2718"} ${escapeHtml(x.user) || "\u2014"}</span>
+            <span class="text-slate-400 font-mono">${x.ok ? "" : "\u2192 " + escapeHtml(x.correct)}</span>
+          </div>`).join("");
+        return `
+          <details class="bg-slate-950 border ${ok ? "border-emerald-500/30" : "border-rose-500/30"} rounded-xl p-3 mb-2">
+            <summary class="cursor-pointer font-bold text-sm md:text-base flex flex-wrap gap-3 items-center">
+              <span class="text-white">${escapeHtml(a.topic || a.moduleId)}</span>
+              <span class="${ok ? "text-emerald-400" : "text-rose-400"} font-black">${a.score}% (${a.rawScore || ""})</span>
+              <span class="text-slate-500 text-xs">${escapeHtml(a.dateTime || "")} \u00b7 ${escapeHtml(a.timeSpent || "")}</span>
+            </summary>
+            <div class="mt-2">${lines || '<p class="text-slate-500 text-sm">No answer details saved.</p>'}</div>
+          </details>`;
+      }).join("");
+      return header + body;
+    }
+
+    function paintTeacherTable() {
+      const tbody = document.getElementById("teacherTableBody");
+      renderTeacherStats(buildStudentSummaries(teacherAllRecords));
+      const students = visibleStudents();
+
+      if (students.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="${TEACHER_COLSPAN}" class="p-6 text-center text-slate-500 font-bold">
+          ${teacherAllRecords.length === 0 ? "No attempts recorded for your class code yet." : "No student matches your search."}</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = "";
+      students.forEach(s => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-800/50 transition cursor-pointer";
+        tr.onclick = () => toggleStudentDetail(s.key);
+
+        const moduleCells = s.levelStats.map((st, i) => {
+          if (!st.done) return `<td class="p-3 text-center text-slate-600">\u2014</td>`;
+          const cls = st.passed === st.total ? "bg-emerald-500/15 text-emerald-400" : (st.avg >= passMark(modulesOfLevel(i + 1)[0]) ? "bg-amber-500/15 text-amber-300" : "bg-rose-500/15 text-rose-400");
+          return `<td class="p-3 text-center"><span class="inline-block px-2 py-1 rounded-lg font-black text-xs ${cls}">${st.passed}/${st.total}</span><span class="block text-[10px] text-slate-500 mt-1">avg ${st.avg}%</span></td>`;
+        }).join("");
+
+        const avgCell = s.allDone
+          ? `<span class="font-black text-white">${s.finalAverage}%</span>`
+          : `<span class="font-bold text-slate-400">${s.completedCount}/${MODULES.length}</span>`;
+        const resultCell = !s.allDone
+          ? `<span class="text-xs font-bold text-slate-500">In progress</span>`
+          : (s.allPassed ? `<span class="text-xs font-black text-emerald-400">\u2705 Passed</span>` : `<span class="text-xs font-black text-rose-400">\u26a0\ufe0f Not passed</span>`);
+        const open = teacherOpenRows.has(s.key);
+
+        tr.innerHTML = `
+          <td class="p-3 font-extrabold text-white"><i class="fa-solid ${open ? "fa-chevron-down" : "fa-chevron-right"} text-slate-500 text-xs mr-1"></i>${escapeHtml(s.firstName)}</td>
+          <td class="p-3 font-extrabold text-emerald-300">${escapeHtml(s.lastName)}<span class="block text-[11px] text-slate-500 font-medium">${escapeHtml(s.email)}</span></td>
+          <td class="p-3 text-slate-300 font-bold">${escapeHtml(s.grade || "\u2014")}</td>
+          <td class="p-3 text-amber-300/80 font-mono text-xs">${escapeHtml(s.classCode || "\u2014")}</td>
+          ${moduleCells}
+          <td class="p-3 text-center">${avgCell}</td>
+          <td class="p-3 text-center">${resultCell}</td>
+          <td class="p-3 text-slate-400 text-xs">${escapeHtml(s.lastDateTime || "\u2014")}</td>`;
+        tbody.appendChild(tr);
+
+        if (open) {
+          const dr = document.createElement("tr");
+          dr.innerHTML = `<td colspan="${TEACHER_COLSPAN}" class="p-3 md:p-4 bg-slate-900/60">${studentDetailHtml(s)}</td>`;
+          tbody.appendChild(dr);
+        }
+      });
+    }
+
+    function exportTeacherCsv() {
+      const students = visibleStudents();
+      const esc = v => `"${(v === null || v === undefined ? "" : String(v)).replace(/"/g, '""')}"`;
+      const header = ["Name", "Surname(s)", "Group", "Class code", "Email",
+        ...MODULES.map(m => m.short + " (best %)"), ...MODULES.map(m => m.short + " (attempts)"),
+        "Average %", "Result", "Last activity"];
+      const rows = students.map(s => [
+        s.firstName, s.lastName, s.grade, s.classCode, s.email,
+        ...s.moduleScores.map(v => v === null ? "" : v),
+        ...s.moduleAttempts,
+        s.allDone ? s.finalAverage : "",
+        !s.allDone ? "In progress" : (s.allPassed ? "Passed" : "Not passed"),
+        s.lastDateTime
+      ]);
+      const csv = "\ufeff" + [header, ...rows].map(r => r.map(esc).join(";")).join("\r\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `future_tenses_${teacherCodes().join("_")}_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
+
+    window.onload = initApp;
+  </script>
+</body>
+</html>
