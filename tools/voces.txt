@@ -1,0 +1,13 @@
+# Voces que narran el video-leccion (video/index.html).
+#
+# Para cambiarlas:
+#   1. Haz doble clic en COMPARAR-VOCES.command y escucha la comparativa
+#      (o, en GitHub: Actions > Grabar la narracion del video > Run workflow,
+#      marcando "comparativa").
+#   2. Escribe aqui el nombre completo de las que mas te gusten.
+#   3. Graba otra vez (GRABAR-AUDIOS.command o Run workflow). Solo se
+#      regraban los clips de la voz que hayas cambiado.
+
+voz_narradora = en-GB-SoniaNeural     # explica la leccion
+voz_quiz      = en-GB-RyanNeural      # lee las preguntas del quiz
+voz_es        = es-ES-ElviraNeural    # dice "IES Goya, Zaragoza" en castellano

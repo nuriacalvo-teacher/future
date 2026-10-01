@@ -18,6 +18,13 @@ App de práctica de los futuros en inglés (ESO / Bachillerato), con el mismo mo
 
 Cada nivel empieza con la explicación del módulo. Los alumnos pueden entrar con su cuenta de Google y el código de clase, o como invitados (en ese caso no se guarda nada).
 
+## 🎬 Vídeo-lección narrada
+
+**▶ [Ver la lección](https://nuriacalvo-teacher.github.io/future/video/)** · https://nuriacalvo-teacher.github.io/future/video/
+
+En [`video/`](video/) hay una lección animada y narrada en inglés con todos los futuros, un quiz y, al final, un botón a esta app de ejercicios.
+La narración está grabada (`video/audio/`, voces neuronales británicas), así que suena igual en Mac, iPhone, Android, Windows y Vitalinux. Para cambiar el guion o las voces y volver a grabar: [`tools/README.md`](tools/README.md).
+
 ## Corrección de las traducciones
 
 Se aceptan todas las respuestas correctas, no solo la del modelo:
