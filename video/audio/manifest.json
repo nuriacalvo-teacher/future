@@ -1,0 +1,394 @@
+{
+ "version": 1,
+ "voices": {
+  "narradora": "en-GB-SoniaNeural",
+  "quiz": "en-GB-RyanNeural",
+  "es": "es-ES-ElviraNeural"
+ },
+ "clips": {
+  "s0_0": {
+   "f": "s0_0.mp3",
+   "d": 2.83,
+   "t": "Hello, and welcome to Future Lab!",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s0_1": {
+   "f": "s0_1.mp3",
+   "d": 8.4,
+   "t": "This educational app has been made by Nuria Calvo, an English teacher at IES Goya, Zaragoza.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s0_2": {
+   "f": "s0_2.mp3",
+   "d": 6.84,
+   "t": "In English, there isn't just one future. There are several, and each one tells us something different.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s0_3": {
+   "f": "s0_3.mp3",
+   "d": 8.88,
+   "t": "Today you'll learn when to use will, be going to, the present tenses, the future continuous and the future perfect. Let's go!",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s1_0": {
+   "f": "s1_0.mp3",
+   "d": 2.09,
+   "t": "Chapter one: will.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s1_1": {
+   "f": "s1_1.mp3",
+   "d": 9.38,
+   "t": "The form is easy: will, plus the infinitive without to. It's the same for every person. In the negative, we say won't.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s1_2": {
+   "f": "s1_2.mp3",
+   "d": 8.54,
+   "t": "We use will for predictions and opinions, especially after I think, I'm sure, or probably. I think it will rain tomorrow.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s1_3": {
+   "f": "s1_3.mp3",
+   "d": 8.02,
+   "t": "We also use it for decisions we make at the moment of speaking. The phone's ringing! Don't worry, I'll answer it.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s1_4": {
+   "f": "s1_4.mp3",
+   "d": 8.47,
+   "t": "And for offers and promises. That bag looks heavy. I'll carry it for you. I promise I won't tell anyone.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s1_5": {
+   "f": "s1_5.mp3",
+   "d": 7.27,
+   "t": "Careful! Never say: I will to go, or: she will goes. Just say: she will go.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s2_0": {
+   "f": "s2_0.mp3",
+   "d": 2.59,
+   "t": "Chapter two: be going to.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s2_1": {
+   "f": "s2_1.mp3",
+   "d": 5.26,
+   "t": "The form is: am, is or are, plus going to, plus the infinitive.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s2_2": {
+   "f": "s2_2.mp3",
+   "d": 8.35,
+   "t": "We use it for plans and intentions: things we decided before speaking. I'm going to study medicine at university.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s2_3": {
+   "f": "s2_3.mp3",
+   "d": 9.1,
+   "t": "We also use it for predictions based on evidence, something we can see right now. Look at those black clouds! It's going to rain.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s2_4": {
+   "f": "s2_4.mp3",
+   "d": 6.36,
+   "t": "In the negative: She isn't going to come. And in questions: Are you going to watch the match?",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s3_0": {
+   "f": "s3_0.mp3",
+   "d": 3.07,
+   "t": "Chapter three: will, or going to?",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s3_1": {
+   "f": "s3_1.mp3",
+   "d": 3.26,
+   "t": "Here's the key question: when did you decide?",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s3_2": {
+   "f": "s3_2.mp3",
+   "d": 6.14,
+   "t": "If you decide right now, use will. Oh no, there's no milk! I'll buy some.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s3_3": {
+   "f": "s3_3.mp3",
+   "d": 7.9,
+   "t": "If you decided before, use going to. I'm going to buy some milk on my way home. I planned it this morning.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s3_4": {
+   "f": "s3_4.mp3",
+   "d": 5.93,
+   "t": "And for predictions: an opinion takes will, but evidence you can see takes going to.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s3_5": {
+   "f": "s3_5.mp3",
+   "d": 6.38,
+   "t": "I think Spain will win. But: look, they're three goals ahead! They're going to win!",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s4_0": {
+   "f": "s4_0.mp3",
+   "d": 3.91,
+   "t": "Chapter four: present tenses with a future meaning.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s4_1": {
+   "f": "s4_1.mp3",
+   "d": 9.72,
+   "t": "We use the present continuous for fixed arrangements: plans with a time and a place, often with other people. I'm meeting Laura at six tomorrow.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s4_2": {
+   "f": "s4_2.mp3",
+   "d": 5.09,
+   "t": "Imagine it's written in your diary. We're flying to London on Friday.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s4_3": {
+   "f": "s4_3.mp3",
+   "d": 8.62,
+   "t": "We use the present simple for timetables and schedules. The train leaves at 8:15. The film starts at nine.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s4_4": {
+   "f": "s4_4.mp3",
+   "d": 6.84,
+   "t": "So remember: arrangements, present continuous. Timetables, present simple.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s5_0": {
+   "f": "s5_0.mp3",
+   "d": 3.34,
+   "t": "Chapter five: the future continuous.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s5_1": {
+   "f": "s5_1.mp3",
+   "d": 4.58,
+   "t": "The form is: will be, plus a verb ending in -ing.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s5_2": {
+   "f": "s5_2.mp3",
+   "d": 5.28,
+   "t": "We use it for an action that will be in progress at a specific moment in the future.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s5_3": {
+   "f": "s5_3.mp3",
+   "d": 6.65,
+   "t": "This time tomorrow, I'll be lying on the beach. At nine o'clock tonight, we'll be having dinner.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s5_4": {
+   "f": "s5_4.mp3",
+   "d": 6.31,
+   "t": "It's also a polite way to ask about someone's plans. Will you be using the car this evening?",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s6_0": {
+   "f": "s6_0.mp3",
+   "d": 3.17,
+   "t": "Chapter six: the future perfect.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s6_1": {
+   "f": "s6_1.mp3",
+   "d": 4.18,
+   "t": "The form is: will have, plus the past participle.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s6_2": {
+   "f": "s6_2.mp3",
+   "d": 5.11,
+   "t": "We use it for an action that will be finished before a certain moment in the future.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s6_3": {
+   "f": "s6_3.mp3",
+   "d": 5.5,
+   "t": "It often goes with by: by Friday, by next year, by the time you arrive.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s6_4": {
+   "f": "s6_4.mp3",
+   "d": 7.46,
+   "t": "By the end of June, I'll have finished all my exams. By 2050, scientists will have found a cure.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s6_5": {
+   "f": "s6_5.mp3",
+   "d": 4.18,
+   "t": "And in the negative: Sorry, I won't have finished by then.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s7_0": {
+   "f": "s7_0.mp3",
+   "d": 4.68,
+   "t": "Chapter seven: when, as soon as, until, and if.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s7_1": {
+   "f": "s7_1.mp3",
+   "d": 11.64,
+   "t": "Here's a classic mistake. After when, as soon as, until, before, after and if, we use a present tense, not will, even when we're talking about the future.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s7_2": {
+   "f": "s7_2.mp3",
+   "d": 4.51,
+   "t": "I'll call you when I arrive. Never: when I will arrive.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s7_3": {
+   "f": "s7_3.mp3",
+   "d": 3.17,
+   "t": "As soon as she gets home, she'll text you.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s7_4": {
+   "f": "s7_4.mp3",
+   "d": 5.47,
+   "t": "If it rains, we'll stay at home. And we'll wait here until the bus comes.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s8_0": {
+   "f": "s8_0.mp3",
+   "d": 4.82,
+   "t": "Time for a challenge! Choose the right future for each sentence.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s9_0": {
+   "f": "s9_0.mp3",
+   "d": 2.09,
+   "t": "Fantastic work!",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s9_1": {
+   "f": "s9_1.mp3",
+   "d": 7.99,
+   "t": "Now you know all the futures: will, going to, the present tenses, the future continuous and the future perfect.",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "s9_2": {
+   "f": "s9_2.mp3",
+   "d": 14.86,
+   "t": "This educational app was made by Nuria Calvo, an English teacher at IES Goya, Zaragoza. Now it's your turn: click the button and practise with the exercises. See you in the future!",
+   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
+  },
+  "q0": {
+   "f": "q0.mp3",
+   "d": 7.18,
+   "t": "Question 1. Look at those black clouds! It, blank, rain.",
+   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  },
+  "q0_ok": {
+   "f": "q0_ok.mp3",
+   "d": 6.94,
+   "t": "Correct! We can see evidence right now, the black clouds, so we use going to.",
+   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  },
+  "q0_no": {
+   "f": "q0_no.mp3",
+   "d": 10.2,
+   "t": "Not quite. The right answer is: is going to. We can see evidence right now, the black clouds, so we use going to.",
+   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  },
+  "q1": {
+   "f": "q1.mp3",
+   "d": 7.18,
+   "t": "Question 2. The phone's ringing. Don't worry, I, blank, it!",
+   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  },
+  "q1_ok": {
+   "f": "q1_ok.mp3",
+   "d": 6.05,
+   "t": "Correct! It's a decision made at the moment of speaking, so we use will.",
+   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  },
+  "q1_no": {
+   "f": "q1_no.mp3",
+   "d": 9.29,
+   "t": "Not quite. The right answer is: will answer. It's a decision made at the moment of speaking, so we use will.",
+   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  },
+  "q2": {
+   "f": "q2.mp3",
+   "d": 7.49,
+   "t": "Question 3. Hurry up! The train, blank, at seven forty-five.",
+   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  },
+  "q2_ok": {
+   "f": "q2_ok.mp3",
+   "d": 6.5,
+   "t": "Correct! It's a timetable, so we use the present simple: the train leaves.",
+   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  },
+  "q2_no": {
+   "f": "q2_no.mp3",
+   "d": 9.62,
+   "t": "Not quite. The right answer is: leaves. It's a timetable, so we use the present simple: the train leaves.",
+   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  },
+  "q3": {
+   "f": "q3.mp3",
+   "d": 6.55,
+   "t": "Question 4. This time next week, I, blank, on a beach in Greece.",
+   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  },
+  "q3_ok": {
+   "f": "q3_ok.mp3",
+   "d": 6.91,
+   "t": "Correct! It's an action in progress at a moment in the future: will be, plus -ing.",
+   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  },
+  "q3_no": {
+   "f": "q3_no.mp3",
+   "d": 10.27,
+   "t": "Not quite. The right answer is: will be lying. It's an action in progress at a moment in the future: will be, plus -ing.",
+   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  },
+  "q4": {
+   "f": "q4.mp3",
+   "d": 6.41,
+   "t": "Question 5. By 2030, I, blank, university.",
+   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  },
+  "q4_ok": {
+   "f": "q4_ok.mp3",
+   "d": 7.9,
+   "t": "Correct! It will be finished before a moment in the future, with by: will have, plus the past participle.",
+   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  },
+  "q4_no": {
+   "f": "q4_no.mp3",
+   "d": 11.23,
+   "t": "Not quite. The right answer is: will have finished. It will be finished before a moment in the future, with by: will have, plus the past participle.",
+   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  },
+  "q5": {
+   "f": "q5.mp3",
+   "d": 5.35,
+   "t": "Question 6. I'll call you when I, blank, home.",
+   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  },
+  "q5_ok": {
+   "f": "q5_ok.mp3",
+   "d": 6.5,
+   "t": "Correct! After when, we use the present simple, not will: when I get home.",
+   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  },
+  "q5_no": {
+   "f": "q5_no.mp3",
+   "d": 9.41,
+   "t": "Not quite. The right answer is: get. After when, we use the present simple, not will: when I get home.",
+   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  }
+ }
+}
