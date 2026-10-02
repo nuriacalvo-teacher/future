@@ -2,18 +2,13 @@
 # Graba el capitulo 1 en dos versiones (una narradora / profesora + alumno)
 # con varias parejas de voces, y deja los MP3 para descargar.
 #
-# Se lanza sola al subir cambios a tools/gemini/ en esta rama, o desde la
-# pestaña "Actions" con "Run workflow". Necesita el secreto GEMINI_API_KEY.
+# Se lanza desde la pestaña "Actions" con "Run workflow". Necesita el secreto
+# GEMINI_API_KEY. Gasta 8 de las 10 peticiones diarias del plan gratuito.
 
 name: Muestra de voces Gemini
 
 on:
   workflow_dispatch:
-  push:
-    branches: [claude/upbeat-curie-o1m6a6]
-    paths:
-      - 'tools/gemini/**'
-      - '.github/workflows/muestra-gemini.yml'
 
 permissions:
   contents: read

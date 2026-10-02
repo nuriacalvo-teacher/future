@@ -308,14 +308,21 @@ def clips_of(lesson):
     usa la pagina. Si cambias como la pagina compone una frase, cambialo aqui
     tambien."""
     out = []
-    for i, frases in enumerate(lesson["scenes"]):
-        for j, t in enumerate(frases):
-            out.append(("s%d_%d" % (i, j), t, "narradora"))
+    for i, pasos in enumerate(lesson["scenes"]):
+        for j, paso in enumerate(pasos):
+            for k, t in enumerate([paso] if isinstance(paso, str) else paso):
+                # "S: ..." lo dice el alumno (aqui, la voz del quiz)
+                out.append(("s%d_%d_%d" % (i, j, k), t, "quiz" if t.startswith("S:") else "narradora"))
     for i, q in enumerate(lesson["quiz"]):
         out.append(("q%d" % i, "Question %d. %s" % (i + 1, q["spoken"]), "quiz"))
         out.append(("q%d_ok" % i, "Correct! " + q["why"], "quiz"))
         out.append(("q%d_no" % i, "Not quite. The right answer is: %s. %s" % (q["opts"][q["a"]], q["why"]), "quiz"))
     return out
+
+
+def spoken_text(raw):
+    """Quita del guion lo que no se lee: el "S:" del alumno y los [corchetes]."""
+    return re.sub(r"^\[[^\]]*\]\s*", "", re.sub(r"^S:\s*", "", raw))
 
 
 def say_as(text):
@@ -400,7 +407,7 @@ async def build_all(force, only, existing):
             out[key] = antigua
             continue
         print("  [%2d/%2d] %-7s %-52s" % (n + 1, total, key, text[:52]), end="", flush=True)
-        audio = await synth_clip(text, role)
+        audio = await synth_clip(spoken_text(text), role)
         with open(destino, "wb") as fh:
             fh.write(audio)
         dur = round(mp3_info(audio)[0], 2)
@@ -413,12 +420,12 @@ async def build_demo():
     if not os.path.isdir(AUDIO_DIR):
         os.makedirs(AUDIO_DIR)
     clips = clips_of(lesson_of())
-    elegidos = [c for c in clips if c[0] in ("s0_0", "s0_1", "s1_1", "q0", "q0_ok")]
+    elegidos = [c for c in clips if c[0] in ("s0_0_0", "s0_0_1", "s0_1_0", "s1_1_1", "q0", "q0_ok")]
     piezas, rate = [], 24000
     print("\nMuestra · narradora %s · quiz %s · castellano %s" % (VOICES["narradora"], VOICES["quiz"], VOICES["es"]))
     for key, text, role in elegidos:
         print("  %-6s %s" % (key, text[:66]))
-        audio = await synth_clip(text, role)
+        audio = await synth_clip(spoken_text(text), role)
         rate = mp3_info(audio)[1]
         if piezas:
             piezas.append(silence_mp3(0.8, rate))
@@ -521,7 +528,7 @@ async def main_async(args):
     # se borran los MP3 de clips que ya no existen en el guion
     vivos = {c["f"] for c in data["clips"].values()}
     for nombre in os.listdir(AUDIO_DIR):
-        if (re.match(r"^(s\d+_\d+|q\d+(_ok|_no)?)\.mp3$", nombre) and nombre not in vivos):
+        if (re.match(r"^(s\d+_\d+(_\d+)?|q\d+(_ok|_no)?)\.mp3$", nombre) and nombre not in vivos):
             os.remove(os.path.join(AUDIO_DIR, nombre))
             print("  (borrado %s: ya no esta en el guion)" % nombre)
 
