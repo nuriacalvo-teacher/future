@@ -1,0 +1,2 @@
+Cambiar este fichero (en la rama de pruebas) lanza la grabacion con Gemini.
+Ultima peticion: 2026-10-03, grabacion completa
