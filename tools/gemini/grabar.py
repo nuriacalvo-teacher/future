@@ -48,7 +48,7 @@ ALUMNO = ("Enthusiastic British teenage student with a natural British accent "
 ESPANOL = " Pronounce 'IES Goya, Zaragoza' the Spanish way."
 
 # Que capitulos van juntos en una misma peticion ("quiz" = todo el quiz).
-GRUPOS = [[0], [1], [2], [3], [4], [5], [6], [7], [8, 9], ["quiz"]]
+GRUPOS = [[0], [1], [2], [3], [4], [5], [6], [7], [8, 9], ["quiz"], ["respuestas"]]
 
 # Solo cambian lo que se ENVIA a la voz, nunca el texto del manifest.
 SAY_AS = [("8:15", "eight fifteen"), ("7:45", "seven forty-five")]
@@ -73,9 +73,23 @@ def turno(raw):
     return who, estilo, rest[m.end():] if m else rest
 
 
+def respuesta(q, j):
+    """La frase del quiz con la opcion j puesta: la dice el alumno al elegirla.
+    Igual que answerText() en video/index.html."""
+    t = re.sub(r"\s*\u2014\s*", " ", q["before"] + q["opts"][j] + q["after"])
+    return re.sub(r"\s+", " ", t).strip()
+
+
 def clips_del_grupo(lesson, grupo):
     out = []
     for g in grupo:
+        if g == "respuestas":
+            for i, q in enumerate(lesson["quiz"]):
+                for j in range(len(q["opts"])):
+                    t = respuesta(q, j)
+                    out.append(("q%d_a%d" % (i, j), t, "S",
+                                "answering a quiz question out loud, saying the whole sentence with confidence", t))
+            continue
         if g == "quiz":
             for i, q in enumerate(lesson["quiz"]):
                 buena = q["opts"][q["a"]]
@@ -110,7 +124,8 @@ def firma(who):
 # Gemini
 # ---------------------------------------------------------------------------
 def pedir(clips):
-    hay_alumno = any(c[2] == "S" for c in clips)
+    quienes = {c[2] for c in clips}
+    dialogo = len(quienes) > 1
     content = []
     for n, (_, _, who, estilo, texto) in enumerate(clips):
         texto = hablado(texto)
@@ -120,15 +135,15 @@ def pedir(clips):
         if "IES Goya" in texto:
             base += ESPANOL
         meta = {"type": "speech_metadata", "style": base + (" Now: " + estilo + "." if estilo else "")}
-        if hay_alumno:
+        if dialogo:
             meta["speaker"] = "Student" if who == "S" else "Teacher"
         content.append({"type": "text", "text": texto, "annotations": [meta]})
-    if hay_alumno:
+    if dialogo:
         cfg = {"mode": "conversational", "speakers": [
             {"speaker": "Teacher", "voice": VOZ_PROFESORA},
             {"speaker": "Student", "voice": VOZ_ALUMNO}]}
     else:
-        cfg = [{"voice": VOZ_PROFESORA}]
+        cfg = [{"voice": VOZ_ALUMNO if quienes == {"S"} else VOZ_PROFESORA}]
     body = json.dumps({"model": MODEL,
                        "input": [{"type": "user_input", "content": content}],
                        "response_format": {"type": "audio"},
@@ -375,7 +390,7 @@ def main():
             del clips_out[k]
             vivos.discard(k + ".mp3")
     for f in os.listdir(AUDIO_DIR):
-        if re.match(r"^(s\d+_\d+(_\d+)?|q\d+(_ok|_no)?)\.mp3$", f) and f not in vivos:
+        if re.match(r"^(s\d+_\d+(_\d+)?|q\d+(_ok|_no|_a\d+)?)\.mp3$", f) and f not in vivos:
             os.remove(os.path.join(AUDIO_DIR, f))
 
     data = {"version": 2,

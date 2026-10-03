@@ -317,6 +317,10 @@ def clips_of(lesson):
         out.append(("q%d" % i, "Question %d. %s" % (i + 1, q["spoken"]), "quiz"))
         out.append(("q%d_ok" % i, "Correct! " + q["why"], "quiz"))
         out.append(("q%d_no" % i, "Not quite. The right answer is: %s. %s" % (q["opts"][q["a"]], q["why"]), "quiz"))
+        for j, opt in enumerate(q["opts"]):
+            # la frase con la opcion elegida: la dice el alumno (answerText() en la pagina)
+            t = re.sub(r"\s+", " ", re.sub(r"\s*\u2014\s*", " ", q["before"] + opt + q["after"])).strip()
+            out.append(("q%d_a%d" % (i, j), t, "quiz"))
     return out
 
 
@@ -528,7 +532,7 @@ async def main_async(args):
     # se borran los MP3 de clips que ya no existen en el guion
     vivos = {c["f"] for c in data["clips"].values()}
     for nombre in os.listdir(AUDIO_DIR):
-        if (re.match(r"^(s\d+_\d+(_\d+)?|q\d+(_ok|_no)?)\.mp3$", nombre) and nombre not in vivos):
+        if (re.match(r"^(s\d+_\d+(_\d+)?|q\d+(_ok|_no|_a\d+)?)\.mp3$", nombre) and nombre not in vivos):
             os.remove(os.path.join(AUDIO_DIR, nombre))
             print("  (borrado %s: ya no esta en el guion)" % nombre)
 

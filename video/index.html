@@ -1020,6 +1020,11 @@ var LESSON = {
     var q = QUIZ[i];
     return ok ? "Correct! " + q.why : "Not quite. The right answer is: " + q.opts[q.a] + ". " + q.why;
   }
+  /* La frase con la opción j puesta: la dice el alumno al elegirla. */
+  function answerText(i, j) {
+    var q = QUIZ[i];
+    return (q.before + q.opts[j] + q.after).replace(/\s*\u2014\s*/g, " ").replace(/\s+/g, " ").trim();
+  }
   function allClips() {
     var out = [];
     SCRIPT.forEach(function (L, i) {
@@ -1031,6 +1036,7 @@ var LESSON = {
       out.push(["q" + i, questionText(i)]);
       out.push(["q" + i + "_ok", feedbackText(i, true)]);
       out.push(["q" + i + "_no", feedbackText(i, false)]);
+      q.opts.forEach(function (_, j) { out.push(["q" + i + "_a" + j, answerText(i, j)]); });
     });
     return out;
   }
@@ -1264,7 +1270,11 @@ var LESSON = {
     st.answers[st.qi] = i; st.started = true;
     var ok = i === q.a;
     renderQuiz();
-    say(feedbackText(st.qi, ok), null, "q" + st.qi + (ok ? "_ok" : "_no"), { who: "T" });
+    var qi = st.qi;
+    /* primero el alumno dice la frase con lo que se ha elegido; luego la profesora corrige */
+    say(answerText(qi, i), function () {
+      say(feedbackText(qi, ok), null, "q" + qi + (ok ? "_ok" : "_no"), { who: "T" });
+    }, "q" + qi + "_a" + i, { who: "S", gap: 300 });
   }
   function nextQuestion() {
     if (st.qi < QUIZ.length - 1) { st.qi++; renderQuiz(); askQuestion(st.qi); }
