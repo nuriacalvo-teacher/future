@@ -12,6 +12,18 @@
    "t": "Question 1. Look at those black clouds! It, blank, rain.",
    "v": "gemini:gemini-3.8-flash-tts:Kore"
   },
+  "q0_a0": {
+   "f": "q0_a0.mp3",
+   "d": 4.06,
+   "t": "Look at those black clouds! It is going to rain.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q0_a1": {
+   "f": "q0_a1.mp3",
+   "d": 3.44,
+   "t": "Look at those black clouds! It will rain.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
   "q0_no": {
    "f": "q0_no.mp3",
    "d": 9.32,
@@ -29,6 +41,18 @@
    "d": 5.6,
    "t": "Question 2. The phone's ringing. Don't worry, I, blank, it!",
    "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "q1_a0": {
+   "f": "q1_a0.mp3",
+   "d": 4.6,
+   "t": "The phone's ringing. Don't worry, I am going to answer it!",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q1_a1": {
+   "f": "q1_a1.mp3",
+   "d": 4.44,
+   "t": "The phone's ringing. Don't worry, I will answer it!",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
   },
   "q1_no": {
    "f": "q1_no.mp3",
@@ -48,6 +72,18 @@
    "t": "Question 3. Hurry up! The train, blank, at seven forty-five.",
    "v": "gemini:gemini-3.8-flash-tts:Kore"
   },
+  "q2_a0": {
+   "f": "q2_a0.mp3",
+   "d": 3.32,
+   "t": "Hurry up! The train will have left at 7:45.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q2_a2": {
+   "f": "q2_a2.mp3",
+   "d": 3.29,
+   "t": "Hurry up! The train leaves at 7:45.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
   "q2_no": {
    "f": "q2_no.mp3",
    "d": 8.58,
@@ -66,6 +102,24 @@
    "t": "Question 4. This time next week, I, blank, on a beach in Greece.",
    "v": "gemini:gemini-3.8-flash-tts:Kore"
   },
+  "q3_a0": {
+   "f": "q3_a0.mp3",
+   "d": 3.69,
+   "t": "This time next week, I will be lying on a beach in Greece.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q3_a1": {
+   "f": "q3_a1.mp3",
+   "d": 4.76,
+   "t": "This time next week, I will have lain on a beach in Greece.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q3_a2": {
+   "f": "q3_a2.mp3",
+   "d": 3.82,
+   "t": "This time next week, I lie on a beach in Greece.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
   "q3_no": {
    "f": "q3_no.mp3",
    "d": 9.34,
@@ -78,11 +132,23 @@
    "t": "Correct! It's an action in progress at a moment in the future: will be, plus -ing.",
    "v": "gemini:gemini-3.8-flash-tts:Kore"
   },
-  "q4": {
-   "f": "q4.mp3",
-   "d": 6.19,
-   "t": "Question 5. By 2030, I, blank, university.",
-   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  "q4_a0": {
+   "f": "q4_a0.mp3",
+   "d": 3.4,
+   "t": "By 2030, I will be finishing university.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q4_a1": {
+   "f": "q4_a1.mp3",
+   "d": 3.42,
+   "t": "By 2030, I will have finished university.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q4_a2": {
+   "f": "q4_a2.mp3",
+   "d": 2.71,
+   "t": "By 2030, I finish university.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
   },
   "q4_no": {
    "f": "q4_no.mp3",
@@ -101,6 +167,24 @@
    "d": 4.16,
    "t": "Question 6. I'll call you when I, blank, home.",
    "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "q5_a0": {
+   "f": "q5_a0.mp3",
+   "d": 3.74,
+   "t": "I'll call you when I will get home.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q5_a1": {
+   "f": "q5_a1.mp3",
+   "d": 3.89,
+   "t": "I'll call you when I am going to get home.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q5_a2": {
+   "f": "q5_a2.mp3",
+   "d": 2.52,
+   "t": "I'll call you when I get home.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
   },
   "q5_no": {
    "f": "q5_no.mp3",

@@ -87,8 +87,11 @@ def clips_del_grupo(lesson, grupo):
             for i, q in enumerate(lesson["quiz"]):
                 for j in range(len(q["opts"])):
                     t = respuesta(q, j)
-                    out.append(("q%d_a%d" % (i, j), t, "S",
-                                "answering a quiz question out loud, saying the whole sentence with confidence", t))
+                    estilo = "answering a quiz question out loud, saying the whole sentence with confidence"
+                    if j != q["a"]:
+                        estilo += ("; this sentence contains a deliberate grammar mistake for a language quiz: "
+                                   "say it EXACTLY as written, word for word, keeping the mistake, never correct it")
+                    out.append(("q%d_a%d" % (i, j), t, "S", estilo, t))
             continue
         if g == "quiz":
             for i, q in enumerate(lesson["quiz"]):
@@ -221,8 +224,34 @@ def silencios(s, rate=24000, ventana=0.01):
     return out
 
 
+NUMEROS = {w: str(n) for n, w in enumerate(
+    "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen "
+    "fifteen sixteen seventeen eighteen nineteen".split())}
+DECENAS = {w: 10 * n for n, w in enumerate("_ _ twenty thirty forty fifty sixty seventy eighty ninety".split()) if n > 1}
+
+
 def palabras(texto):
-    return re.findall(r"[a-z0-9]+", texto.lower().replace("'", ""))
+    """Palabras normalizadas para comparar el guion con lo que oye Whisper,
+    que escribe los numeros en cifras ('seven forty-five' -> 7 45)."""
+    ws = re.findall(r"[a-z0-9]+", texto.lower().replace("'", "").replace("o'clock", "oclock"))
+    out = []
+    for w in ws:
+        if w == "oclock":
+            out += ["o", "clock"]
+        elif w in DECENAS:
+            out.append(str(DECENAS[w]))
+        elif w in NUMEROS and out and out[-1].isdigit() and int(out[-1]) % 10 == 0 and int(out[-1]) >= 20 \
+                and int(NUMEROS[w]) < 10:
+            out[-1] = str(int(out[-1]) + int(NUMEROS[w]))     # forty five -> 45
+        else:
+            out.append(NUMEROS.get(w, w))
+    return out
+
+
+def exacto(clave):
+    """Las respuestas del quiz pueden llevar errores a proposito: tienen que
+    sonar palabra por palabra, sin que la voz los corrija."""
+    return re.match(r"^q\d+_a\d+$", clave) is not None
 
 
 MODELO_ASR = {}
@@ -249,8 +278,12 @@ def transcribir(s, rate=24000):
 def cortar(s, clips, rate=24000):
     """Corta el audio del grupo en un trozo por clip. Transcribe el audio,
     lo alinea con el guion y corta en la pausa mas larga entre la ultima
-    palabra de una frase y la primera de la siguiente. Lanza ValueError si
-    falta alguna frase o no cuadra."""
+    palabra de una frase y la primera de la siguiente.
+
+    Devuelve (tramos, buenos): buenos[n] es False si la frase n no se ha
+    dicho tal cual (le faltan palabras, le sobran o, en las que llevan errores
+    a proposito, la voz los ha corregido); esas no se guardan. Lanza
+    ValueError si alguna frase no se encuentra y no se puede cortar."""
     import difflib
     total = len(s) / float(rate)
     oido = transcribir(s, rate)
@@ -260,7 +293,7 @@ def cortar(s, clips, rate=24000):
         guion += ws
         de_quien += [n] * len(ws)
     sm = difflib.SequenceMatcher(None, guion, [w[0] for w in oido], autojunk=False)
-    t_ini, t_fin, aciertos = {}, {}, [0] * len(clips)
+    t_ini, t_fin, aciertos, pos = {}, {}, [0] * len(clips), {}
     for blk in sm.get_matching_blocks():
         for k in range(blk.size):
             n = de_quien[blk.a + k]
@@ -268,11 +301,21 @@ def cortar(s, clips, rate=24000):
             aciertos[n] += 1
             t_ini.setdefault(n, w[1])
             t_fin[n] = w[2]
+            pos.setdefault(n, [blk.b + k, blk.b + k])[1] = blk.b + k
+    buenos = []
     for n, c in enumerate(clips):
         tot = max(1, sum(1 for q in de_quien if q == n))
         if aciertos[n] < max(1, 0.5 * tot):
             raise ValueError("la frase %s no se reconoce bien en el audio (%d de %d palabras)"
                              % (c[0], aciertos[n], tot))
+        sobran = pos[n][1] - pos[n][0] + 1 - aciertos[n]
+        if exacto(c[0]):
+            ok = aciertos[n] == tot and sobran == 0
+        else:
+            ok = aciertos[n] >= 0.8 * tot and sobran <= 2
+        if not ok:
+            print("    %s no se ha dicho tal cual: %s" % (c[0], " ".join(w[0] for w in oido[pos[n][0]:pos[n][1] + 1])))
+        buenos.append(ok)
     sil = silencios(s, rate)
     cortes = []
     for n in range(len(clips) - 1):
@@ -284,7 +327,9 @@ def cortar(s, clips, rate=24000):
             x = max(hueco, key=lambda x: x[1] - x[0])
             cortes.append((max(x[0], a), min(x[1], b) if b > a else x[1]))
         else:
-            cortes.append((a, b))
+            # frases pegadas: se corta en el momento de menos volumen
+            x = punto_mas_bajo(s, a - 0.1, b + 0.1, rate)
+            cortes.append((x, x))
     ini0 = max(0.0, t_ini[0] - 0.3)
     fin0 = min(total, t_fin[len(clips) - 1] + 0.5)
     trozos, a = [], ini0
@@ -292,13 +337,25 @@ def cortar(s, clips, rate=24000):
         trozos.append((a, x[0]))
         a = x[1]
     trozos.append((a, fin0))
-    return [(max(0.0, a - MARGEN), min(total, b + MARGEN)) for a, b in trozos]
+    return [(max(0.0, a - MARGEN), min(total, b + MARGEN)) for a, b in trozos], buenos
+
+
+def punto_mas_bajo(s, a, b, rate=24000, ventana=0.01):
+    n = int(rate * ventana)
+    mejor, t = None, (a + b) / 2.0
+    for i in range(max(0, int(a * rate)), min(len(s) - n, int(b * rate)), n):
+        trozo = s[i:i + n]
+        nivel = max(abs(min(trozo)), abs(max(trozo)))
+        if mejor is None or nivel < mejor:
+            mejor, t = nivel, (i + n / 2.0) / rate
+    return t
 
 
 def guardar_mp3(s, a, b, destino, rate=24000):
     trozo = s[int(a * rate):int(b * rate)]
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-f", "s16le", "-ar", str(rate), "-ac", "1",
-                    "-i", "pipe:0", "-ar", "24000", "-ac", "1", "-b:a", "48k", destino],
+                    "-i", "pipe:0", "-af", "afade=t=in:d=0.01,areverse,afade=t=in:d=0.03,areverse",
+                    "-ar", "24000", "-ac", "1", "-b:a", "48k", destino],
                    input=trozo.tobytes(), check=True)
     return round(len(trozo) / float(rate), 2)
 
@@ -328,16 +385,16 @@ def main():
     sin_cuota = False
 
     for grupo in GRUPOS:
-        clips = clips_del_grupo(lesson, grupo)
-        nombre = "+".join("cap%s" % g if g != "quiz" else "quiz" for g in grupo)
-        al_dia = all(
-            viejos.get(c[0], {}).get("t") == c[1]
-            and viejos.get(c[0], {}).get("v") == firma(c[2])
-            and os.path.exists(os.path.join(AUDIO_DIR, c[0] + ".mp3"))
-            for c in clips)
-        if al_dia:
-            for c in clips:
-                clips_out[c[0]] = viejos[c[0]]
+        nombre = "+".join(str(g) if g in ("quiz", "respuestas") else "cap%s" % g for g in grupo)
+        clips = []
+        for c in clips_del_grupo(lesson, grupo):
+            v = viejos.get(c[0], {})
+            if (v.get("t") == c[1] and v.get("v") == firma(c[2])
+                    and os.path.exists(os.path.join(AUDIO_DIR, c[0] + ".mp3"))):
+                clips_out[c[0]] = v                          # ya grabado y al dia
+            else:
+                clips.append(c)
+        if not clips:
             print("  %-12s ya estaba grabado" % nombre)
             continue
         if sin_cuota:
@@ -357,7 +414,7 @@ def main():
             continue
         s = a_pcm(audio)
         try:
-            tramos = cortar(s, clips)
+            tramos, buenos = cortar(s, clips)
         except ValueError as e:
             print("  %s no se ha podido cortar bien (%s). Se repetira." % (nombre, e))
             os.makedirs(fallos, exist_ok=True)
@@ -365,11 +422,17 @@ def main():
             mal.append(nombre)
             time.sleep(21)
             continue
-        for c, (a, b) in zip(clips, tramos):
-            d = guardar_mp3(s, a, b, os.path.join(AUDIO_DIR, c[0] + ".mp3"))
-            clips_out[c[0]] = {"f": c[0] + ".mp3", "d": d, "t": c[1], "v": firma(c[2])}
-        print("               -> %.0f s de audio" % (len(s) / 24000.0))
-        hechos.append(nombre)
+        for c, (a, b), ok in zip(clips, tramos, buenos):
+            if ok:
+                d = guardar_mp3(s, a, b, os.path.join(AUDIO_DIR, c[0] + ".mp3"))
+                clips_out[c[0]] = {"f": c[0] + ".mp3", "d": d, "t": c[1], "v": firma(c[2])}
+        repetir = [c[0] for c, ok in zip(clips, buenos) if not ok]
+        print("               -> %.0f s de audio%s" % (len(s) / 24000.0,
+              "; se repetiran: " + ", ".join(repetir) if repetir else ""))
+        if repetir:
+            mal.append("%s (%s)" % (nombre, ", ".join(repetir)))
+        if len(repetir) < len(clips):
+            hechos.append(nombre)
         time.sleep(21)                                       # maximo 3 peticiones por minuto
 
     if not hechos:
