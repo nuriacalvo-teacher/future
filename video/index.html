@@ -144,6 +144,7 @@ a{color:#D4FF4F}a:hover{color:#EFFFB8}
 /* ---------- caption ---------- */
 .caption{position:absolute;left:50%;transform:translateX(-50%);bottom:118px;max-width:1040px;width:max-content;z-index:6;display:flex;gap:14px;align-items:flex-start;padding:12px 22px 12px 12px;border-radius:18px;background:rgba(8,9,24,.78);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);font-size:19px;line-height:1.4;box-shadow:0 20px 50px rgba(0,0,0,.4)}
 .cc{flex:none;font-size:11px;font-weight:800;letter-spacing:.1em;padding:4px 8px;border-radius:6px;background:#F4F1EA;color:#0B0D1F;margin-top:3px}
+.cc.student{background:#D4FF4F;color:#101400}
 
 /* ---------- controls ---------- */
 .ctrl{position:absolute;left:32px;right:32px;bottom:22px;height:80px;z-index:6;display:flex;align-items:center;gap:18px;padding:0 18px;border-radius:24px;background:rgba(20,22,52,.72);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(18px);box-shadow:0 24px 60px rgba(0,0,0,.45)}
@@ -707,7 +708,7 @@ a{color:#D4FF4F}a:hover{color:#EFFFB8}
   </main>
 
   <div class="caption" aria-live="polite">
-    <span class="cc">CC</span>
+    <span class="cc" id="ccWho">CC</span>
     <span id="caption">Tip: turn your sound on. This lesson is narrated in English. Press “Start the lesson” to begin.</span>
   </div>
 
@@ -738,84 +739,189 @@ a{color:#D4FF4F}a:hover{color:#EFFFB8}
    Todo lo que se dice y se lee en pantalla sale de aquí. Si cambias una
    frase, vuelve a grabar (tools/README.md): las frases que no se regraben
    se dicen con la voz del navegador hasta entonces.
+
+   Cada capítulo es una lista de pasos (cada paso enciende sus animaciones,
+   las de data-b). Un paso es una frase o una lista de frases seguidas:
+     - "Texto"           lo dice la profesora
+     - "S: Texto"        lo dice el alumno
+     - "[alegre] Texto"  lo de los corchetes es cómo decirlo: no se lee ni
+                         sale en pantalla, solo lo usa la grabación.
    ===================================================================== */
 var LESSON = {
   "scenes": [
     [
-      "Hello, and welcome to Future Lab!",
+      [
+        "Hello, and welcome to Future Lab!",
+        "S: [cheerful, waving hello] Hi everyone!"
+      ],
       "This educational app has been made by Nuria Calvo, an English teacher at IES Goya, Zaragoza.",
-      "In English, there isn't just one future. There are several, and each one tells us something different.",
-      "Today you'll learn when to use will, be going to, the present tenses, the future continuous and the future perfect. Let's go!"
+      [
+        "In English, there isn't just one future. There are several, and each one tells us something different.",
+        "S: [surprised] Wait... more than one future?",
+        "Yes! Several."
+      ],
+      [
+        "Today you'll learn when to use will, be going to, the present tenses, the future continuous and the future perfect.",
+        "S: [excited] Let's go!"
+      ]
     ],
     [
-      "Chapter one: will.",
-      "The form is easy: will, plus the infinitive without to. It's the same for every person. In the negative, we say won't.",
-      "We use will for predictions and opinions, especially after I think, I'm sure, or probably. I think it will rain tomorrow.",
-      "We also use it for decisions we make at the moment of speaking. The phone's ringing! Don't worry, I'll answer it.",
-      "And for offers and promises. That bag looks heavy. I'll carry it for you. I promise I won't tell anyone.",
-      "Careful! Never say: I will to go, or: she will goes. Just say: she will go."
+      "Chapter one: will!",
+      [
+        "The form is easy: will, plus the infinitive without to. It's the same for every person.",
+        "S: [curious, checking] So... I will, you will, she will?",
+        "Exactly! And in the negative, we say won't."
+      ],
+      [
+        "We use will for predictions and opinions, especially after I think, I'm sure, or probably.",
+        "S: [thoughtful, trying it out] Hmm... I think it will rain tomorrow.",
+        "Perfect!"
+      ],
+      [
+        "We also use it for decisions we make at the moment of speaking.",
+        "S: [surprised, acting a little scene] Oh! The phone's ringing!",
+        "[quick and helpful, acting the scene] Don't worry, I'll answer it!"
+      ],
+      [
+        "And for offers and promises.",
+        "S: [struggling, a bit tired] Ugh, this bag is so heavy...",
+        "[kind] I'll carry it for you!",
+        "S: [grateful] Thanks! I promise I'll help you next time."
+      ],
+      [
+        "S: [confident but making a mistake] Got it! So... she will goes?",
+        "[playfully alarmed, then clear] Careful! Never say: she will goes, or: I will to go. Just say: she will go.",
+        "S: [proud] She will go. Easy!"
+      ]
     ],
     [
       "Chapter two: be going to.",
-      "The form is: am, is or are, plus going to, plus the infinitive.",
-      "We use it for plans and intentions: things we decided before speaking. I'm going to study medicine at university.",
-      "We also use it for predictions based on evidence, something we can see right now. Look at those black clouds! It's going to rain.",
-      "In the negative: She isn't going to come. And in questions: Are you going to watch the match?"
+      [
+        "The form is: am, is or are, plus going to, plus the infinitive.",
+        "S: [checking] I'm going to, she's going to, they're going to?",
+        "That's it!"
+      ],
+      [
+        "We use it for plans and intentions: things we decided before speaking.",
+        "S: [proud, dreamy] I'm going to study medicine at university!",
+        "[impressed] Great plan!"
+      ],
+      [
+        "We also use it for predictions based on evidence, something we can see right now.",
+        "S: [worried, pointing at the sky] Look at those black clouds! It's going to rain.",
+        "Right! You can see it coming."
+      ],
+      [
+        "In the negative: She isn't going to come. And in questions...",
+        "S: [eager] Are you going to watch the match?",
+        "[cheerful] Of course I am!"
+      ]
     ],
     [
       "Chapter three: will, or going to?",
-      "Here's the key question: when did you decide?",
-      "If you decide right now, use will. Oh no, there's no milk! I'll buy some.",
-      "If you decided before, use going to. I'm going to buy some milk on my way home. I planned it this morning.",
+      [
+        "S: [confused] Will or going to? I always mix them up!",
+        "Here's the key question: when did you decide?"
+      ],
+      [
+        "If you decide right now, use will.",
+        "S: [surprised] Oh no, there's no milk!",
+        "[quick] I'll buy some!"
+      ],
+      [
+        "If you decided before, use going to.",
+        "S: [calm, matter-of-fact] I'm going to buy some milk on my way home. I planned it this morning."
+      ],
       "And for predictions: an opinion takes will, but evidence you can see takes going to.",
-      "I think Spain will win. But: look, they're three goals ahead! They're going to win!"
+      [
+        "S: [hopeful] I think Spain will win.",
+        "[excited, like a sports commentator] But look, they're three goals ahead! They're going to win!"
+      ]
     ],
     [
       "Chapter four: present tenses with a future meaning.",
-      "We use the present continuous for fixed arrangements: plans with a time and a place, often with other people. I'm meeting Laura at six tomorrow.",
-      "Imagine it's written in your diary. We're flying to London on Friday.",
-      "We use the present simple for timetables and schedules. The train leaves at 8:15. The film starts at nine.",
+      [
+        "We use the present continuous for fixed arrangements: plans with a time and a place, often with other people.",
+        "S: [casual] I'm meeting Laura at six tomorrow."
+      ],
+      [
+        "Imagine it's written in your diary.",
+        "S: [excited] We're flying to London on Friday!"
+      ],
+      [
+        "We use the present simple for timetables and schedules.",
+        "S: [hurried] The train leaves at 8:15!",
+        "And the film starts at nine."
+      ],
       "So remember: arrangements, present continuous. Timetables, present simple."
     ],
     [
       "Chapter five: the future continuous.",
       "The form is: will be, plus a verb ending in -ing.",
       "We use it for an action that will be in progress at a specific moment in the future.",
-      "This time tomorrow, I'll be lying on the beach. At nine o'clock tonight, we'll be having dinner.",
-      "It's also a polite way to ask about someone's plans. Will you be using the car this evening?"
+      [
+        "S: [dreamy, relaxed] This time tomorrow, I'll be lying on the beach.",
+        "[amused] Lucky you! At nine o'clock tonight, we'll be having dinner."
+      ],
+      [
+        "It's also a polite way to ask about someone's plans.",
+        "S: [very polite, a little cheeky] Will you be using the car this evening?",
+        "[amused] Nice try!"
+      ]
     ],
     [
       "Chapter six: the future perfect.",
       "The form is: will have, plus the past participle.",
       "We use it for an action that will be finished before a certain moment in the future.",
       "It often goes with by: by Friday, by next year, by the time you arrive.",
-      "By the end of June, I'll have finished all my exams. By 2050, scientists will have found a cure.",
-      "And in the negative: Sorry, I won't have finished by then."
+      [
+        "S: [relieved, happy] By the end of June, I'll have finished all my exams!",
+        "And by 2050, scientists will have found a cure."
+      ],
+      [
+        "And in the negative...",
+        "S: [apologetic] Sorry, I won't have finished by then."
+      ]
     ],
     [
       "Chapter seven: when, as soon as, until, and if.",
       "Here's a classic mistake. After when, as soon as, until, before, after and if, we use a present tense, not will, even when we're talking about the future.",
-      "I'll call you when I arrive. Never: when I will arrive.",
+      [
+        "S: [confident, making a mistake] I'll call you when I will arrive.",
+        "[firm, stopping him] Stop! Never: when I will arrive. Just say: I'll call you when I arrive."
+      ],
       "As soon as she gets home, she'll text you.",
-      "If it rains, we'll stay at home. And we'll wait here until the bus comes."
+      [
+        "S: [thinking it through] So... if it rains, we'll stay at home?",
+        "Exactly! And we'll wait here until the bus comes."
+      ]
     ],
     [
-      "Time for a challenge! Choose the right future for each sentence."
+      [
+        "Time for a challenge! Choose the right future for each sentence.",
+        "S: [determined, excited] I'm ready!"
+      ]
     ],
     [
-      "Fantastic work!",
+      [
+        "[delighted, proud] Fantastic work!",
+        "S: [proud] Thanks!"
+      ],
       "Now you know all the futures: will, going to, the present tenses, the future continuous and the future perfect.",
-      "This educational app was made by Nuria Calvo, an English teacher at IES Goya, Zaragoza. Now it's your turn: click the button and practise with the exercises. See you in the future!"
+      [
+        "This educational app was made by Nuria Calvo, an English teacher at IES Goya, Zaragoza. Now it's your turn: click the button and practise with the exercises.",
+        "S: [cheerful, waving goodbye] See you in the future!"
+      ]
     ]
   ],
   "quiz": [
     {
       "before": "Look at those black clouds! It ",
-      "after": " rain.",
-      "spoken": "Look at those black clouds! It, blank, rain.",
+      "after": ".",
+      "spoken": "Look at those black clouds! It, blank.",
       "opts": [
-        "is going to",
-        "will",
+        "is going to rain",
+        "will rain",
         "rains"
       ],
       "a": 0,
@@ -899,19 +1005,38 @@ var LESSON = {
   var QUIZ_SCENE = 8, LAST = SCRIPT.length - 1;
   var LABELS = ["Intro", "Will", "Going to", "Which one?", "Present", "Will be -ing", "Will have", "When / if", "Quiz", "Practise"];
 
+  /* Un paso del guion -> sus frases: quién habla, qué sale en pantalla y el
+     texto tal cual (es lo que guarda el manifest de la grabación). */
+  function turnsOf(beat) {
+    return (typeof beat === "string" ? [beat] : beat).map(function (raw) {
+      var who = /^S:\s*/.test(raw) ? "S" : "T";
+      var text = raw.replace(/^S:\s*/, "").replace(/^\[[^\]]*\]\s*/, "");
+      return { who: who, text: text, raw: raw };
+    });
+  }
   /* Los textos que se dicen, con la misma clave que usa la grabación. */
   function questionText(i) { return "Question " + (i + 1) + ". " + QUIZ[i].spoken; }
   function feedbackText(i, ok) {
     var q = QUIZ[i];
     return ok ? "Correct! " + q.why : "Not quite. The right answer is: " + q.opts[q.a] + ". " + q.why;
   }
+  /* La frase con la opción j puesta: la dice el alumno al elegirla. */
+  function answerText(i, j) {
+    var q = QUIZ[i];
+    return (q.before + q.opts[j] + q.after).replace(/\s*\u2014\s*/g, " ").replace(/\s+/g, " ").trim();
+  }
   function allClips() {
     var out = [];
-    SCRIPT.forEach(function (L, i) { L.forEach(function (t, j) { out.push(["s" + i + "_" + j, t]); }); });
+    SCRIPT.forEach(function (L, i) {
+      L.forEach(function (b, j) {
+        turnsOf(b).forEach(function (u, k) { out.push(["s" + i + "_" + j + "_" + k, u.raw]); });
+      });
+    });
     QUIZ.forEach(function (q, i) {
       out.push(["q" + i, questionText(i)]);
       out.push(["q" + i + "_ok", feedbackText(i, true)]);
       out.push(["q" + i + "_no", feedbackText(i, false)]);
+      q.opts.forEach(function (_, j) { out.push(["q" + i + "_a" + j, answerText(i, j)]); });
     });
     return out;
   }
@@ -1029,22 +1154,28 @@ var LESSON = {
   }
   function stopKeepAlive() { if (keepAlive) { clearInterval(keepAlive); keepAlive = null; } }
 
-  function say(text, done, key) {
-    var t = ++tok, fin = false;
+  /* opt: { raw: texto del guion (con "S:" y corchetes), who: "T" o "S",
+            gap: pausa al terminar, en ms } */
+  function say(text, done, key, opt) {
+    opt = opt || {};
+    var t = ++tok, fin = false, gap = opt.gap === undefined ? 550 : opt.gap;
     clearTimeout(wd); stopKeepAlive();
     function end() {
       if (fin || t !== tok) return;
       fin = true; clearTimeout(wd); stopKeepAlive();
       st.speaking = false; render();
-      if (done) setTimeout(function () { if (t === tok) done(); }, 550);
+      if (done) setTimeout(function () { if (t === tok) done(); }, gap);
     }
     $("caption").textContent = text;
+    var cc = $("ccWho");
+    cc.textContent = opt.who === "S" ? "STUDENT" : opt.who === "T" ? "TEACHER" : "CC";
+    cc.classList.toggle("student", opt.who === "S");
     st.speaking = true; render();
     var words = text.split(/\s+/).length;
     try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) {}
     if (audioEl) { try { audioEl.pause(); } catch (e) {} }
 
-    var rec = st.voiceOn ? clipFor(key, text) : null;
+    var rec = st.voiceOn ? clipFor(key, opt.raw || text) : null;
     if (rec && audioEl) {
       var fellBack = false;
       var fallback = function () {
@@ -1108,20 +1239,23 @@ var LESSON = {
     scenes[i].hidden = false;
     st.scene = i;
   }
-  function runBeat(scene, beat) {
+  function runBeat(scene, beat, turn) {
+    turn = turn || 0;
     if (st.scene !== scene) showScene(scene);
     st.beat = beat; render();
-    say(SCRIPT[scene][beat], function () {
-      if (beat + 1 < SCRIPT[scene].length) runBeat(scene, beat + 1);
+    var turns = turnsOf(SCRIPT[scene][beat]), u = turns[turn], more = turn + 1 < turns.length;
+    say(u.text, function () {
+      if (more) runBeat(scene, beat, turn + 1);
+      else if (beat + 1 < SCRIPT[scene].length) runBeat(scene, beat + 1);
       else sceneDone(scene);
-    }, "s" + scene + "_" + beat);
+    }, "s" + scene + "_" + beat + "_" + turn, { raw: u.raw, who: u.who, gap: more ? 220 : 550 });
   }
   function sceneDone(scene) {
     if (scene < QUIZ_SCENE) runBeat(scene + 1, 0);
     else if (scene === QUIZ_SCENE) askQuestion(st.qi);
     else { st.playing = false; render(); }
   }
-  function askQuestion(qi) { say(questionText(qi), null, "q" + qi); }
+  function askQuestion(qi) { say(questionText(qi), null, "q" + qi, { who: "T" }); }
   function goTo(i) {
     warm();
     hush();
@@ -1136,7 +1270,11 @@ var LESSON = {
     st.answers[st.qi] = i; st.started = true;
     var ok = i === q.a;
     renderQuiz();
-    say(feedbackText(st.qi, ok), null, "q" + st.qi + (ok ? "_ok" : "_no"));
+    var qi = st.qi;
+    /* primero el alumno dice la frase con lo que se ha elegido; luego la profesora corrige */
+    say(answerText(qi, i), function () {
+      say(feedbackText(qi, ok), null, "q" + qi + (ok ? "_ok" : "_no"), { who: "T" });
+    }, "q" + qi + "_a" + i, { who: "S", gap: 300 });
   }
   function nextQuestion() {
     if (st.qi < QUIZ.length - 1) { st.qi++; renderQuiz(); askQuestion(st.qi); }

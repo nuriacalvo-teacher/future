@@ -127,3 +127,30 @@ las mismas reglas que BRIT, `battles` y `ad`:
 - Si no hay grabación ni ninguna voz instalada (Vitalinux), avisa y el vídeo
   sigue con los subtítulos. Con grabación, en Vitalinux suena normal.
 - Sin `manifest.json`, todo funciona con la voz del navegador.
+
+## Narración con Gemini: profesora + alumno
+
+El guion de `video/index.html` es ahora un diálogo. Cada paso de un capítulo
+puede tener varias frases seguidas:
+
+```
+"Texto"            lo dice la profesora (voz Kore)
+"S: Texto"         lo dice el alumno (voz Puck)
+"[alegre] Texto"   lo de los corchetes es CÓMO decirlo: no se lee ni sale en pantalla
+```
+
+En pantalla, el subtítulo indica quién habla: **TEACHER** o **STUDENT**.
+
+Se graba con `tools/gemini/grabar.py`, desde la pestaña **Actions** →
+*Grabar la narración con Gemini*. Necesita el secreto `GEMINI_API_KEY`.
+
+- El plan gratuito de Gemini permite **10 peticiones al día**. Por eso cada
+  capítulo se graba de una sola vez (9 peticiones, el aviso del quiz va con el
+  final) y el quiz entero en otra.
+- Después, el programa transcribe el audio con Whisper, lo compara con el
+  guion y lo corta en frases. Si falta alguna frase o no cuadra, ese capítulo
+  no se guarda y se repite en la siguiente ejecución.
+- Solo se graba lo que ha cambiado o falta. Si se acaba la cuota, se guarda
+  lo hecho y el resto se graba otro día.
+- Las voces y el carácter de cada personaje están al principio de
+  `tools/gemini/grabar.py` (`VOZ_PROFESORA`, `VOZ_ALUMNO`, `PROFESORA`, `ALUMNO`).

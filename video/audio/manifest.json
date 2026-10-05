@@ -1,394 +1,754 @@
 {
- "version": 1,
+ "version": 2,
  "voices": {
-  "narradora": "en-GB-SoniaNeural",
-  "quiz": "en-GB-RyanNeural",
-  "es": "es-ES-ElviraNeural"
+  "profesora": "Kore",
+  "alumno": "Puck",
+  "modelo": "gemini-3.8-flash-tts"
  },
  "clips": {
-  "s0_0": {
-   "f": "s0_0.mp3",
-   "d": 2.83,
-   "t": "Hello, and welcome to Future Lab!",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s0_1": {
-   "f": "s0_1.mp3",
-   "d": 8.4,
-   "t": "This educational app has been made by Nuria Calvo, an English teacher at IES Goya, Zaragoza.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s0_2": {
-   "f": "s0_2.mp3",
-   "d": 6.84,
-   "t": "In English, there isn't just one future. There are several, and each one tells us something different.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s0_3": {
-   "f": "s0_3.mp3",
-   "d": 8.88,
-   "t": "Today you'll learn when to use will, be going to, the present tenses, the future continuous and the future perfect. Let's go!",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s1_0": {
-   "f": "s1_0.mp3",
-   "d": 2.09,
-   "t": "Chapter one: will.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s1_1": {
-   "f": "s1_1.mp3",
-   "d": 9.38,
-   "t": "The form is easy: will, plus the infinitive without to. It's the same for every person. In the negative, we say won't.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s1_2": {
-   "f": "s1_2.mp3",
-   "d": 8.54,
-   "t": "We use will for predictions and opinions, especially after I think, I'm sure, or probably. I think it will rain tomorrow.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s1_3": {
-   "f": "s1_3.mp3",
-   "d": 8.02,
-   "t": "We also use it for decisions we make at the moment of speaking. The phone's ringing! Don't worry, I'll answer it.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s1_4": {
-   "f": "s1_4.mp3",
-   "d": 8.47,
-   "t": "And for offers and promises. That bag looks heavy. I'll carry it for you. I promise I won't tell anyone.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s1_5": {
-   "f": "s1_5.mp3",
-   "d": 7.27,
-   "t": "Careful! Never say: I will to go, or: she will goes. Just say: she will go.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s2_0": {
-   "f": "s2_0.mp3",
-   "d": 2.59,
-   "t": "Chapter two: be going to.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s2_1": {
-   "f": "s2_1.mp3",
-   "d": 5.26,
-   "t": "The form is: am, is or are, plus going to, plus the infinitive.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s2_2": {
-   "f": "s2_2.mp3",
-   "d": 8.35,
-   "t": "We use it for plans and intentions: things we decided before speaking. I'm going to study medicine at university.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s2_3": {
-   "f": "s2_3.mp3",
-   "d": 9.1,
-   "t": "We also use it for predictions based on evidence, something we can see right now. Look at those black clouds! It's going to rain.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s2_4": {
-   "f": "s2_4.mp3",
-   "d": 6.36,
-   "t": "In the negative: She isn't going to come. And in questions: Are you going to watch the match?",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s3_0": {
-   "f": "s3_0.mp3",
-   "d": 3.07,
-   "t": "Chapter three: will, or going to?",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s3_1": {
-   "f": "s3_1.mp3",
-   "d": 3.26,
-   "t": "Here's the key question: when did you decide?",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s3_2": {
-   "f": "s3_2.mp3",
-   "d": 6.14,
-   "t": "If you decide right now, use will. Oh no, there's no milk! I'll buy some.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s3_3": {
-   "f": "s3_3.mp3",
-   "d": 7.9,
-   "t": "If you decided before, use going to. I'm going to buy some milk on my way home. I planned it this morning.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s3_4": {
-   "f": "s3_4.mp3",
-   "d": 5.93,
-   "t": "And for predictions: an opinion takes will, but evidence you can see takes going to.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s3_5": {
-   "f": "s3_5.mp3",
-   "d": 6.38,
-   "t": "I think Spain will win. But: look, they're three goals ahead! They're going to win!",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s4_0": {
-   "f": "s4_0.mp3",
-   "d": 3.91,
-   "t": "Chapter four: present tenses with a future meaning.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s4_1": {
-   "f": "s4_1.mp3",
-   "d": 9.72,
-   "t": "We use the present continuous for fixed arrangements: plans with a time and a place, often with other people. I'm meeting Laura at six tomorrow.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s4_2": {
-   "f": "s4_2.mp3",
-   "d": 5.09,
-   "t": "Imagine it's written in your diary. We're flying to London on Friday.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s4_3": {
-   "f": "s4_3.mp3",
-   "d": 8.62,
-   "t": "We use the present simple for timetables and schedules. The train leaves at 8:15. The film starts at nine.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s4_4": {
-   "f": "s4_4.mp3",
-   "d": 6.84,
-   "t": "So remember: arrangements, present continuous. Timetables, present simple.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s5_0": {
-   "f": "s5_0.mp3",
-   "d": 3.34,
-   "t": "Chapter five: the future continuous.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s5_1": {
-   "f": "s5_1.mp3",
-   "d": 4.58,
-   "t": "The form is: will be, plus a verb ending in -ing.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s5_2": {
-   "f": "s5_2.mp3",
-   "d": 5.28,
-   "t": "We use it for an action that will be in progress at a specific moment in the future.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s5_3": {
-   "f": "s5_3.mp3",
-   "d": 6.65,
-   "t": "This time tomorrow, I'll be lying on the beach. At nine o'clock tonight, we'll be having dinner.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s5_4": {
-   "f": "s5_4.mp3",
-   "d": 6.31,
-   "t": "It's also a polite way to ask about someone's plans. Will you be using the car this evening?",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s6_0": {
-   "f": "s6_0.mp3",
-   "d": 3.17,
-   "t": "Chapter six: the future perfect.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s6_1": {
-   "f": "s6_1.mp3",
-   "d": 4.18,
-   "t": "The form is: will have, plus the past participle.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s6_2": {
-   "f": "s6_2.mp3",
-   "d": 5.11,
-   "t": "We use it for an action that will be finished before a certain moment in the future.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s6_3": {
-   "f": "s6_3.mp3",
-   "d": 5.5,
-   "t": "It often goes with by: by Friday, by next year, by the time you arrive.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s6_4": {
-   "f": "s6_4.mp3",
-   "d": 7.46,
-   "t": "By the end of June, I'll have finished all my exams. By 2050, scientists will have found a cure.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s6_5": {
-   "f": "s6_5.mp3",
-   "d": 4.18,
-   "t": "And in the negative: Sorry, I won't have finished by then.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s7_0": {
-   "f": "s7_0.mp3",
-   "d": 4.68,
-   "t": "Chapter seven: when, as soon as, until, and if.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s7_1": {
-   "f": "s7_1.mp3",
-   "d": 11.64,
-   "t": "Here's a classic mistake. After when, as soon as, until, before, after and if, we use a present tense, not will, even when we're talking about the future.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s7_2": {
-   "f": "s7_2.mp3",
-   "d": 4.51,
-   "t": "I'll call you when I arrive. Never: when I will arrive.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s7_3": {
-   "f": "s7_3.mp3",
-   "d": 3.17,
-   "t": "As soon as she gets home, she'll text you.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s7_4": {
-   "f": "s7_4.mp3",
-   "d": 5.47,
-   "t": "If it rains, we'll stay at home. And we'll wait here until the bus comes.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s8_0": {
-   "f": "s8_0.mp3",
-   "d": 4.82,
-   "t": "Time for a challenge! Choose the right future for each sentence.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s9_0": {
-   "f": "s9_0.mp3",
-   "d": 2.09,
-   "t": "Fantastic work!",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s9_1": {
-   "f": "s9_1.mp3",
-   "d": 7.99,
-   "t": "Now you know all the futures: will, going to, the present tenses, the future continuous and the future perfect.",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
-  "s9_2": {
-   "f": "s9_2.mp3",
-   "d": 14.86,
-   "t": "This educational app was made by Nuria Calvo, an English teacher at IES Goya, Zaragoza. Now it's your turn: click the button and practise with the exercises. See you in the future!",
-   "v": "en-GB-SoniaNeural|es-ES-ElviraNeural"
-  },
   "q0": {
    "f": "q0.mp3",
-   "d": 7.18,
-   "t": "Question 1. Look at those black clouds! It, blank, rain.",
-   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+   "d": 5.13,
+   "t": "Question 1. Look at those black clouds! It, blank.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
   },
-  "q0_ok": {
-   "f": "q0_ok.mp3",
-   "d": 6.94,
-   "t": "Correct! We can see evidence right now, the black clouds, so we use going to.",
-   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  "q0_a0": {
+   "f": "q0_a0.mp3",
+   "d": 4.06,
+   "t": "Look at those black clouds! It is going to rain.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q0_a1": {
+   "f": "q0_a1.mp3",
+   "d": 3.44,
+   "t": "Look at those black clouds! It will rain.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q0_a2": {
+   "f": "q0_a2.mp3",
+   "d": 2.92,
+   "t": "Look at those black clouds! It rains.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
   },
   "q0_no": {
    "f": "q0_no.mp3",
-   "d": 10.2,
-   "t": "Not quite. The right answer is: is going to. We can see evidence right now, the black clouds, so we use going to.",
-   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+   "d": 10.0,
+   "t": "Not quite. The right answer is: is going to rain. We can see evidence right now, the black clouds, so we use going to.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "q0_ok": {
+   "f": "q0_ok.mp3",
+   "d": 6.26,
+   "t": "Correct! We can see evidence right now, the black clouds, so we use going to.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
   },
   "q1": {
    "f": "q1.mp3",
-   "d": 7.18,
+   "d": 5.6,
    "t": "Question 2. The phone's ringing. Don't worry, I, blank, it!",
-   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
   },
-  "q1_ok": {
-   "f": "q1_ok.mp3",
-   "d": 6.05,
-   "t": "Correct! It's a decision made at the moment of speaking, so we use will.",
-   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  "q1_a0": {
+   "f": "q1_a0.mp3",
+   "d": 4.6,
+   "t": "The phone's ringing. Don't worry, I am going to answer it!",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q1_a1": {
+   "f": "q1_a1.mp3",
+   "d": 4.44,
+   "t": "The phone's ringing. Don't worry, I will answer it!",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q1_a2": {
+   "f": "q1_a2.mp3",
+   "d": 3.5,
+   "t": "The phone's ringing. Don't worry, I answer it!",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
   },
   "q1_no": {
    "f": "q1_no.mp3",
-   "d": 9.29,
+   "d": 8.66,
    "t": "Not quite. The right answer is: will answer. It's a decision made at the moment of speaking, so we use will.",
-   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "q1_ok": {
+   "f": "q1_ok.mp3",
+   "d": 5.19,
+   "t": "Correct! It's a decision made at the moment of speaking, so we use will.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
   },
   "q2": {
    "f": "q2.mp3",
-   "d": 7.49,
+   "d": 6.39,
    "t": "Question 3. Hurry up! The train, blank, at seven forty-five.",
-   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
   },
-  "q2_ok": {
-   "f": "q2_ok.mp3",
-   "d": 6.5,
-   "t": "Correct! It's a timetable, so we use the present simple: the train leaves.",
-   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  "q2_a0": {
+   "f": "q2_a0.mp3",
+   "d": 3.32,
+   "t": "Hurry up! The train will have left at 7:45.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q2_a1": {
+   "f": "q2_a1.mp3",
+   "d": 3.41,
+   "t": "Hurry up! The train leave at 7:45.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q2_a2": {
+   "f": "q2_a2.mp3",
+   "d": 3.29,
+   "t": "Hurry up! The train leaves at 7:45.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
   },
   "q2_no": {
    "f": "q2_no.mp3",
-   "d": 9.62,
+   "d": 8.58,
    "t": "Not quite. The right answer is: leaves. It's a timetable, so we use the present simple: the train leaves.",
-   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "q2_ok": {
+   "f": "q2_ok.mp3",
+   "d": 5.72,
+   "t": "Correct! It's a timetable, so we use the present simple: the train leaves.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
   },
   "q3": {
    "f": "q3.mp3",
-   "d": 6.55,
+   "d": 6.51,
    "t": "Question 4. This time next week, I, blank, on a beach in Greece.",
-   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
   },
-  "q3_ok": {
-   "f": "q3_ok.mp3",
-   "d": 6.91,
-   "t": "Correct! It's an action in progress at a moment in the future: will be, plus -ing.",
-   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  "q3_a0": {
+   "f": "q3_a0.mp3",
+   "d": 3.69,
+   "t": "This time next week, I will be lying on a beach in Greece.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q3_a1": {
+   "f": "q3_a1.mp3",
+   "d": 4.76,
+   "t": "This time next week, I will have lain on a beach in Greece.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q3_a2": {
+   "f": "q3_a2.mp3",
+   "d": 3.82,
+   "t": "This time next week, I lie on a beach in Greece.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
   },
   "q3_no": {
    "f": "q3_no.mp3",
-   "d": 10.27,
+   "d": 9.34,
    "t": "Not quite. The right answer is: will be lying. It's an action in progress at a moment in the future: will be, plus -ing.",
-   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "q3_ok": {
+   "f": "q3_ok.mp3",
+   "d": 6.56,
+   "t": "Correct! It's an action in progress at a moment in the future: will be, plus -ing.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
   },
   "q4": {
    "f": "q4.mp3",
-   "d": 6.41,
+   "d": 6.04,
    "t": "Question 5. By 2030, I, blank, university.",
-   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
   },
-  "q4_ok": {
-   "f": "q4_ok.mp3",
-   "d": 7.9,
-   "t": "Correct! It will be finished before a moment in the future, with by: will have, plus the past participle.",
-   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  "q4_a0": {
+   "f": "q4_a0.mp3",
+   "d": 3.4,
+   "t": "By 2030, I will be finishing university.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q4_a1": {
+   "f": "q4_a1.mp3",
+   "d": 3.42,
+   "t": "By 2030, I will have finished university.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q4_a2": {
+   "f": "q4_a2.mp3",
+   "d": 2.71,
+   "t": "By 2030, I finish university.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
   },
   "q4_no": {
    "f": "q4_no.mp3",
-   "d": 11.23,
+   "d": 10.99,
    "t": "Not quite. The right answer is: will have finished. It will be finished before a moment in the future, with by: will have, plus the past participle.",
-   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "q4_ok": {
+   "f": "q4_ok.mp3",
+   "d": 8.36,
+   "t": "Correct! It will be finished before a moment in the future, with by: will have, plus the past participle.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
   },
   "q5": {
    "f": "q5.mp3",
-   "d": 5.35,
+   "d": 4.16,
    "t": "Question 6. I'll call you when I, blank, home.",
-   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
   },
-  "q5_ok": {
-   "f": "q5_ok.mp3",
-   "d": 6.5,
-   "t": "Correct! After when, we use the present simple, not will: when I get home.",
-   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+  "q5_a0": {
+   "f": "q5_a0.mp3",
+   "d": 3.74,
+   "t": "I'll call you when I will get home.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q5_a1": {
+   "f": "q5_a1.mp3",
+   "d": 3.89,
+   "t": "I'll call you when I am going to get home.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q5_a2": {
+   "f": "q5_a2.mp3",
+   "d": 2.52,
+   "t": "I'll call you when I get home.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
   },
   "q5_no": {
    "f": "q5_no.mp3",
-   "d": 9.41,
+   "d": 9.45,
    "t": "Not quite. The right answer is: get. After when, we use the present simple, not will: when I get home.",
-   "v": "en-GB-RyanNeural|es-ES-ElviraNeural"
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "q5_ok": {
+   "f": "q5_ok.mp3",
+   "d": 6.93,
+   "t": "Correct! After when, we use the present simple, not will: when I get home.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s0_0_0": {
+   "f": "s0_0_0.mp3",
+   "d": 2.95,
+   "t": "Hello, and welcome to Future Lab!",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s0_0_1": {
+   "f": "s0_0_1.mp3",
+   "d": 0.85,
+   "t": "S: [cheerful, waving hello] Hi everyone!",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s0_1_0": {
+   "f": "s0_1_0.mp3",
+   "d": 6.99,
+   "t": "This educational app has been made by Nuria Calvo, an English teacher at IES Goya, Zaragoza.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s0_2_0": {
+   "f": "s0_2_0.mp3",
+   "d": 7.44,
+   "t": "In English, there isn't just one future. There are several, and each one tells us something different.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s0_2_1": {
+   "f": "s0_2_1.mp3",
+   "d": 2.53,
+   "t": "S: [surprised] Wait... more than one future?",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s0_2_2": {
+   "f": "s0_2_2.mp3",
+   "d": 1.48,
+   "t": "Yes! Several.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s0_3_0": {
+   "f": "s0_3_0.mp3",
+   "d": 9.08,
+   "t": "Today you'll learn when to use will, be going to, the present tenses, the future continuous and the future perfect.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s0_3_1": {
+   "f": "s0_3_1.mp3",
+   "d": 1.36,
+   "t": "S: [excited] Let's go!",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s1_0_0": {
+   "f": "s1_0_0.mp3",
+   "d": 1.98,
+   "t": "Chapter one: will!",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s1_1_0": {
+   "f": "s1_1_0.mp3",
+   "d": 6.36,
+   "t": "The form is easy: will, plus the infinitive without to. It's the same for every person.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s1_1_1": {
+   "f": "s1_1_1.mp3",
+   "d": 3.64,
+   "t": "S: [curious, checking] So... I will, you will, she will?",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s1_1_2": {
+   "f": "s1_1_2.mp3",
+   "d": 4.2,
+   "t": "Exactly! And in the negative, we say won't.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s1_2_0": {
+   "f": "s1_2_0.mp3",
+   "d": 7.43,
+   "t": "We use will for predictions and opinions, especially after I think, I'm sure, or probably.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s1_2_1": {
+   "f": "s1_2_1.mp3",
+   "d": 3.09,
+   "t": "S: [thoughtful, trying it out] Hmm... I think it will rain tomorrow.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s1_2_2": {
+   "f": "s1_2_2.mp3",
+   "d": 0.84,
+   "t": "Perfect!",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s1_3_0": {
+   "f": "s1_3_0.mp3",
+   "d": 5.09,
+   "t": "We also use it for decisions we make at the moment of speaking.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s1_3_1": {
+   "f": "s1_3_1.mp3",
+   "d": 1.42,
+   "t": "S: [surprised, acting a little scene] Oh! The phone's ringing!",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s1_3_2": {
+   "f": "s1_3_2.mp3",
+   "d": 2.18,
+   "t": "[quick and helpful, acting the scene] Don't worry, I'll answer it!",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s1_4_0": {
+   "f": "s1_4_0.mp3",
+   "d": 2.73,
+   "t": "And for offers and promises.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s1_4_1": {
+   "f": "s1_4_1.mp3",
+   "d": 2.92,
+   "t": "S: [struggling, a bit tired] Ugh, this bag is so heavy...",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s1_4_2": {
+   "f": "s1_4_2.mp3",
+   "d": 1.56,
+   "t": "[kind] I'll carry it for you!",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s1_4_3": {
+   "f": "s1_4_3.mp3",
+   "d": 2.94,
+   "t": "S: [grateful] Thanks! I promise I'll help you next time.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s1_5_0": {
+   "f": "s1_5_0.mp3",
+   "d": 4.31,
+   "t": "S: [confident but making a mistake] Got it! So... she will goes?",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s1_5_1": {
+   "f": "s1_5_1.mp3",
+   "d": 7.49,
+   "t": "[playfully alarmed, then clear] Careful! Never say: she will goes, or: I will to go. Just say: she will go.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s1_5_2": {
+   "f": "s1_5_2.mp3",
+   "d": 2.06,
+   "t": "S: [proud] She will go. Easy!",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s2_0_0": {
+   "f": "s2_0_0.mp3",
+   "d": 3.06,
+   "t": "Chapter two: be going to.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s2_1_0": {
+   "f": "s2_1_0.mp3",
+   "d": 7.42,
+   "t": "The form is: am, is or are, plus going to, plus the infinitive.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s2_1_1": {
+   "f": "s2_1_1.mp3",
+   "d": 4.23,
+   "t": "S: [checking] I'm going to, she's going to, they're going to?",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s2_1_2": {
+   "f": "s2_1_2.mp3",
+   "d": 0.92,
+   "t": "That's it!",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s2_2_0": {
+   "f": "s2_2_0.mp3",
+   "d": 5.29,
+   "t": "We use it for plans and intentions: things we decided before speaking.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s2_2_1": {
+   "f": "s2_2_1.mp3",
+   "d": 2.56,
+   "t": "S: [proud, dreamy] I'm going to study medicine at university!",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s2_2_2": {
+   "f": "s2_2_2.mp3",
+   "d": 1.48,
+   "t": "[impressed] Great plan!",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s2_3_0": {
+   "f": "s2_3_0.mp3",
+   "d": 5.36,
+   "t": "We also use it for predictions based on evidence, something we can see right now.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s2_3_1": {
+   "f": "s2_3_1.mp3",
+   "d": 3.38,
+   "t": "S: [worried, pointing at the sky] Look at those black clouds! It's going to rain.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s2_3_2": {
+   "f": "s2_3_2.mp3",
+   "d": 2.55,
+   "t": "Right! You can see it coming.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s2_4_0": {
+   "f": "s2_4_0.mp3",
+   "d": 4.27,
+   "t": "In the negative: She isn't going to come. And in questions...",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s2_4_1": {
+   "f": "s2_4_1.mp3",
+   "d": 1.37,
+   "t": "S: [eager] Are you going to watch the match?",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s2_4_2": {
+   "f": "s2_4_2.mp3",
+   "d": 1.73,
+   "t": "[cheerful] Of course I am!",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s3_0_0": {
+   "f": "s3_0_0.mp3",
+   "d": 3.55,
+   "t": "Chapter three: will, or going to?",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s3_1_0": {
+   "f": "s3_1_0.mp3",
+   "d": 2.93,
+   "t": "S: [confused] Will or going to? I always mix them up!",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s3_1_1": {
+   "f": "s3_1_1.mp3",
+   "d": 3.89,
+   "t": "Here's the key question: when did you decide?",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s3_2_0": {
+   "f": "s3_2_0.mp3",
+   "d": 3.34,
+   "t": "If you decide right now, use will.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s3_2_1": {
+   "f": "s3_2_1.mp3",
+   "d": 1.97,
+   "t": "S: [surprised] Oh no, there's no milk!",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s3_2_2": {
+   "f": "s3_2_2.mp3",
+   "d": 1.21,
+   "t": "[quick] I'll buy some!",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s3_3_0": {
+   "f": "s3_3_0.mp3",
+   "d": 3.56,
+   "t": "If you decided before, use going to.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s3_3_1": {
+   "f": "s3_3_1.mp3",
+   "d": 4.47,
+   "t": "S: [calm, matter-of-fact] I'm going to buy some milk on my way home. I planned it this morning.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s3_4_0": {
+   "f": "s3_4_0.mp3",
+   "d": 7.15,
+   "t": "And for predictions: an opinion takes will, but evidence you can see takes going to.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s3_5_0": {
+   "f": "s3_5_0.mp3",
+   "d": 2.03,
+   "t": "S: [hopeful] I think Spain will win.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s3_5_1": {
+   "f": "s3_5_1.mp3",
+   "d": 4.28,
+   "t": "[excited, like a sports commentator] But look, they're three goals ahead! They're going to win!",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s4_0_0": {
+   "f": "s4_0_0.mp3",
+   "d": 4.07,
+   "t": "Chapter four: present tenses with a future meaning.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s4_1_0": {
+   "f": "s4_1_0.mp3",
+   "d": 7.84,
+   "t": "We use the present continuous for fixed arrangements: plans with a time and a place, often with other people.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s4_1_1": {
+   "f": "s4_1_1.mp3",
+   "d": 2.48,
+   "t": "S: [casual] I'm meeting Laura at six tomorrow.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s4_2_0": {
+   "f": "s4_2_0.mp3",
+   "d": 2.43,
+   "t": "Imagine it's written in your diary.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s4_2_1": {
+   "f": "s4_2_1.mp3",
+   "d": 1.96,
+   "t": "S: [excited] We're flying to London on Friday!",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s4_3_0": {
+   "f": "s4_3_0.mp3",
+   "d": 4.39,
+   "t": "We use the present simple for timetables and schedules.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s4_3_1": {
+   "f": "s4_3_1.mp3",
+   "d": 2.07,
+   "t": "S: [hurried] The train leaves at 8:15!",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s4_3_2": {
+   "f": "s4_3_2.mp3",
+   "d": 2.1,
+   "t": "And the film starts at nine.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s4_4_0": {
+   "f": "s4_4_0.mp3",
+   "d": 5.65,
+   "t": "So remember: arrangements, present continuous. Timetables, present simple.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s5_0_0": {
+   "f": "s5_0_0.mp3",
+   "d": 3.44,
+   "t": "Chapter five: the future continuous.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s5_1_0": {
+   "f": "s5_1_0.mp3",
+   "d": 4.87,
+   "t": "The form is: will be, plus a verb ending in -ing.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s5_2_0": {
+   "f": "s5_2_0.mp3",
+   "d": 5.15,
+   "t": "We use it for an action that will be in progress at a specific moment in the future.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s5_3_0": {
+   "f": "s5_3_0.mp3",
+   "d": 2.85,
+   "t": "S: [dreamy, relaxed] This time tomorrow, I'll be lying on the beach.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s5_3_1": {
+   "f": "s5_3_1.mp3",
+   "d": 4.82,
+   "t": "[amused] Lucky you! At nine o'clock tonight, we'll be having dinner.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s5_4_0": {
+   "f": "s5_4_0.mp3",
+   "d": 3.91,
+   "t": "It's also a polite way to ask about someone's plans.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s5_4_1": {
+   "f": "s5_4_1.mp3",
+   "d": 2.62,
+   "t": "S: [very polite, a little cheeky] Will you be using the car this evening?",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s5_4_2": {
+   "f": "s5_4_2.mp3",
+   "d": 2.06,
+   "t": "[amused] Nice try!",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s6_0_0": {
+   "f": "s6_0_0.mp3",
+   "d": 3.24,
+   "t": "Chapter six: the future perfect.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s6_1_0": {
+   "f": "s6_1_0.mp3",
+   "d": 5.38,
+   "t": "The form is: will have, plus the past participle.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s6_2_0": {
+   "f": "s6_2_0.mp3",
+   "d": 5.63,
+   "t": "We use it for an action that will be finished before a certain moment in the future.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s6_3_0": {
+   "f": "s6_3_0.mp3",
+   "d": 7.02,
+   "t": "It often goes with by: by Friday, by next year, by the time you arrive.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s6_4_0": {
+   "f": "s6_4_0.mp3",
+   "d": 3.35,
+   "t": "S: [relieved, happy] By the end of June, I'll have finished all my exams!",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s6_4_1": {
+   "f": "s6_4_1.mp3",
+   "d": 4.63,
+   "t": "And by 2050, scientists will have found a cure.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s6_5_0": {
+   "f": "s6_5_0.mp3",
+   "d": 1.92,
+   "t": "And in the negative...",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s6_5_1": {
+   "f": "s6_5_1.mp3",
+   "d": 3.2,
+   "t": "S: [apologetic] Sorry, I won't have finished by then.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s7_0_0": {
+   "f": "s7_0_0.mp3",
+   "d": 5.59,
+   "t": "Chapter seven: when, as soon as, until, and if.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s7_1_0": {
+   "f": "s7_1_0.mp3",
+   "d": 14.76,
+   "t": "Here's a classic mistake. After when, as soon as, until, before, after and if, we use a present tense, not will, even when we're talking about the future.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s7_2_0": {
+   "f": "s7_2_0.mp3",
+   "d": 2.14,
+   "t": "S: [confident, making a mistake] I'll call you when I will arrive.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s7_2_1": {
+   "f": "s7_2_1.mp3",
+   "d": 5.96,
+   "t": "[firm, stopping him] Stop! Never: when I will arrive. Just say: I'll call you when I arrive.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s7_3_0": {
+   "f": "s7_3_0.mp3",
+   "d": 2.99,
+   "t": "As soon as she gets home, she'll text you.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s7_4_0": {
+   "f": "s7_4_0.mp3",
+   "d": 3.94,
+   "t": "S: [thinking it through] So... if it rains, we'll stay at home?",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s7_4_1": {
+   "f": "s7_4_1.mp3",
+   "d": 4.86,
+   "t": "Exactly! And we'll wait here until the bus comes.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s8_0_0": {
+   "f": "s8_0_0.mp3",
+   "d": 4.92,
+   "t": "Time for a challenge! Choose the right future for each sentence.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s8_0_1": {
+   "f": "s8_0_1.mp3",
+   "d": 0.83,
+   "t": "S: [determined, excited] I'm ready!",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s9_0_0": {
+   "f": "s9_0_0.mp3",
+   "d": 1.83,
+   "t": "[delighted, proud] Fantastic work!",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s9_0_1": {
+   "f": "s9_0_1.mp3",
+   "d": 0.98,
+   "t": "S: [proud] Thanks!",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "s9_1_0": {
+   "f": "s9_1_0.mp3",
+   "d": 9.98,
+   "t": "Now you know all the futures: will, going to, the present tenses, the future continuous and the future perfect.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s9_2_0": {
+   "f": "s9_2_0.mp3",
+   "d": 11.83,
+   "t": "This educational app was made by Nuria Calvo, an English teacher at IES Goya, Zaragoza. Now it's your turn: click the button and practise with the exercises.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "s9_2_1": {
+   "f": "s9_2_1.mp3",
+   "d": 1.88,
+   "t": "S: [cheerful, waving goodbye] See you in the future!",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
   }
  }
 }
