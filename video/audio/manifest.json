@@ -8,8 +8,8 @@
  "clips": {
   "q0": {
    "f": "q0.mp3",
-   "d": 5.87,
-   "t": "Question 1. Look at those black clouds! It, blank, rain.",
+   "d": 5.13,
+   "t": "Question 1. Look at those black clouds! It, blank.",
    "v": "gemini:gemini-3.8-flash-tts:Kore"
   },
   "q0_a0": {
@@ -24,10 +24,16 @@
    "t": "Look at those black clouds! It will rain.",
    "v": "gemini:gemini-3.8-flash-tts:Puck"
   },
+  "q0_a2": {
+   "f": "q0_a2.mp3",
+   "d": 2.92,
+   "t": "Look at those black clouds! It rains.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
   "q0_no": {
    "f": "q0_no.mp3",
-   "d": 9.32,
-   "t": "Not quite. The right answer is: is going to. We can see evidence right now, the black clouds, so we use going to.",
+   "d": 10.0,
+   "t": "Not quite. The right answer is: is going to rain. We can see evidence right now, the black clouds, so we use going to.",
    "v": "gemini:gemini-3.8-flash-tts:Kore"
   },
   "q0_ok": {
@@ -54,6 +60,12 @@
    "t": "The phone's ringing. Don't worry, I will answer it!",
    "v": "gemini:gemini-3.8-flash-tts:Puck"
   },
+  "q1_a2": {
+   "f": "q1_a2.mp3",
+   "d": 3.5,
+   "t": "The phone's ringing. Don't worry, I answer it!",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
   "q1_no": {
    "f": "q1_no.mp3",
    "d": 8.66,
@@ -76,6 +88,12 @@
    "f": "q2_a0.mp3",
    "d": 3.32,
    "t": "Hurry up! The train will have left at 7:45.",
+   "v": "gemini:gemini-3.8-flash-tts:Puck"
+  },
+  "q2_a1": {
+   "f": "q2_a1.mp3",
+   "d": 3.41,
+   "t": "Hurry up! The train leave at 7:45.",
    "v": "gemini:gemini-3.8-flash-tts:Puck"
   },
   "q2_a2": {
@@ -130,6 +148,12 @@
    "f": "q3_ok.mp3",
    "d": 6.56,
    "t": "Correct! It's an action in progress at a moment in the future: will be, plus -ing.",
+   "v": "gemini:gemini-3.8-flash-tts:Kore"
+  },
+  "q4": {
+   "f": "q4.mp3",
+   "d": 6.04,
+   "t": "Question 5. By 2030, I, blank, university.",
    "v": "gemini:gemini-3.8-flash-tts:Kore"
   },
   "q4_a0": {
